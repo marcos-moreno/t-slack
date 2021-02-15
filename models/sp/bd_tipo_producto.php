@@ -1,0 +1,153 @@
+<?php  
+
+ require_once '../../models/postgres.php';
+ $received_data = json_decode(file_get_contents('php://input')); 
+ $model = null;
+ require_once '../../models/auth/check.php';
+
+if (check_session()) { 
+    switch($received_data->action){
+        case 'update': 
+            $model = new Tipo_producto($data,$connect,$received_data);
+            $model->update();
+        break;
+        case 'insert':
+            $model = new Tipo_producto($data,$connect,$received_data);
+            $model->insert();
+        break;
+        case 'delete':
+            $model = new Tipo_producto($data,$connect,$received_data);
+            $model->delete(); 
+        break;
+        case 'select': 
+            $model = new Tipo_producto($data,$connect,$received_data);
+            $model->select();
+        break;
+    }
+}else{
+    $output = array('message' => 'Not authorized'); 
+    echo json_encode($output); 
+} 
+
+class Tipo_producto 
+{   
+    
+    private $output = null;
+    private $data = array(); 
+    private $connect = null;
+    private $received_data = null;
+    public function __construct($data,$connect,$received_data){
+        $this->data  = $data;
+        $this->connect = $connect;
+        $this->received_data = $received_data;
+    }
+
+    public function insert(){
+        try {
+            $data = array(
+                    ':nombre_tipo_producto' => $this->received_data->model->nombre_tipo_producto,
+                            ':descripcion' => $this->received_data->model->descripcion,
+                            ':activo' => $this->received_data->model->activo,
+                            
+                    ); 
+        $query = 'INSERT INTO  un_tipo_producto  (nombre_tipo_producto,descripcion,activo) VALUES (:nombre_tipo_producto,:descripcion,:activo) ;';
+
+            $statement = $this->connect->prepare($query); 
+            $statement->execute($data);  
+            $output = array('message' => 'Data Inserted'); 
+            echo json_encode($output); 
+            return true;
+        } catch (Exception $exc) {
+            $output = array('message' => $exc); 
+            echo json_encode($output); 
+            return false;
+        } 
+    } 
+
+    public function update(){
+        try {
+            $data = array(
+                    ':id_tipo_producto' => $this->received_data->model->id_tipo_producto, 
+                            ':nombre_tipo_producto' => $this->received_data->model->nombre_tipo_producto, 
+                            ':descripcion' => $this->received_data->model->descripcion, 
+                            ':activo' => $this->received_data->model->activo, 
+                             
+                    ); 
+        $query = 'UPDATE  un_tipo_producto  SET nombre_tipo_producto=:nombre_tipo_producto,descripcion=:descripcion,activo=:activo WHERE  id_tipo_producto = :id_tipo_producto ;';
+
+            $statement = $this->connect->prepare($query); 
+            $statement->execute($data);  
+            $output = array('message' => 'Data Updated'); 
+            echo json_encode($output); 
+            return true;
+        } catch (Exception $exc) {
+            $output = array('message' => $exc); 
+            echo json_encode($output); 
+            return false;
+        }  
+    } 
+
+    public function select(){
+        try {  
+             
+        $query = 'SELECT id_tipo_producto,nombre_tipo_producto,descripcion,activo 
+                    FROM  un_tipo_producto   
+                    ' . (isset($this->received_data->filter) ? ' 
+                    WHERE ' . $this->received_data->filter:'') . 
+                    (isset($this->received_data->order) ? $this->received_data->order:'') ;
+                        
+            $statement = $this->connect->prepare($query); 
+            $statement->execute($data);   
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {    $data[] = $row;
+            }
+
+        
+            echo json_encode($data); 
+            return true;
+        } catch (Exception $exc) {
+            $output = array('message' => $exc); 
+            echo json_encode($output); 
+            return false;
+        }  
+    }
+    
+    public function search_union($row,$table_origen,$fk_table_origen,$fk_table_usage){
+        $data = array(); 
+        try {    
+            $query = 'SELECT * FROM '. $table_origen . '   WHERE '. $fk_table_origen . ' = ' .$row[$fk_table_usage] ;               
+            $statement = $this->connect->prepare($query); 
+            $statement->execute($data);   
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {   
+                    $data[] = $row;
+            }  
+            return $data; 
+        } catch (Exception $exc) {
+            $output = array('message' => $exc); 
+            echo json_encode($output); 
+            return false;
+        }  
+    }
+    public function delete(){
+        try {  
+            $data = array(
+                   ':id_tipo_producto' => $this->received_data->model->id_tipo_producto,
+                            
+                    ); 
+        $query = 'DELETE FROM  un_tipo_producto  WHERE id_tipo_producto = :id_tipo_producto ;'; 
+
+            $statement = $this->connect->prepare($query); 
+            $statement->execute($data);  
+            $output = array('message' => 'Data Deleted'); 
+            echo json_encode($output); 
+            return true;
+        } catch (Exception $exc) {
+            $output = array('message' => $exc); 
+            echo json_encode($output); 
+            return false;
+        }  
+    }
+
+  
+    
+
+} 
