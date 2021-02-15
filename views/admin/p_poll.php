@@ -129,12 +129,12 @@
 
                                   <div class="md-form md-outline input-with-post-icon datepicker">
                                     <label for="example">Válido Desde</label>
-                                    <input type="datetime" class="form-control" v-model="in_inicio"  />
+                                    <input type="datetime-local" class="form-control" v-model="in_inicio"  />
                                   </div> 
 
                                   <div class="md-form md-outline input-with-post-icon datepicker">
                                     <label for="example">Válido Hasta</label>
-                                    <input type="datetime"  class="form-control" v-model="in_fin" />
+                                    <input type="datetime-local"  class="form-control" v-model="in_fin" />
                                   </div> 
                                   <br/><br/>
                                   
@@ -178,12 +178,12 @@
                                 </div> 
                                 <div class="md-form md-outline input-with-post-icon datepicker">
                                   <label for="example">Válido Desde</label>
-                                  <input type="datetime" id="example" class="form-control" v-model="poll_validfrom" placeholder="01-01-2020" />
+                                  <input type="datetime-local" id="example" class="form-control" v-model="poll_validfrom" placeholder="01-01-2020" />
                                 </div> 
 
                                 <div class="md-form md-outline input-with-post-icon datepicker">
                                   <label for="example">Válido Hasta</label>
-                                  <input type="datetime" id="example" class="form-control" v-model="poll_validUntil" placeholder="01-01-2020" />
+                                  <input type="datetime-local" id="example" class="form-control" v-model="poll_validUntil" placeholder="01-01-2020" />
                                 </div> 
 
                                 <div class="custom-control custom-checkbox">
