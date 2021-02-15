@@ -66,6 +66,8 @@ if (check_session()) {
             $data['checked'] = $row['activo'];
             $data['poll_validfrom'] = $row['validodesde'];
             $data['poll_validUntil'] = $row['validohasta'];
+            $data['link'] = $row['link'];
+            $data['link_final'] = $row['link_final']; 
         }
         echo json_encode($data);
     }

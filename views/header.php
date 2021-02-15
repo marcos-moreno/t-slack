@@ -129,11 +129,43 @@ if ($valido == false) {  header('location: ../logout.php'); }
                   </div>
                 </div>
               </transition>
-            </div>    
+            </div>
+
+            
+
           </div>   
         </div>
 
 
+        <div> 
+          <div id="leccion">  
+            <div v-if="modalLeccion" >  <!-- Modal Lecciones -->
+              <transition name="model"  >
+                <div class="modal-mask" > 
+                  <div class="modal-dialog modal-dialog-scrollable">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h4 class="modal-title"></h4>
+                        <button type="button" class="close" @click="modalLeccion=false;lecciones=[];"><span aria-hidden="true">&times;</span></button>
+                      </div>  
+                      <div class="modal-body"> 
+                        <div class="card-body">   
+                          <div class="custom-control custom-checkbox">
+                          
 
+
+                          </div> 
+                        </div>
+                      </div>
+                    </div> 
+                  </div>
+                </div>
+              </transition>
+            </div>
+          </div>
+        </div>
+
+
+<script type="text/javascript" src="../../controller/user/c_leccion.js"></script>
 <script type="text/javascript" src="../../controller/user/notifications.js"></script>
 <script type="text/javascript" src="../../controller/admin/changePasword.js"></script>  

@@ -48,10 +48,11 @@ if (check_session()) {
                 ':id_actualizadopor' =>  $_SESSION['id_empleado'],
                 ':numero_pregunta' =>   $received_data->model->numero_pregunta,
                 ':obligatoria' =>   $received_data->model->obligatoria,
-                
+                ':resp_direct_quest_value' =>   $received_data->model->resp_direct_quest_value,
+                ':is_evaluated' =>   $received_data->model->is_evaluated,
             ); 
-            $query = "INSERT INTO pregunta ( id_encuesta, id_creado, fecha_creado, nombre_pregunta, activo, id_tipo, id_actualizadopor, fecha_actualizado, numero_pregunta, obligatoria)  
-                    VALUES (:id_encuesta,:id_creado,CURRENT_TIMESTAMP,:nombre_pregunta,:activo,:id_tipo,:id_actualizadopor,CURRENT_TIMESTAMP,:numero_pregunta,:obligatoria)";
+            $query = "INSERT INTO pregunta ( id_encuesta, id_creado, fecha_creado, nombre_pregunta, activo, id_tipo, id_actualizadopor, fecha_actualizado, numero_pregunta, obligatoria,resp_direct_quest_value,is_evaluated)  
+                    VALUES (:id_encuesta,:id_creado,CURRENT_TIMESTAMP,:nombre_pregunta,:activo,:id_tipo,:id_actualizadopor,CURRENT_TIMESTAMP,:numero_pregunta,:obligatoria,:resp_direct_quest_value,:is_evaluated)";
 
             $statement = $connect->prepare($query); 
             $statement->execute($data); 
@@ -60,7 +61,7 @@ if (check_session()) {
             ); 
             echo json_encode($output);
         } catch (\Throwable $th) {
-            echo json_encode($th->errorInfo);
+            echo json_encode($th);
         }
     }
 
@@ -91,6 +92,8 @@ if (check_session()) {
                 ':obligatoria' =>   $received_data->model->obligatoria, 
                 ':id_tipo' => $received_data->model->id_tipo,
                 ':id_pregunta'=>   $received_data->model->id_pregunta, 
+                ':resp_direct_quest_value' =>   $received_data->model->resp_direct_quest_value,
+                ':is_evaluated' =>   $received_data->model->is_evaluated,
             ); 
             $query = " UPDATE pregunta SET 
                         nombre_pregunta = :nombre_pregunta
@@ -100,6 +103,8 @@ if (check_session()) {
                         ,numero_pregunta = :numero_pregunta
                         ,obligatoria = :obligatoria
                         ,id_tipo = :id_tipo
+                        ,resp_direct_quest_value = :resp_direct_quest_value
+                        ,is_evaluated = :is_evaluated
                         WHERE id_pregunta= :id_pregunta"; 
             $statement = $connect->prepare($query); 
             $statement->execute($data); 

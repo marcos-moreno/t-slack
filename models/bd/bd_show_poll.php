@@ -12,7 +12,8 @@ if (check_session()) {
                     e.id_encuesta, e.id_creadopor, e.fecha_creado, e.nombre, e.observaciones, 
                     e.activo, e.id_actualizado, e.fecha_actualizado, 
                     TO_CHAR(e.validohasta, 'DD/MM/YYYY HH12:MI:SS AM') As validohasta,
-                    TO_CHAR(e.validodesde, 'DD/MM/YYYY HH12:MI:SS AM') As validodesde
+                    TO_CHAR(e.validodesde, 'DD/MM/YYYY HH12:MI:SS AM') As validodesde,
+                    coalesce((SELECT COUNT(*) as total FROM refividrio.enc_leccion lec WHERE lec.id_encuesta = e.id_encuesta ),0) As totallecciones 
                 FROM refividrio.encuesta e  
                 LEFT JOIN refividrio.empleado empl ON empl.id_empleado = " . $_SESSION['id_empleado'] ."
                 INNER JOIN refividrio.segmento seg ON empl.id_segmento = seg.id_segmento
@@ -36,10 +37,99 @@ if (check_session()) {
         echo json_encode($data);
     }  
 
+    if ($received_data->action == 'getPoollByID' ) {
+        $query ="SELECT 
+                    --e.*
+                    e.id_encuesta, e.id_creadopor, e.fecha_creado, e.nombre, e.observaciones, 
+                    e.activo, e.id_actualizado, e.fecha_actualizado, 
+                    TO_CHAR(e.validohasta, 'DD/MM/YYYY HH12:MI:SS AM') As validohasta,
+                    TO_CHAR(e.validodesde, 'DD/MM/YYYY HH12:MI:SS AM') As validodesde
+                    ,coalesce((SELECT COUNT(*) as total FROM refividrio.enc_leccion lec WHERE lec.id_encuesta = e.id_encuesta ),0) As totallecciones 
+                FROM refividrio.encuesta e    
+                WHERE 
+                e.id_encuesta = " . $received_data->id_encuesta . "  ORDER BY e.id_encuesta DESC";
+        $statement = $connect->prepare($query);
+        $statement->execute();
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $data[] = $row;
+        }
+        echo json_encode($data);
+    }  
+
+    if ($received_data->action == 'getdatosdetermino' ) {
+        $query =" 
+        SELECT
+            Concat(empleado.paterno,' ',empleado.materno,' ',empleado.nombre) as nomempleado
+            ,ee.id_empleado_encuesta,ee.id_empleado,ee.id_encuesta,ee.fechafin,ee.activo,ee.termino, 
+                            TO_CHAR(ee.fecha_creado, 'DD/MM/YYYY HH12:MI:SS AM') respuesta,encuesta.total,respuestas.respuestas_correctas
+        FROM refividrio.empleado_encuesta ee
+        LEFT JOIN LATERAL(
+        SELECT COUNT(*) total 
+            FROM refividrio.pregunta pre  
+            WHERE pre.id_encuesta = ee.id_encuesta AND pre.is_evaluated = true
+        )As encuesta ON true
+        
+        LEFT JOIN LATERAL(
+                SELECT  
+                    SUM(CASE WHEN (CASE WHEN is_evaluated THEN
+                    CASE WHEN typep.direct_data = true  THEN 
+                        CASE WHEN p.resp_direct_quest_value = 
+                                (SELECT respuesta FROM refividrio.res_encuesta_empleado resp 
+                                    WHERE resp.id_pregunta =  p.id_pregunta 
+                                    AND resp.id_empleado = emp_enc.id_empleado) 
+                        THEN 'Correcta' ELSE 'Incorrecta' END
+                    WHEN typep.id_tipo = 4 THEN  
+                        CASE WHEN p.resp_direct_quest_value = 
+                                (SELECT opts.nombre FROM refividrio.res_encuesta_empleado resp 
+                                    INNER JOIN refividrio.opciones opts ON resp.id_opcion = opts.id_opcion
+                                        WHERE resp.id_pregunta =  p.id_pregunta 
+                                        AND resp.id_empleado = emp_enc.id_empleado LIMIT 1)
+                        THEN 'Correcta' ELSE 'Incorrecta' END  
+                    ELSE 
+                        CASE WHEN 
+                            (SELECT COUNT(resp2.id_opcion) FROM refividrio.res_encuesta_empleado resp2 
+                                    WHERE resp2.id_pregunta =  p.id_pregunta 
+                                    AND resp2.id_empleado = emp_enc.id_empleado
+                                    AND resp2.id_opcion IN (SELECT op.id_opcion FROM refividrio.opciones op 
+                                                                WHERE op.id_pregunta = p.id_pregunta 
+                                                                AND op.is_correct_answer = true) 
+                            ) = ( SELECT COUNT(*)
+                                    FROM refividrio.opciones op 
+                                        WHERE op.id_pregunta = p.id_pregunta AND op.is_correct_answer = true 
+                                ) 
+                        AND   
+                            (SELECT COUNT(resp2.id_opcion) FROM refividrio.res_encuesta_empleado resp2 
+                                    WHERE resp2.id_pregunta =  p.id_pregunta 
+                                    AND resp2.id_empleado = emp_enc.id_empleado 
+                            ) = ( SELECT COUNT(*)
+                                    FROM refividrio.opciones op 
+                                        WHERE op.id_pregunta = p.id_pregunta AND op.is_correct_answer = true 
+                                ) 
+                        THEN 'Correcta' ELSE 'Incorrecta' END  
+                                    END 
+                                    ELSE 'NEE' END) = 'Correcta' THEN 1 ELSE 0 END)  As respuestas_correctas 
+                        FROM refividrio.encuesta e
+                            INNER JOIN refividrio.empleado_encuesta emp_enc ON emp_enc.id_encuesta = e.id_encuesta 
+                            INNER JOIN refividrio.pregunta p ON p.id_encuesta = e.id_encuesta 
+                            INNER JOIN refividrio.tipo typep ON typep.id_tipo = p.id_tipo
+                        WHERE 
+                        e.id_Encuesta = ee.id_encuesta
+                        AND emp_enc.id_empleado = ee.id_empleado  
+                    )As respuestas ON true
+        INNER JOIN refividrio.empleado empleado ON empleado.id_empleado = ee.id_empleado
+        WHERE ee.id_empleado = " . $_SESSION['id_empleado'] ."
+        AND ee.id_encuesta = " . $received_data->id_encuesta ;
+        $statement = $connect->prepare($query);
+        $statement->execute();
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $data[] = $row;
+        }
+        echo json_encode($data);
+    }  
     if ($received_data->action == 'seachPollComplete') {
         $query = "
         SELECT 
-                coalesce(TO_CHAR(res.fecha_creado, 'MM/DD/YYYY HH12:MI:SS AM'),'--') As respuesta,
+                coalesce(TO_CHAR(res.fecha_creado, 'DD/MM/YYYY HH12:MI:SS AM'),'--') As respuesta,
             CASE 
                 WHEN res.fecha_creado BETWEEN enc.validodesde AND enc.validohasta THEN
                 'Correcto'
@@ -54,9 +144,10 @@ if (check_session()) {
             END AS estado
             ,enc.id_encuesta, enc.id_creadopor, enc.fecha_creado, enc.nombre, enc.observaciones, 
             enc.activo, enc.id_actualizado, enc.fecha_actualizado, 
-            TO_CHAR(enc.validohasta, 'MM/DD/YYYY HH12:MI:SS AM') As validohasta,
-            TO_CHAR(enc.validodesde, 'MM/DD/YYYY HH12:MI:SS AM') As validodesde,
+            TO_CHAR(enc.validohasta, 'DD/MM/YYYY HH12:MI:SS AM') As validohasta,
+            TO_CHAR(enc.validodesde, 'DD/MM/YYYY HH12:MI:SS AM') As validodesde,
             row_number() over (partition by emp.id_empleado order by enc.id_encuesta ASC) As no_enc
+            ,coalesce((SELECT COUNT(*) as total FROM refividrio.enc_leccion lec WHERE lec.id_encuesta = ee.id_encuesta ),0) As totallecciones
         FROM refividrio.empleado emp
         INNER JOIN refividrio.segmento seg ON seg.id_segmento = emp.id_segmento
         INNER JOIN refividrio.empresa empres ON empres.id_empresa = seg.id_empresa

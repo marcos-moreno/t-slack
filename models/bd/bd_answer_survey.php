@@ -106,7 +106,11 @@ if (check_session()) {
                 OR 
             (SELECT  COUNT(*) FROM enc_intentos_encuesta i 
             WHERE (now() BETWEEN i.inicio AND i.fin) 
-            AND i.id_encuesta = enc.id_encuesta ) > 0) " ;
+            AND i.id_encuesta = enc.id_encuesta ) > 0)
+            AND (SELECT COUNT(id_empleado_encuesta) FROM empleado_encuesta res 
+            WHERE res.id_empleado = emp.id_empleado 
+            AND enc.id_encuesta = res.id_encuesta) = 0
+            " ;
         $statement = $connect->prepare($query);
         $statement->execute();
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
@@ -114,6 +118,109 @@ if (check_session()) {
         }
         echo json_encode($data);
     }
+    if ($received_data->action == 'getRespuestasWET') {
+        $query = "
+        SELECT 
+            COALESCE(resss.valueres,'')  respuesta
+        FROM encuesta e
+            INNER JOIN empleado_encuesta emp_enc ON emp_enc.id_encuesta = e.id_encuesta
+            INNER JOIN empleado empl ON empl.id_empleado = emp_enc.id_empleado 
+            LEFT JOIN LATERAL( 
+                SELECT 
+                        CASE WHEN res.directa THEN respuesta 
+                        ELSE 
+                            CASE WHEN freeansware.value is NOT NULL THEN
+                            COALESCE(CONCAT((SELECT nombre FROM opciones opt WHERE opt.id_opcion = res.id_opcion) ,' : ',freeansware.value),'')  
+                            ELSE 	COALESCE((SELECT nombre FROM opciones opt WHERE opt.id_opcion = res.id_opcion) ,'') END
+                        END As valueres
+                    ,P.nombre_pregunta,P.id_pregunta,p.numero_pregunta,res.respuesta
+                FROM pregunta p
+                LEFT JOIN res_encuesta_empleado res ON res.id_pregunta = p.id_pregunta AND res.id_empleado = emp_enc.id_empleado
+                LEFT JOIN option_answer_free freeansware ON freeansware.id_option = res.id_opcion
+                WHERE  p.id_encuesta = e.id_encuesta AND p.id_pregunta = ". $received_data->id_pregunta ."
+            )as resss ON true  
+        WHERE 
+        e.id_Encuesta = ". $received_data->idEncuesta ."
+        AND emp_enc.id_empleado = ".$_SESSION['id_empleado']."
+        ORDER BY resss.numero_pregunta   " ;
+        $statement = $connect->prepare($query);
+        $statement->execute();
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $data[] = $row;
+        }
+        echo json_encode($data);
+    }
+    if ($received_data->action == 'getRespuestasCorrectasCheckbox') {
+        $query = "
+        SELECT * FROM opciones WHERE id_pregunta = ". $received_data->id_pregunta ." AND is_correct_answer = true" ;
+        $statement = $connect->prepare($query);
+        $statement->execute();
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $data[] = $row;
+        }
+        echo json_encode($data);
+    }
+    
+    if ($received_data->action == 'getQuestions') {
+        $query = "
+        SELECT 
+        p.*,
+        --	typep.*
+            --,
+            CASE WHEN is_evaluated THEN
+            CASE WHEN typep.direct_data = true  THEN 
+                CASE WHEN p.resp_direct_quest_value = 
+                        (SELECT respuesta FROM res_encuesta_empleado resp 
+                            WHERE resp.id_pregunta =  p.id_pregunta 
+                            AND resp.id_empleado = emp_enc.id_empleado) 
+                THEN 'Correcta' ELSE 'Incorrecta' END
+            WHEN typep.id_tipo = 4 THEN  
+                CASE WHEN p.resp_direct_quest_value = 
+                        (SELECT opts.nombre FROM res_encuesta_empleado resp 
+                         INNER JOIN opciones opts ON resp.id_opcion = opts.id_opcion
+                             WHERE resp.id_pregunta =  p.id_pregunta 
+                             AND resp.id_empleado = emp_enc.id_empleado LIMIT 1)
+                THEN 'Correcta' ELSE 'Incorrecta' END  
+            ELSE 
+                CASE WHEN 
+                    (SELECT COUNT(resp2.id_opcion) FROM res_encuesta_empleado resp2 
+                            WHERE resp2.id_pregunta =  p.id_pregunta 
+                            AND resp2.id_empleado = emp_enc.id_empleado
+                            AND resp2.id_opcion IN (SELECT op.id_opcion FROM opciones op 
+                                                        WHERE op.id_pregunta = p.id_pregunta 
+                                                        AND op.is_correct_answer = true) 
+                    ) = ( SELECT COUNT(*)
+                            FROM opciones op 
+                                WHERE op.id_pregunta = p.id_pregunta AND op.is_correct_answer = true 
+                        ) 
+                AND   
+                    (SELECT COUNT(resp2.id_opcion) FROM res_encuesta_empleado resp2 
+                            WHERE resp2.id_pregunta =  p.id_pregunta 
+                            AND resp2.id_empleado = emp_enc.id_empleado 
+                    ) = ( SELECT COUNT(*)
+                            FROM opciones op 
+                                WHERE op.id_pregunta = p.id_pregunta AND op.is_correct_answer = true 
+                        ) 
+                THEN 'Correcta' ELSE 'Incorrecta' END  
+            END 
+            ELSE 'NEE' END As estado_respuesta
+        FROM encuesta e
+            INNER JOIN empleado_encuesta emp_enc ON emp_enc.id_encuesta = e.id_encuesta 
+            INNER JOIN pregunta p ON p.id_encuesta = e.id_encuesta 
+            INNER JOIN tipo typep ON typep.id_tipo = p.id_tipo
+        WHERE 
+        e.id_Encuesta =  ". $received_data->idEncuesta ."
+        AND emp_enc.id_empleado =  ".$_SESSION['id_empleado']." ORDER BY p.numero_pregunta " ;
+
+        $statement = $connect->prepare($query);
+        $statement->execute();
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $data[] = $row;
+        }
+        echo json_encode($data);
+    }
+
+
 }else{
     $output = array('message' => 'Not authorized'); 
     echo json_encode($output); 
