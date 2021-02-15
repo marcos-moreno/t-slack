@@ -174,7 +174,7 @@
                                <div v-if="formOption == false" >
                                 <ul id="Opciones" >
                                   <li v-for="r in options">
-                                    Opción: <strong> {{ r.opcion }} </strong>
+                                  {{ r.id_opcion }}  Opción: <strong> {{ r.opcion }} </strong>
                                       <ul>  
                                         <table border=1  BORDERCOLOR=#D6DBDF >
                                           <tr>
