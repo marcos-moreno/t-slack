@@ -29,7 +29,6 @@ if ($valido == false) {  header('location: ../logout.php'); }
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button> 
-
     <a class="navbar-brand" href="#"><img src="../../img/logo.png" style="width:70%">
       <?php echo '<br/><font size="1.5">Rol: '.$_SESSION['rol'].'</font>' ?> 
     </a>  
@@ -82,12 +81,9 @@ if ($valido == false) {  header('location: ../logout.php'); }
         <li class="nav-item active">
           <a class="nav-link" href="../logout.php">Salir <span class="sr-only">(current)</span></a>
         </li> 
-    
       </ul> 
     </div>
   </nav>   
-
-
   <!-- <li class="nav-item active">  -->
         <div > 
           <div id="notification">  
@@ -130,12 +126,8 @@ if ($valido == false) {  header('location: ../logout.php'); }
                 </div>
               </transition>
             </div>
-
-            
-
           </div>   
         </div>
-
 
         <div> 
           <div id="leccion">  
@@ -151,9 +143,6 @@ if ($valido == false) {  header('location: ../logout.php'); }
                       <div class="modal-body"> 
                         <div class="card-body">   
                           <div class="custom-control custom-checkbox">
-                          
-
-
                           </div> 
                         </div>
                       </div>

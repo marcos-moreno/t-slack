@@ -88,8 +88,10 @@ var application_poll = new Vue({
             this.questionSelected.is_evaluated = (this.questionSelected.is_evaluated == 'true' || this.questionSelected.is_evaluated == true ? 'true':'false');
             this.questionSelected.activo = (this.questionSelected.activo == 'true' || this.questionSelected.activo == true ? 'true':'false');
             this.questionSelected.obligatoria = (this.questionSelected.obligatoria == 'true' || this.questionSelected.obligatoria == true ? 'true':'false');
-            this.questionSelected.resp_direct_quest_value = (this.questionSelected.resp_direct_quest_value == 'true' || this.questionSelected.resp_direct_quest_value == true ? 'true':'false');
-            
+            // this.questionSelected.resp_direct_quest_value = (this.questionSelected.resp_direct_quest_value == 'true' || this.questionSelected.resp_direct_quest_value == true ? 'true':'false');
+            if (  this.questionSelected.is_evaluated == 'false')  {
+                this.questionSelected.resp_direct_quest_value = '';
+            }
             if (this.validForm()) {
                 this.questionSelected.id_pregunta > 0 ? action = 'update' : action = 'insert'; 
                 console.log( this.questionSelected);

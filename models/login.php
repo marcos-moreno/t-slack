@@ -33,7 +33,7 @@ if ($received_data->action == 'login') {
                     FROM refividrio.empleado e
                     INNER JOIN empleado_rol er ON er.id_empleado = e.id_empleado
                     INNER JOIN rol r ON r.id_rol = er.id_rol
-                    WHERE usuario = :user AND password = md5(:password)   
+                    WHERE UPPER(usuario) = UPPER(:user) AND password = md5(:password)   
                     AND e.activo = true"; 
                     $statement = $connect->prepare($query);
                     $statement->execute($parametros); 

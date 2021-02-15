@@ -169,14 +169,14 @@ if (check_session()) {
             --,
             CASE WHEN is_evaluated THEN
             CASE WHEN typep.direct_data = true  THEN 
-                CASE WHEN p.resp_direct_quest_value = 
-                        (SELECT respuesta FROM res_encuesta_empleado resp 
+                CASE WHEN UPPER(TRIM(p.resp_direct_quest_value))  = 
+                        (SELECT UPPER(TRIM(respuesta)) respuesta FROM res_encuesta_empleado resp 
                             WHERE resp.id_pregunta =  p.id_pregunta 
                             AND resp.id_empleado = emp_enc.id_empleado) 
                 THEN 'Correcta' ELSE 'Incorrecta' END
             WHEN typep.id_tipo = 4 THEN  
-                CASE WHEN p.resp_direct_quest_value = 
-                        (SELECT opts.nombre FROM res_encuesta_empleado resp 
+                CASE WHEN UPPER(TRIM(p.resp_direct_quest_value)) = 
+                        (SELECT UPPER(TRIM(opts.nombre)) FROM res_encuesta_empleado resp 
                          INNER JOIN opciones opts ON resp.id_opcion = opts.id_opcion
                              WHERE resp.id_pregunta =  p.id_pregunta 
                              AND resp.id_empleado = emp_enc.id_empleado LIMIT 1)
