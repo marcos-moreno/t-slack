@@ -61,7 +61,8 @@ var application = new Vue({
         ,async getenc_leccions(){  
             this.enc_leccionCollection  = [];
             this.paginaCollection = [];
-            let filtrarPor =  "( nombre ILIKE '%" + this.filter + "%'  OR descipcion ILIKE '%" + this.filter + "%'  OR tipo ILIKE '%" + this.filter + "%'  OR link ILIKE '%" + this.filter + "%'  )";  
+            let filtrarPor =  "( nombre ILIKE '%" + this.filter + "%'  OR descipcion ILIKE '%" + this.filter + "%'  OR tipo ILIKE '%" +
+             this.filter + "%'  OR link ILIKE '%" + this.filter + "%'  ) AND id_encuesta = " + this.encuesta.id_encuesta;  
            const response = await this.request(this.path,{'order' : 'ORDER BY orden DESC','action' : 'select','filter' : filtrarPor});
             try{ 
                 this.show_message(response.length + ' Registros Encontrados.','success');
@@ -221,7 +222,7 @@ var application = new Vue({
     },
     async created(){
         let id_encuesta = document.getElementById("id_encuesta").value; 
-          
+          console.log(id_encuesta);
         const response_encuesta = await this.request('../../models/admin/bd_encuesta.php',{'order' : 'ORDER BY id_encuesta DESC','action' : 'select',"filter":" id_encuesta = " + id_encuesta });
             try{  
                 if(response_encuesta.length > 0){  

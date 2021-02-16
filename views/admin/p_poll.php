@@ -1,13 +1,14 @@
 <?php require '../header.php'; ?>  
  
-<div class="container" id="crudPoll"> 
+<!-- <div class="container" id="crudPoll">  -->
+<div class="container" style="width:100%" id="crudPoll">
     <h3>Encuesta</h3><br/> 
     <div class="alert alert-danger" role="alert"   v-if="msgError" > {{alert}}
     </div>
     <div class="alert alert-success" role="alert"  v-if="msg" > {{alert}}
     </div> 
-    <div class="panel panel-default">
-      <div class="panel-heading">
+    <div >
+      <div >
         <div class="row">
           <div class="col-md-6">
           <h3 class="panel-title">Datos</h3>

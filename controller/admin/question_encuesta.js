@@ -24,9 +24,13 @@ var application_poll = new Vue({
         options_resp_valid: [],
         formOption : false,
         option : {"id_opcion":0,"opcion":"","op_activo":true,action: "",id_pregunta: 0,"respuesta_extra":false}
+        ,respaldo_QuestionPoll : []
     },
     methods:{ 
-        async req_response_valid(){
+        async req_response_valid(origen){
+            if (origen) {
+                this.questionSelected.resp_direct_quest_value = "";
+            }
             if (this.questionSelected.is_evaluated == "true" || this.questionSelected.is_evaluated == true) { 
                 for (let index = 0; index < this.tipos.length; index++) {
                     const element = this.tipos[index];
@@ -60,7 +64,7 @@ var application_poll = new Vue({
                 this.dynamicTitle = "Nueva pregunta."
                 this.myModelPoll = true;
                 this.questionSelected = {"id_pregunta":0,"id_encuesta":this.poll.id,"nombre_pregunta":"","activo":true,"id_tipo":0,"numero_pregunta":this.maxValuePosition(),"obligatoria":true,"is_evaluated":"false","resp_direct_quest_value":"",direct_data:true};
-                this.req_response_valid();
+                this.req_response_valid(false);
             } else if(funct == 'mod'){
                 this.actionButton = "Actualizar";
                 if (id > 0) {  
@@ -69,7 +73,7 @@ var application_poll = new Vue({
                     }); 
                    this.dynamicTitle = "Modificar pregunta." 
                    this.myModelPoll = true;   
-                   this.req_response_valid();
+                   this.req_response_valid(false);
                 } else {
                     alert("La selección es incorrecta.");
                 } 
@@ -83,12 +87,11 @@ var application_poll = new Vue({
             }); 
             return res + 1;
         },async save(){
-            let action = ''; 
-            
+            let action = '';  
             this.questionSelected.is_evaluated = (this.questionSelected.is_evaluated == 'true' || this.questionSelected.is_evaluated == true ? 'true':'false');
             this.questionSelected.activo = (this.questionSelected.activo == 'true' || this.questionSelected.activo == true ? 'true':'false');
             this.questionSelected.obligatoria = (this.questionSelected.obligatoria == 'true' || this.questionSelected.obligatoria == true ? 'true':'false');
-            // this.questionSelected.resp_direct_quest_value = (this.questionSelected.resp_direct_quest_value == 'true' || this.questionSelected.resp_direct_quest_value == true ? 'true':'false');
+            
             if (  this.questionSelected.is_evaluated == 'false')  {
                 this.questionSelected.resp_direct_quest_value = '';
             }
@@ -96,7 +99,6 @@ var application_poll = new Vue({
                 this.questionSelected.id_pregunta > 0 ? action = 'update' : action = 'insert'; 
                 console.log( this.questionSelected);
                 const responseSave = await axios.post('../../models/bd/bd_question.php', {  action:action, model: this.questionSelected}).then(function(response){ return  response });
-                // console.log(responseSave); 
                 this.questionSelected.id_pregunta > 0 ? application_poll.manageError(responseSave,'Data Updated','Actualizado.')   : application_poll.manageError(responseSave,'Data Inserted','Datos Guardados.'); 
                 this.dynamicTitle = "" 
                 this.myModelPoll = false;   
@@ -156,6 +158,7 @@ var application_poll = new Vue({
         },async loadModelQuestion(){
             const questions = await axios.post('../../models/bd/bd_question.php', {  action:'fetchall',id_encuesta: this.poll.id }).then(function(response){ return  response.data });
             this.allData_QuestionPoll = questions;
+            
         },manageError(result, origen,msg){
             try { 
               if(result.data.message == origen){  
@@ -252,9 +255,10 @@ var application_poll = new Vue({
     created:async function(){
         let id_encuesta = document.getElementById("id_encuesta").value; 
         if (id_encuesta > 0) {
-            const respuesta = await axios.post('../../models/bd/bd_poll.php', {  action:'fetchSingle',id: id_encuesta }).then(function(response){ return  response.data });
-            this.poll = respuesta;  
+            const encuesta = await axios.post('../../models/bd/bd_poll.php', {  action:'fetchSingle',id: id_encuesta }).then(function(response){ return  response.data });
+            this.poll = encuesta;  
             await this.loadModelQuestion(); 
+            this.respaldo_QuestionPoll = this.allData_QuestionPoll;
             const tiposResponce = await axios.post('../../models/bd/bd_question.php', {  action:'getTipos'}).then(function(response){ return  response.data });
             this.tipos = tiposResponce;   
         } else {

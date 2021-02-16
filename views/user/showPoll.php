@@ -31,7 +31,7 @@
                 </div> 
             </div>
 
-            <h3>CONCLUIDO</h3>
+            <h3>Encuestas</h3>
             <div class="table-responsive">
                 <table class="table table-bordered table-striped">
                     <thead class="thead-dark">

@@ -50,23 +50,32 @@ var application = new Vue({
                         });
                     }  
                 }  
-                pregunta.options.forEach(opcion => { 
-                    if (opcion.respuesta_extra && document.getElementById(pregunta.id_pregunta + "_" + opcion.id_opcion).checked ) {
+                if (pregunta.id_tipo == 5 || pregunta.id_tipo ==  4) {
+                    pregunta.options.forEach(opcion => { 
                         try {
-                            let res = document.getElementById( opcion.id_opcion + "_respuesta_extra").value; 
-                            if (res != '' && res .length > 0 ) {
-                                this.setColorLabel(pregunta.id_pregunta,"black"); 
-                            }else{
-                                this.setColorLabel(pregunta.id_pregunta,"red");
-                                other_answer_empty = false;
-                                formValid = false; 
-                            } 
-                            array_answer_extra.push({"id_option": opcion.id_opcion , "value" : res});
+                             if (opcion.respuesta_extra && document.getElementById(pregunta.id_pregunta + "_" + opcion.id_opcion).checked ) {
+                                 try {
+                                     let res = document.getElementById( opcion.id_opcion + "_respuesta_extra").value; 
+                                     if (res != '' && res .length > 0 ) {
+                                         this.setColorLabel(pregunta.id_pregunta,"black"); 
+                                     }else{
+                                         this.setColorLabel(pregunta.id_pregunta,"red");
+                                         other_answer_empty = false;
+                                         formValid = false; 
+                                     } 
+                                     array_answer_extra.push({"id_option": opcion.id_opcion , "value" : res});
+                                 } catch (error) {
+                                     console.log(error);
+                                 } 
+                             }  
                         } catch (error) {
-                            console.log(error);
+                             alert("Existe un error, or favor reportalo con los Administradores.");
+                             console.log(error);
+                             return;
                         } 
-                    }  
-                });  
+                     });   
+                }
+            
             });   
             
             if (formValid) {

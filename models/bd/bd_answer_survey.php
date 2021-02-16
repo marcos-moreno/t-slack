@@ -10,7 +10,7 @@ if (check_session()) {
     if ($received_data->action == 'fetchallQuestion') {
         $query = " SELECT 
                         e.id_encuesta,p.id_pregunta,p.nombre_pregunta
-                        ,p.activo,t.tipo, t.direct_data ,p.obligatoria
+                        ,p.activo,t.tipo, t.direct_data ,p.obligatoria,p.id_tipo
                     FROM refividrio.encuesta e
                         INNER JOIN pregunta p ON p.id_encuesta = e.id_encuesta 
                         INNER JOIN tipo t ON t.id_tipo = p.id_tipo 

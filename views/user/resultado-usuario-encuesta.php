@@ -28,7 +28,8 @@
                 <div v-if="row.is_evaluated"   v-bind:class="[(row.estado_respuesta == 'Correcta' ) ? 'alert alert-success' : 'alert alert-danger']"  >
                     <span>
                     <strong> {{ row.numero_pregunta }}-:</strong>
-                    <strong> {{ row.nombre_pregunta }}</strong></span> Esta Pregunta se Evaluará <img src="../../img/alertad.svg" width="18px" > 
+                    <strong> {{ row.nombre_pregunta }}</strong></span>
+                    <div style="background:#FEF6BE">Esta Pregunta se Evaluará <img src="../../img/alertad.svg" width="18px" ></div>
                     <div v-if="row.estado_respuesta == 'Correcta'"> 
                         <div v-for="r in row.respuestas" ><div class="col-md-12"><span>R: <strong>{{ r }}</strong></span></div></div> 
                         <img src="../../img/cheque.png" width="18px" >La respuesta es Correcta </div> 

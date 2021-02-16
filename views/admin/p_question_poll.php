@@ -106,7 +106,7 @@
 
                                 <div class="form-group">  
                                     <label>Tipo</label> 
-                                    <select v-model="questionSelected.id_tipo" class="form-control" @change="req_response_valid()" >
+                                    <select v-model="questionSelected.id_tipo" class="form-control" @change="req_response_valid(true)" >
                                         <option v-for="r in tipos" v-bind:value="r.id_tipo"> {{ r.descripcion }} ({{ r.tipo }}) </option> 
                                     </select>  
                                 </div> 
