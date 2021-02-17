@@ -261,6 +261,7 @@ var application_poll = new Vue({
             this.respaldo_QuestionPoll = this.allData_QuestionPoll;
             const tiposResponce = await axios.post('../../models/bd/bd_question.php', {  action:'getTipos'}).then(function(response){ return  response.data });
             this.tipos = tiposResponce;   
+            console.log(this.tipos);
         } else {
             location.href="p_poll.php"; 
         } 

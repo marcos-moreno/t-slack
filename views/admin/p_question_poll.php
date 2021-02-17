@@ -117,7 +117,7 @@
                                 </div> 
 
                                 <div class="custom-control custom-checkbox">
-                                  <input type="checkbox"  @change="req_response_valid()"  class="custom-control-input" id="is_evaluated" v-model="questionSelected.is_evaluated"  false-value="false" true-value="true" >
+                                  <input type="checkbox"  @change="req_response_valid(true)"  class="custom-control-input" id="is_evaluated" v-model="questionSelected.is_evaluated"  false-value="false" true-value="true" >
                                   <label class="custom-control-label" for="is_evaluated">¿Será Evaluada?</label>
                                 </div>
                                 
