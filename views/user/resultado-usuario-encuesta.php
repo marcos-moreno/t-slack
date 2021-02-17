@@ -9,9 +9,9 @@
     }
 ?>   
 <div class="container" style="width:100%">  
-    <div id="usuarioencuesta" style="margin-top:15px;"> 
+    <div id="usuarioencuesta" style="margin-top:1px;"> 
         <center v-if=cargando> 
-            <img src="../../img/cargando2colores.gif" class="img-fluid"  >  
+            <img src="../../img/cargando2colores.gif" class="img-fluid" width="700"  >  
             <h5>Estamos Corroborando tus Respuestas.</h5>
         </center>  
         <div  v-if="cargando==false">
@@ -29,7 +29,7 @@
                     <span>
                     <strong> {{ row.numero_pregunta }}-:</strong>
                     <strong> {{ row.nombre_pregunta }}</strong></span>
-                    <div style="background:#FEF6BE">Esta Pregunta se Evaluará <img src="../../img/alertad.svg" width="18px" ></div>
+                        *Esta Pregunta se Evaluará* <img src="../../img/alertad.svg" width="18px" > 
                     <div v-if="row.estado_respuesta == 'Correcta'"> 
                         <div v-for="r in row.respuestas" ><div class="col-md-12"><span>R: <strong>{{ r }}</strong></span></div></div> 
                         <img src="../../img/cheque.png" width="18px" >La respuesta es Correcta </div> 

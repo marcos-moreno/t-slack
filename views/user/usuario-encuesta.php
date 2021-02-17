@@ -10,13 +10,13 @@
     <div id="usuarioencuesta"  > 
     <h3 class="alert alert-info"  >{{poll.nombre}}</h3> 
     <center v-if=cargando> 
-        <img src="../../img/cargando.gif" class="img-fluid" 
+        <img src="../../img/cargando.gif" class="img-fluid" width="500"
          >  
         <h5>Por favor no cierres ni recargues la página.</h5>
     </center>  
 
-    <center v-if=is_upload> 
-        <img src="../../img/subiendo.gif" style='max-width:100%;max-heigth:100%;'
+    <center v-if="is_upload" > 
+        <img src="../../img/subiendo.gif" class="img-fluid" width="500"
         alt=""  >  
         <h5>Espera por favor, estamos Guardando tus Respuestas.</h5>
     </center>  
