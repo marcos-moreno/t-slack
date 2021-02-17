@@ -9,11 +9,11 @@
 
 <div class="container" >  
     <div id="app_enc_leccion" style="margin-top:15px;"> 
-        <div class="table-responsive">
+        <div class="table-responsive"> 
             <table class="table table-bordered table-striped">
                 <tr>
-                    <td style="weight: 30%">
-                        <label>Filtrar</label>  
+                    <td style="weight: 30%"> 
+                        <label>Filtrar</label>   
                         <table>
                             <tr>
                                 <td>
@@ -29,6 +29,9 @@
                         <div class="pre-scrollable" >
                             <h1>{{encuesta.nombre}}</h1>
                             <h2>Lecciones</h2>
+                            <a href="../admin/p_poll.php"><button type="button" class="btn btn btn-xs"><img src="../../img/regresar.png" width="28px" />
+                                Regresar
+                            </button></a>
                             <div class="alert alert-primary" v-if="typeMessage == 'info'" role="alert">{{msg}}</div>
                             <div class="alert alert-danger"  v-if="typeMessage == 'error'" role="alert">{{msg}}</div>
                             <div class="alert alert-success" v-if="typeMessage == 'success'" role="alert">{{msg}}</div>
@@ -36,7 +39,6 @@
                     </td> 
                 </tr>
             </table> 
-            
         </div> 
          
         <div class="panel-body"  v-if="isFormCrud==false">

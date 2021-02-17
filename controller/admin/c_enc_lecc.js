@@ -173,7 +173,16 @@ var application = new Vue({
             this.typeMessage = typeMessage;
             setTimeout(function() { application.typeMessage='' ;application.msg =''; }, 5000);
         },model_empty(){
-            this.enc_leccion = {id_enc_leccion:0,nombre:'',descipcion:'',id_encuesta:'',tipo:'',link:'',valor:'',inicio:false,final:false,creado:'',actualizado:'',creadopor:'',actualizadopor:'',leccion:true,orden:0};
+            let siguienteOrden = 0;
+            for (let index = 0; index < this.enc_leccionCollection.length; index++) {
+                const element = this.enc_leccionCollection[index];
+                if (siguienteOrden < element.orden) {
+                    siguienteOrden = element.orden;
+                }
+            } 
+            siguienteOrden = siguienteOrden + 1;
+            this.enc_leccion = {id_enc_leccion:0,nombre:'',descipcion:'',id_encuesta:'',tipo:'',link:'',valor:'',
+            inicio:false,final:false,creado:'',actualizado:'',creadopor:'',actualizadopor:'',leccion:true,orden:siguienteOrden};
         },
         async request(path,jsonParameters){
             const response = await axios.post(path, jsonParameters).then(function (response) {   
