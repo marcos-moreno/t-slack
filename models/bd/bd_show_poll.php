@@ -79,8 +79,8 @@ if (check_session()) {
                                     AND resp.id_empleado = emp_enc.id_empleado) 
                         THEN 'Correcta' ELSE 'Incorrecta' END
                     WHEN typep.id_tipo = 4 THEN  
-                        CASE WHEN p.resp_direct_quest_value = 
-                                (SELECT opts.nombre FROM refividrio.res_encuesta_empleado resp 
+                        CASE WHEN UPPER(p.resp_direct_quest_value) = 
+                                (SELECT UPPER(opts.nombre) FROM refividrio.res_encuesta_empleado resp 
                                     INNER JOIN refividrio.opciones opts ON resp.id_opcion = opts.id_opcion
                                         WHERE resp.id_pregunta =  p.id_pregunta 
                                         AND resp.id_empleado = emp_enc.id_empleado LIMIT 1)
