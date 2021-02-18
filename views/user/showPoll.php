@@ -16,13 +16,16 @@
                         </thead>    
                         <tr v-for="row in poll"> 
                             <td>{{ row.nombre }}</td>
-                            <td>{{ row.observaciones }}</td>
+                            <td>
+                                <!-- {{ row }} -->
+                                {{ row.observaciones }}
+                            </td>
                             <td>({{ row.validodesde }})<br><br>({{ row.validohasta }})</td> 
                             <td>
-                                <button  v-if="row.totallecciones > 0"   @click="getenc_leccions(row.id_encuesta)" class="btn btn-info">
+                                <button  v-if="row.totallecciones > 0"   @click="getenc_leccions(row)" class="btn btn-info">
                                     Lecciones 
                                 </button>
-                                <button type="button" class="btn btn-success" @click="openPoll(row.id_encuesta)">
+                                <button type="button" class="btn btn-success" @click="openPoll(row)">
                                     Responder
                                 </button> 
                             </td>
@@ -47,9 +50,10 @@
                         <td>{{ row.no_enc }}</td>
                         <td>  
                         {{ row.nombre }} 
-                        <button v-if="row.totallecciones > 0" @click="getenc_leccions(row.id_encuesta)" class="btn btn-link" width="18px" >
+                        <!-- {{ row }}  -->
+                        <button v-if="row.totallecciones > 0 && row.estado != 'En Captura' " @click="getenc_leccions(row)" class="btn btn-link" width="18px" >
                             <div v-if="row.estado=='Aún No Disponible'" style="color:green">
-                            <img src="../../img/notificacion.png">Ya puedes consultar las Lecciones de esta encuesta.
+                                <img src="../../img/notificacion.png">Ya puedes consultar las Lecciones de esta encuesta.
                             </div>
                             <div v-else>Lecciones</div>
                         </button>  
@@ -108,15 +112,14 @@
                                     <button v-if="leccion.index < (lecciones.length - 1)" @click="iterarLeccion('sig',leccion.index)" class="btn btn-info" >
                                         Siguiente >>
                                     </button>
-                                    <button v-if="leccion.index == (lecciones.length - 1)" @click="modalLeccion=false;lecciones=[];" class="btn btn-success">
+ 
+                                    <button v-if="leccion.index == (lecciones.length - 1)" @click="terminar_lecciones(leccion.id_encuesta)" class="btn btn-success">
                                         terminar
                                     </button> 
                                 </div> 
                                 <div class="modal-body"> 
                                 <p><strong>{{leccion.descipcion}}</strong></p>  
-                                    <div >    
-
-
+                                    <div >     
                                             <div v-if="leccion.tipo == 'text'" >
                                             <span v-once v-html="leccion.valor"></span> 
                                             </div>
@@ -136,23 +139,15 @@
 
                                             <div v-if="leccion.tipo == 'image'">
                                                 <image style="max-width: 100%; max-height: 100%;" v-bind:src="leccion.link"  />
-                                            </div>   
-
-
+                                            </div>    
                                     </div>
                                 </div>
                             </div>
                         </div> 
                         </div>
                         </transition>
-                    </div>             
-  
-            </div>
-
-
-
-
-
+                    </div>              
+            </div> 
     </div> 
 </div>
-<script type="text/javascript" src="../../controller/user/ctl_user_poll_m.js"></script>
+<script type="text/javascript" src="../../controller/user/ctl_vista_encuest_e.js"></script>

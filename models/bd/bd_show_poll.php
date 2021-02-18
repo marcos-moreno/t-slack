@@ -14,9 +14,11 @@ if (check_session()) {
                     TO_CHAR(e.validohasta, 'DD/MM/YYYY HH12:MI:SS AM') As validohasta,
                     TO_CHAR(e.validodesde, 'DD/MM/YYYY HH12:MI:SS AM') As validodesde,
                     coalesce((SELECT COUNT(*) as total FROM refividrio.enc_leccion lec WHERE lec.id_encuesta = e.id_encuesta ),0) As totallecciones 
+                    ,coalesce(esta_lecc.estado,'NO') As estado_leccion
                 FROM refividrio.encuesta e  
                 LEFT JOIN refividrio.empleado empl ON empl.id_empleado = " . $_SESSION['id_empleado'] ."
                 INNER JOIN refividrio.segmento seg ON empl.id_segmento = seg.id_segmento
+                LEFT JOIN refividrio.enc_encuesta_leccion_empleado esta_lecc ON esta_lecc.id_encuesta = e.id_encuesta AND esta_lecc.id_empleado = empl.id_empleado
                 WHERE 
                 e.id_encuesta NOT IN (SELECT id_encuesta FROM refividrio.empleado_encuesta WHERE id_empleado = empl.id_empleado )
                 AND seg.id_empresa IN (SELECT id_empresa FROM empresa_encuesta WHERE  e.id_encuesta = id_encuesta)
@@ -148,13 +150,14 @@ if (check_session()) {
             TO_CHAR(enc.validodesde, 'DD/MM/YYYY HH12:MI:SS AM') As validodesde,
             row_number() over (partition by emp.id_empleado order by enc.id_encuesta ASC) As no_enc
             ,coalesce((SELECT COUNT(*) as total FROM refividrio.enc_leccion lec WHERE lec.id_encuesta = ee.id_encuesta ),0) As totallecciones
+            ,coalesce(esta_lecc.estado,'NO') As estado_leccion 
         FROM refividrio.empleado emp
         INNER JOIN refividrio.segmento seg ON seg.id_segmento = emp.id_segmento
         INNER JOIN refividrio.empresa empres ON empres.id_empresa = seg.id_empresa
         INNER JOIN refividrio.empresa_encuesta ee ON ee.id_empresa = empres.id_empresa
         INNER JOIN refividrio.encuesta enc ON enc.id_encuesta = ee.id_encuesta
-        LEFT JOIN refividrio.empleado_encuesta res ON res.id_encuesta = ee.id_encuesta
-        AND res.id_empleado = emp.id_empleado
+        LEFT JOIN refividrio.empleado_encuesta res ON res.id_encuesta = ee.id_encuesta AND res.id_empleado = emp.id_empleado
+        LEFT JOIN refividrio.enc_encuesta_leccion_empleado esta_lecc ON esta_lecc.id_encuesta = enc.id_encuesta AND esta_lecc.id_empleado = emp.id_empleado
         WHERE 
             emp.id_empleado = " . $_SESSION['id_empleado'] ."
         ORDER BY enc.id_encuesta DESC "; 
@@ -165,6 +168,44 @@ if (check_session()) {
         }
         echo json_encode($data);
     } 
+    if ($received_data->action == 'insertLeccionEmpleado') {
+        try {
+            $data = array(
+                    ':id_encuesta' => $received_data->model->id_encuesta,
+                        ':id_empleado' =>  $_SESSION['id_empleado'],     
+                        
+                    ); 
+            $query = 'INSERT INTO refividrio.enc_encuesta_leccion_empleado(id_encuesta, id_empleado,creado,actualizado) 
+                            VALUES (:id_encuesta, :id_empleado,now(),now());';
+            $statement = $connect->prepare($query); 
+            $statement->execute($data);  
+            $output = array('message' => 'Data Inserted'); 
+            echo json_encode($output); 
+            return true;
+        } catch (PDOException $exc) {
+            $output = array('message' => $exc->getMessage()); 
+            echo json_encode($output); 
+            return false;
+        } 
+    } 
+    if ($received_data->action == 'UpdateLeccionEmpleado') {
+        try {
+            $data = array(
+                    ':id_encuesta' => $received_data->model->id_encuesta,
+                        ':id_empleado' =>  $_SESSION['id_empleado'],     
+                    ); 
+            $query = "UPDATE refividrio.enc_encuesta_leccion_empleado  SET actualizado=now(),estado='CO' WHERE id_empleado=:id_empleado  AND id_encuesta = :id_encuesta;";
+            $statement = $connect->prepare($query); 
+            $statement->execute($data);  
+            $output = array('message' => 'Data Updated'); 
+            echo json_encode($output); 
+            return true;
+        } catch (PDOException $exc) {
+            $output = array('message' => $exc->getMessage()); 
+            echo json_encode($output); 
+            return false;
+        } 
+    }  
 }else{
     $output = array('message' => 'Not authorized'); 
     echo json_encode($output); 
