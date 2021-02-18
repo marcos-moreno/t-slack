@@ -73,8 +73,8 @@ if (check_session()) {
                 SELECT  
                     SUM(CASE WHEN (CASE WHEN is_evaluated THEN
                     CASE WHEN typep.direct_data = true  THEN 
-                        CASE WHEN p.resp_direct_quest_value = 
-                                (SELECT respuesta FROM refividrio.res_encuesta_empleado resp 
+                        CASE WHEN UPPER(p.resp_direct_quest_value) = 
+                                (SELECT UPPER(respuesta) FROM refividrio.res_encuesta_empleado resp 
                                     WHERE resp.id_pregunta =  p.id_pregunta 
                                     AND resp.id_empleado = emp_enc.id_empleado) 
                         THEN 'Correcta' ELSE 'Incorrecta' END
