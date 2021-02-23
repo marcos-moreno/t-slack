@@ -172,6 +172,8 @@ class Empleado
                     // $row['un_talla'] = $this->search_union($row,'un_talla','id_talla','id_numero_zapato');
                     $row['segmento'] = $this->search_union($row,'segmento','id_segmento','id_segmento');
                     // $row['un_talla'] = $this->search_union($row,'un_talla','id_talla','id_talla_playera');
+                    $row['empresa'] = $this->search_unions('empresa','id_empresa', $row['segmento'][0]['id_empresa']  );
+                    // $row['un_talla'] = $this->search_union($row,'un_talla','id_talla','id_talla_playera');
                     $data[] = $row;
             } 
             echo json_encode($data); 
@@ -195,6 +197,24 @@ class Empleado
             return $data; 
         } catch (PDOException $exc) {
             $output = array('message' => $exc->getMessage()); 
+            echo json_encode($output); 
+            return false;
+        }  
+    }
+
+    public function search_unions($table_origen,$fk_table_usage,$fk_value){
+        $data = array(); 
+        try {    
+            $query = 'SELECT * FROM '. $table_origen . '   WHERE '. $fk_table_usage . ' = ' . $fk_value;               
+            $statement = $this->connect->prepare($query); 
+            $statement->execute($data);   
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {   
+                    $data[] = $row;
+            }  
+            return $data; 
+        } catch (PDOException $exc) {
+            $output = array('message' => $exc->getMessage()
+        ); 
             echo json_encode($output); 
             return false;
         }  

@@ -48,8 +48,9 @@ var application = new Vue({
             let filtrar_segmento = (this.segmento_id_filter > 0 ? " AND id_segmento = " + this.segmento_id_filter : " AND id_segmento = 0")
             filtrar_segmento = (this.segmento_id_filter == 'todo' ?
              " AND id_segmento IN (SELECT id_segmento FROM segmento WHERE activo = true AND id_empresa = " + this.empresa_id_filter + ")" : filtrar_segmento)
- 
-            let filtrarPor =  "( nombre ILIKE '%" + this.filter + "%'  OR paterno ILIKE '%" + this.filter + "%'  OR materno ILIKE '%"
+             this.empresa_id_filter == "todo" ? filtrar_segmento = "" : filtrar_segmento = filtrar_segmento;
+             
+            let filtrarPor =  "(CONCAT(paterno ,' ',materno,' ',nombre) ILIKE '%" + this.filter + "%' OR  nombre ILIKE '%" + this.filter + "%'  OR paterno ILIKE '%" + this.filter + "%'  OR materno ILIKE '%"
                                  + this.filter + "%'  OR celular ILIKE '%" + this.filter + "%'  OR correo ILIKE '%" + this.filter +
                                   "%'  OR usuario ILIKE '%" + this.filter + "%'  OR password ILIKE '%" + this.filter + "%'  OR nss ILIKE '%" +
                                    this.filter + "%'  OR rfc ILIKE '%" + this.filter + "%'  OR perfilcalculo ILIKE '%" + this.filter + 

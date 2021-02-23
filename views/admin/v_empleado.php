@@ -22,6 +22,7 @@
                             <tr> 
                                 <td> 
                                     <select class='form-control'  v-model='empresa_id_filter' style="width:150px" @change="get_segmentos()" > 
+                                        <option value='todo'>Todas las Empresas</option>
                                         <option v-for='rows in empresas' v-bind:value='rows.id_empresa'>{{ rows.empresa_observaciones }}</option>
                                     </select>
                                 </td> 
@@ -74,6 +75,7 @@
                     <tr> 
                         <th>id</th>
                         <th>id cerberus</th> 
+                        <th>Empresa</th>   
                         <th>Segmento</th>
                         <th>nombre</th>        
                         <th>Perfil-Calculo</th>   
@@ -83,6 +85,7 @@
                         
                         <td>{{ empleado.id_empleado}}</td>
                         <td>{{ empleado.id_cerberus_empleado}}</td> 
+                        <td>{{ empleado.empresa[0].empresa_observaciones }}</td>
                         <td>{{ empleado.segmento[0].nombre}}</td>
                         <td>{{ empleado.paterno + ' ' + empleado.materno  + ' ' + empleado.nombre }}</td>
                         <td>{{ empleado.perfilcalculo}}</td> 
