@@ -97,7 +97,8 @@
                   <option value='K' >K.MEDIDAS DE PREVENCIÓN A VALIDAR POR ÁREA</option>        
                   <option value='L' >L.REINCIDENCIA EN INCUMPLIMIENTO DE CUESTIONARIO COVID-19</option> 
                   <option value='M'  >M.CUMPLEAÑOS DE COLABORADORES POR MES</option> 
-                  <option value='N'  >N.GRÁFICAS POR ENCUESTA</option>                               
+                  <option value='N'  >N.GRÁFICAS POR ENCUESTA</option>                 
+                  <option value='Ñ'  >Ñ.ENCUESTAS SANCIONADAS</option>                               
                 </select>  
                 </br>
                 <button type="button" class="btn btn-info float-right"  @click='generateReport()' >Consultar</button>       
