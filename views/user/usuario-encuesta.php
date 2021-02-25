@@ -82,4 +82,4 @@
         </div> 
     </div> 
 </div>
-<script type="text/javascript" src="../../controller/user/ctl_answer_survey_m.js"></script>
+<script type="text/javascript" src="../../controller/user/ctl_answer_survey_mo.js"></script>
