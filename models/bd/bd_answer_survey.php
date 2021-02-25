@@ -88,22 +88,29 @@ if (check_session()) {
     } 
 
     if ($received_data->action == 'insertAnswer') {
-        $data = array(
-            ':id_pregunta' => $received_data->respuesta->id_pregunta,
-            ':id_empleado' =>  $_SESSION['id_empleado'],// $received_data->respuesta->id_empleado,
-            ':id_opcion' => $received_data->respuesta->id_opcion,
-            ':id_encuesta' => $received_data->respuesta->id_encuesta,  
-            ':respuesta' => $received_data->respuesta->respuesta,
-            ':directa' => $received_data->respuesta->directa,  
-        ); 
-        $query = "INSERT INTO refividrio.res_encuesta_empleado(id_pregunta, id_empleado, id_opcion, id_encuesta, respuesta, directa)
-                  VALUES (:id_pregunta,:id_empleado,:id_opcion,:id_encuesta,:respuesta,:directa)"; 
-        $statement = $connect->prepare($query); 
-        $statement->execute($data); 
-        $output = array(
-            'message' => 'Data Inserted'
-        ); 
-        echo json_encode($output);
+        try { 
+            $data = array(
+                ':id_pregunta' => $received_data->respuesta->id_pregunta,
+                ':id_empleado' =>  $_SESSION['id_empleado'],// $received_data->respuesta->id_empleado,
+                ':id_opcion' => $received_data->respuesta->id_opcion,
+                ':id_encuesta' => $received_data->respuesta->id_encuesta,  
+                ':respuesta' => $received_data->respuesta->respuesta,
+                ':directa' => $received_data->respuesta->directa,  
+            ); 
+            $query = "INSERT INTO refividrio.res_encuesta_empleado(id_pregunta, id_empleado, id_opcion, id_encuesta, respuesta, directa)
+                      VALUES (:id_pregunta,:id_empleado,:id_opcion,:id_encuesta,:respuesta,:directa)"; 
+            $statement = $connect->prepare($query); 
+            $statement->execute($data); 
+            $output = array(
+                'message' => 'Data Inserted'
+                ,'status'=>'success'
+            ); 
+            echo json_encode($output);
+        } catch (PDOException $exc) {
+            $output = array('status'=>'error' ,'message' => $exc->getMessage()); 
+            echo json_encode($output);  
+            return false;
+        }    
     } 
     if ($received_data->action == 'inserEncuesta_empleado') {
         $data = array(

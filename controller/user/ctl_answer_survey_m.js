@@ -96,7 +96,10 @@ var application = new Vue({
                     for (let index = 0; index < validAnswers.length; index++) {
                         const respuesta = validAnswers[index];
                         const result = await this.insertAnswer(respuesta); 
-                        // console.log(respuesta); 
+                        if (result.status == 'error') {
+                             alert("Existe un error: " + result.message)
+                        }
+                        console.log(respuesta); 
                     } 
                     console.log(array_answer_extra); 
                     for (let index = 0; index < array_answer_extra.length; index++) {
