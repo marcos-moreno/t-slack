@@ -21,7 +21,11 @@ var application = new Vue({
         empresas:[],
         empresa_id_filter:1,
         segmento_id_filter:1,
-        activos_filter : true
+        activos_filter : true,
+        myModelRol : false,
+        dynamicTitle: "",
+        rols:[],
+        isDisabledSC:true
     },
     methods:{
         async resetPassword(id_empleado){ 
@@ -198,7 +202,30 @@ var application = new Vue({
                 }  
             }  
             this.paginas.push({'element':'Sig'});
-        }
+        }, 
+        async asingRols(employee){  
+            this.isDisabledSC = false;
+            this.empleado = employee;
+            const response = await axios.post('../../models/bd/bd_employeerole.php', {  action:'fetchall',id_empleado:this.empleado.id_empleado }).then(function(response){ return  response.data });
+            this.rols = response;  
+            this.dynamicTitle = this.empleado.nombre;
+            this.myModelRol = true;   
+           
+        }, 
+        async saveRols(){ 
+            this.isDisabledSC = true; 
+            const response = await axios.post('../../models/bd/bd_employeerole.php', {  action:'delete',id_empleado: this.empleado.id_empleado }).then(function(response){ return  response.data });
+            // console.log(response);
+            for (let index = 0; index < this.rols.length; index++) {
+              const element = this.rols[index];
+              if (element.selected) { 
+                const response2 = await axios.post('../../models/bd/bd_employeerole.php', {  action:'insert',id_empleado: this.empleado.id_empleado,id_rol: element.id_rol }).then(function(response){ return  response.data });
+                //  console.log(response2);
+              } 
+            } 
+            this.empleado = null;
+            this.myModelRol = false;   
+          }
 
     },
     async mounted() {    

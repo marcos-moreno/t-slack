@@ -69,7 +69,7 @@ var application = new Vue({
                                  } 
                              }  
                         } catch (error) {
-                             alert("Existe un error, or favor reportalo con los Administradores.");
+                             alert("Existe un error, por favor reportalo con los Administradores.");
                              console.log(error);
                              return;
                         } 

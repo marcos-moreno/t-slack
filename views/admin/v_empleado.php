@@ -93,6 +93,7 @@
                             <button type="button" class="btn btn" @click="resetPassword(empleado.id_empleado)"><img src="../../img/synchronize.png" width="25px" /></button>
                             <button type="button" class="btn btn" @click="update_empleado(empleado.id_empleado)"><img src="../../img/ojo.png" width="25px" /></button>
                             <button type="button" class="btn btn" @click="delete_empleado(empleado.id_empleado)"><img src="../../img/borrar.png" width="25px" /></button>
+                            <button type="button" class="btn btn-link"  @click="asingRols(empleado)">Rol</button> 
                         </td> 
                     </tr>
                 </table>
@@ -200,7 +201,43 @@
                 <td><button type="button" class="btn btn btn-xs" @click="cancel_empleado()"><img src="../../img/regresar.png" width="28px" /> Regresar</button></td> 
                 <button @click="save_empleado()" class="btn btn-info btn-xs" ><img src="../../img/send.png" width="18px" /> *Guardar</button>
             </div>   
-        </div>  
+        </div>   
+
+        <!-- Modal Roles -->
+        <div v-if="myModelRol" >  
+                    <transition name="model" >
+                    <div class="modal-mask" > 
+                            <div class="modal-dialog modal-dialog-scrollable">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">{{ dynamicTitle }}</h4>
+                                    <button type="button" class="close" @click="myModelRol=false"><span aria-hidden="true">&times;</span></button>
+                                </div>  
+                                <div class="modal-body"> 
+                                    <div class="card-body">   
+                                        <div class="custom-control custom-checkbox">
+                                        <h5 >El Usuario cuenta con las siguientes roles:</h5>
+                                        <div v-for="r in rols" >   
+                                                <input style="margin-left:5px;" type='checkbox' v-model=r.selected  :id="'check_' + r.id_rol"  > <span>{{ r.rol }}</span>  
+                                        </div> 
+                                        </div>   
+                                        <div align="center">
+                                        <input type="hidden" v-model="empleado.id_empleado" />
+                                        <input type="button" class="btn btn-success btn-xs" value="Guardar" :disabled='isDisabledSC' @click="saveRols()" />
+                                        </div>
+                                        </br> 
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
+                    </transition>
+                </div>
+            </div>
+        <!-- Modal Roles --> 
     </div>
+
+
+
 </div>
-<script type="text/javascript" src="../../controller/admin/c_empleado.js"></script>
+<script type="text/javascript" src="../../controller/admin/c_emplead.js"></script>

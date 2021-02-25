@@ -13,6 +13,7 @@
         <img src="../../img/cargando.gif" class="img-fluid" width="500"
          >  
         <h5>Por favor no cierres ni recargues la página.</h5>
+        <h4>Recuerda que es importante contar con una conexión estable a Internet.</h4>
     </center>  
 
     <center v-if="is_upload" > 
@@ -27,21 +28,7 @@
                     <br>
                         <div :id="'label_'+ row.id_pregunta"   class="alert alert-info" >
                             <span><strong> {{ row.nombre_pregunta }}</strong></span> 
-                        </div>  
-                        
-
-                        <!-- <div v-if="row.tipo == 'checkbox'"   >
-                        <div v-for="r in row.options" >    
-                                <input style="margin-left:5px;"   :type=row.tipo :id="row.id_pregunta + '_' + r.id_opcion" :value=r.id_opcion > 
-                                    <span>
-                                        {{ r.opcion }}  
-                                        <input v-if="r.respuesta_extra"   style="width:50%;  border-top: none;  border-left: none;
-                                          border-right: none;  border-bottom: 1px solid #03a8f45e;"
-                                          type="text" :id="r.id_opcion + '_respuesta_extra'" placeholder="Especifique cual" > 
-                                    </span>
-                        </div> 
-                    </div>  -->
-
+                        </div>   
 
                         <div v-if="row.tipo == 'checkbox'"  >
                             <div v-for="r in row.options" >    
@@ -52,17 +39,7 @@
                                         <input v-if="r.respuesta_extra"   style="width:50%;  border-top: none;  border-left: none;
                                           border-right: none;  border-bottom: 1px solid #03a8f45e;"
                                           type="text" :id="r.id_opcion + '_respuesta_extra'" placeholder="Especifique cual" > 
-                                    </span>
-                                    <!-- <div v-if="r.respuesta_extra==true" class="form-inline">
-                                        <input style="margin-left:5px;" :type=row.tipo :id="row.id_pregunta + '_' + r.id_opcion" :value=r.id_opcion > 
-                                        <span>{{ r.opcion }}</span>
-                                        <input style="margin-left:5px;" type="text" :id="r.id_opcion + '_respuesta_extra'" placeholder="Por favor Especifique..." class="form-control form-control-sm" > 
-                                    </div>
-
-                                    <div v-else >
-                                        <input style="margin-left:5px;" :type=row.tipo :id="row.id_pregunta + '_' + r.id_opcion" :value=r.id_opcion > 
-                                        <span style="margin-left:5px;">{{  r.opcion }}</span>
-                                    </div>  -->
+                                    </span> 
                                 </div>  
                             </div> 
                         </div>  
@@ -73,21 +50,7 @@
                                 <input v-if="r.respuesta_extra"   style="width:50%;  border-top: none;  border-left: none;
                                           border-right: none;  border-bottom: 1px solid #03a8f45e;"
                                           type="text" :id="r.id_opcion + '_respuesta_extra'" placeholder="Especifique cual" > 
-                            </div>
-                            <!-- <div v-for="r in row.options" >  
-                            <input style="margin-left:5px;"   :type=row.tipo :id="row.id_pregunta + '_' + r.id_opcion" :value=r.id_opcion > 
-                                   
-
-                                    <div v-if="r.respuesta_extra==true" class="form-inline">
-                                        <input class="form-check-input" :type=row.tipo :id="row.id_pregunta + '_' + r.id_opcion" :name=row.id_pregunta>
-                                        <label  class="form-check-label" >{{ r.opcion }}</label > 
-                                        <input v-if="r.respuesta_extra" type="text" :id="r.id_opcion + '_respuesta_extra'" placeholder="Por favor Especifique..." class="form-control form-control-sm" > 
-                                    </div>
-                                    <div v-else >
-                                        <input  style="margin-left:5px;" :type=row.tipo :id="row.id_pregunta + '_' + r.id_opcion" :name=row.id_pregunta>
-                                        <label  style="margin-left:5px;" >{{ r.opcion }}</label > 
-                                    </div>
-                            </div> -->
+                            </div> 
                         </div> 
 
                         <div v-if="row.tipo == 'select'"   >   

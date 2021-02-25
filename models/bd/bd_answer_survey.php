@@ -24,22 +24,51 @@ if (check_session()) {
         }
         echo json_encode($data);
     }
+    // if ($received_data->action == 'fetchallOption') {
+    //     $query = " SELECT  
+    //                     o.id_opcion,o.nombre As opcion
+    //                     ,o.activo As op_activo , o.id_pregunta
+    //                     ,o.pocision ,'update' as action,respuesta_extra
+    //                 FROM refividrio.encuesta e
+    //                         INNER JOIN pregunta p ON p.id_encuesta = e.id_encuesta
+    //                         INNER JOIN opciones o ON o.id_pregunta = p.id_pregunta
+    //                         INNER JOIN tipo t ON t.id_tipo = p.id_tipo 
+    //                 WHERE p.id_pregunta =     " . $received_data->idQuestion . " AND o.activo = true ORDER BY  o.pocision ";
+    //     $statement = $connect->prepare($query);
+    //     $statement->execute(); 
+    //     while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+    //         $data[] = $row;
+    //     }
+    //     echo json_encode($data);
+    // }
+
     if ($received_data->action == 'fetchallOption') {
-        $query = " SELECT  
-                        o.id_opcion,o.nombre As opcion
-                        ,o.activo As op_activo , o.id_pregunta
-                        ,o.pocision ,'update' as action,respuesta_extra
-                    FROM refividrio.encuesta e
+        try { 
+            $parameters = array(
+                ':idQuestion' => $received_data->idQuestion, 
+                );  
+            $query = " SELECT  
+                            o.id_opcion,o.nombre As opcion
+                            ,o.activo As op_activo , o.id_pregunta
+                            ,o.pocision ,'update' as action,respuesta_extra
+                        FROM refividrio.encuesta e
                             INNER JOIN pregunta p ON p.id_encuesta = e.id_encuesta
                             INNER JOIN opciones o ON o.id_pregunta = p.id_pregunta
                             INNER JOIN tipo t ON t.id_tipo = p.id_tipo 
-                    WHERE p.id_pregunta =     " . $received_data->idQuestion . " AND o.activo = true ORDER BY  o.pocision ";
-        $statement = $connect->prepare($query);
-        $statement->execute(); 
-        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $data[] = $row;
-        }
-        echo json_encode($data);
+                        WHERE p.id_pregunta = :idQuestion AND o.activo = true ORDER BY  o.pocision ";
+
+            $statement = $connect->prepare($query);
+            $statement->execute($parameters); 
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $data[] = $row;
+            }
+            echo json_encode($data);  
+            return true;
+        } catch (PDOException $exc) {
+            $output = array('message' => $exc->getMessage()); 
+            echo json_encode($output);  
+            return false;
+        }   
     }
      
     if ($received_data->action == 'insert_answer_extra') {
