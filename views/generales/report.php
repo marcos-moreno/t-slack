@@ -98,7 +98,8 @@
                   <option value='L' >L.REINCIDENCIA EN INCUMPLIMIENTO DE CUESTIONARIO COVID-19</option> 
                   <option value='M'  >M.CUMPLEAÑOS DE COLABORADORES POR MES</option> 
                   <option value='N'  >N.GRÁFICAS POR ENCUESTA</option>                 
-                  <option value='Ñ'  >Ñ.ENCUESTAS SANCIONADAS</option>                               
+                  <option value='Ñ'  >Ñ.ENCUESTAS SANCIONADAS</option>       
+                  <option value='O'  >O.GRÁFICA DE PREGUNTAS EVALUADAS</option>                               
                 </select>  
                 </br>
                 <button type="button" class="btn btn-info float-right"  @click='generateReport()' >Consultar</button>       
@@ -112,4 +113,4 @@
 
   <div id="viewReport"> </div>   
   
-<script type="text/javascript" src="../../controller/admin/reporte.js" ></script>
+<script type="text/javascript" src="../../controller/admin/reportes.js" ></script>

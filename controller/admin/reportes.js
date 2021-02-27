@@ -78,7 +78,8 @@ var report = new Vue({
                 case 'L': return 'resultadoEncuesta_1_1_1';   
                 case 'M': return 'cumple_mes';       
                 case 'N': return 'resultadoEncuesta_1_1_1_1';
-                case 'Ñ': return 'resultadoEncuesta_1_1_1_1_1';                                
+                case 'Ñ': return 'resultadoEncuesta_1_1_1_1_1';           
+                case 'O': return 'resultadoEncuesta_1_1_1_1_1_1';      
                 default : return '';   
             }
         },
