@@ -175,9 +175,9 @@ if (check_session()) {
     }
 
     if ($received_data->action == 'fetchByDepartament') {
-        $query = "SELECT e.*,concat(nombre,' ',paterno,' ',materno)As nom_largo FROM empleado e 
+        $query = "SELECT e.*,concat(paterno,' ',materno ,' ',nombre)As nom_largo FROM empleado e 
                     WHERE e.id_segmento = ". $received_data->id_segmento ."
-                        ORDER BY nom_largo DESC";
+                        ORDER BY nom_largo ASC";
         $statement = $connect->prepare($query);
         $statement->execute();
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
