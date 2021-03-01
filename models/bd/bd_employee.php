@@ -176,7 +176,7 @@ if (check_session()) {
 
     if ($received_data->action == 'fetchByDepartament') {
         $query = "SELECT e.*,concat(paterno,' ',materno ,' ',nombre)As nom_largo FROM empleado e 
-                    WHERE e.id_segmento = ". $received_data->id_segmento ."
+                    WHERE e.id_segmento = ". $received_data->id_segmento ." AND activo = true
                         ORDER BY nom_largo ASC";
         $statement = $connect->prepare($query);
         $statement->execute();
