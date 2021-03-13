@@ -1,7 +1,50 @@
 <?php require "../header.php";?> 
 <div class="container" style="width:90%">  
     <div id="app_file_nomina" style="margin-top:15px;"> 
-        <div style="background:none;" id="mymodal" class="modal fade bd-example-modal-lg" tabindex="-1"  aria-labelledby="myLargeModalLabel" aria-hidden="true">
+
+
+
+
+
+
+        <div v-if="view_modal" style="background:none;" >  
+            <transition name="model" style="background:none;" >
+              <div class="modal-mask" style="background:none;"> 
+                      <div class="modal-dialog modal-dialog-scrollable" style="background:#000;">
+                        <div class="modal-content" style="background:none;">
+                          <div class="modal-header" style="background:#000;"> 
+                            <button type="button" style="background:#fff;" class="close" @click="view_modal=false"><span aria-hidden="true">&times;</span></button>
+                          </div>     
+                    <div  align="center" style="width: 100%; height: 100%;background:none;
+                                            padding-bottom: 120%; position: relative; margin: 0px; 
+                                            padding-top: 0px; padding-left: 0px; padding-right: 0 px;">
+                    <iframe v-if="preview_file_load==false" style="position: absolute;
+                                        top: 0; left: 0;
+                                        width: 100%; height: 100%; 
+                                        margin: 0px; padding: 0px;" 
+                    type="application/xml" :src="'data:' + file_nomina.type_file +';base64,' + src" >
+                    </iframe>   
+                    <br><br><br><br><br>
+                    <img width="400"  src="../../img/progress.gif"  v-if="preview_file_load">
+                    </div>
+                    </div>
+                </div>
+              </div>
+
+
+       
+            </transition>
+        </div>
+
+
+
+
+
+
+
+
+<!-- 
+        <div style="background:none;" v-if="view_modal==true" id="mymodal" class="modal fade bd-example-modal-lg" tabindex="-1"  aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" style="background:none;">
                 <div class="modal-content" style="background:none;">
                 <div  align="center" style="width: 100%; height: 100%;background:none;
@@ -18,7 +61,7 @@
                 </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         
         <h3> Recibos de Nómina </h3>
         <div class="panel-body">

@@ -22,7 +22,8 @@ var application = new Vue({
         preview_file_load: true,
         src :null,
 
-        iterator: []
+        iterator: [],
+        view_modal: false
     },
     methods:{
         async getfile_nominas(){  
@@ -56,7 +57,8 @@ var application = new Vue({
             } 
         }, 
         async get_file(file){ 
-            $("#mymodal").modal(); 
+            this.view_modal = true;
+            // $("#mymodal").modal(); 
             this.preview_file_load = true; 
             this.file_nomina = file; 
             let download = true; 
@@ -72,16 +74,17 @@ var application = new Vue({
             }  
             const response = await this.request(this.path,
             {'action' : 'select_file_item',"model":this.file_nomina}); 
-            if (download) { 
+            if (download) {   
                 var a = document.createElement("a"); //Create <a>
                 a.href = 'data:' + this.file_nomina.type_file +';base64,' + response; //Image Base64 Goes here
-                a.download = this.file_nomina.nombre; //File name Here
-                $("#mymodal").modal('hide');  
-                a.click(); //Downloaded file
+                a.download = this.file_nomina.nombre.replace('/','_'); //File name Here
+                a.click();//Downloaded file
+                this.view_modal = false;
+                // $("#mymodal").modal('hide');
             } else { 
                 this.preview_file_load = false;
                 this.src = response;
-            }  
+            }   
         },
         async show_message(msg,typeMessage){
             this.msg = msg;
