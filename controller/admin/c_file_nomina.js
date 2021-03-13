@@ -12,7 +12,7 @@ var application = new Vue({
             
 
         //paginador
-        numByPag : 5, 
+        numByPag : 200, 
         paginas : [],
         paginaCollection : [],
         paginaActual : 1,
@@ -58,11 +58,10 @@ var application = new Vue({
             const response = await this.request(this.path,
             {'action' : 'select_file_item',"model":this.file_nomina}); 
             if (download) { 
-                this.preview_file_load = false;
-                $("#mymodal").modal('hide'); 
                 var a = document.createElement("a"); //Create <a>
                 a.href = 'data:' + this.file_nomina.type_file +';base64,' + response; //Image Base64 Goes here
                 a.download = this.file_nomina.nombre; //File name Here
+                $("#mymodal").modal('hide'); 
                 a.click(); //Downloaded file
             } else { 
                 this.preview_file_load = false;

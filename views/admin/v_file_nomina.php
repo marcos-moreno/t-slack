@@ -75,10 +75,10 @@
                         <li><h3> Recibos de Nómina </h3></li>
                         <li>
                             <select class="custom-select mb-2 mr-sm-2 mb-sm-0" v-model="numByPag" @change="paginator(1)" > 
-                                <option value=5  >5</option>
-                                <option value=10 >10</option>
-                                <option value=15 >15</option>
-                                <option value=20 >20</option>
+                                <option value=100  >100</option>
+                                <option value=200 >200</option>
+                                <option value=300 >500</option>
+                                <option value=100000 >100000</option>
                             </select>
                         </li>
                         <li v-for="li in paginas" class="page-item">
