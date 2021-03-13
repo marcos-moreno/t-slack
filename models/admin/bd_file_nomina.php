@@ -112,7 +112,7 @@ class File_nomina
                     AND emp.id_empleado = ' . $_SESSION['id_empleado'] . '
                     WHERE (SELECT seg.id_empresa FROM segmento seg
                              WHERE seg.id_segmento =  emp.id_segmento) = fil_nom.id_empresa
-                    ORDER BY fil_nom.ejercicio,fil_nom.semana,fil_nom.nombre DESC';
+                    ORDER BY fil_nom.ejercicio,fil_nom.semana DESC,type_file,fil_nom.nombre';
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);   
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  

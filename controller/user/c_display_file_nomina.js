@@ -13,26 +13,44 @@ var application = new Vue({
 
         //paginador
         numByPag : 20, 
-        paginas : [],
-        paginaCollection : [],
+        paginas : [], 
         paginaActual : 1,
         ////paginador
 
         filter : '',
 
         preview_file_load: true,
-        src :null
+        src :null,
+
+        iterator: []
     },
     methods:{
         async getfile_nominas(){  
-            this.file_nominaCollection  = [];
-            this.paginaCollection = [];
+            this.file_nominaCollection  = []; 
             const response = await this.request(this.path,{'order' : 'ORDER BY id_file_nomina DESC','action' : 'select_user'});
             try{ 
                 this.show_message(response.length + ' Registros Encontrados.','success');
-                this.file_nominaCollection = response;
-                this.paginaCollection = response;
-                this.paginator(1);  
+                this.file_nominaCollection = response;  
+                for (let index = 0; index < this.file_nominaCollection.length; index++) {
+                    const elementOrigin = this.file_nominaCollection[index];
+                    let existe = false;
+                    for (let index = 0; index < this.iterator.length; index++) { 
+                        if (this.iterator[index].semana == elementOrigin.semana && this.iterator[index].ejercicio == elementOrigin.ejercicio) 
+                        { existe = true;}
+                    }
+                    if (existe == false) {
+                        this.iterator.push({semana:elementOrigin.semana,ejercicio:elementOrigin.ejercicio,files:[]});
+                    }
+                }
+                for (let i = 0; i < this.iterator.length; i++) {  
+                    for (let index = 0; index < this.file_nominaCollection.length; index++) {    
+                        if (this.file_nominaCollection[index].semana == this.iterator[i].semana
+                            && this.file_nominaCollection[index].ejercicio == this.iterator[i].ejercicio) 
+                        { 
+                            this.iterator[i].files.push(this.file_nominaCollection[index]);
+                        }
+                    }
+                }
             }catch(error){
                 this.show_message('No hay datos Para Mostrar.','info');
             } 
@@ -55,11 +73,10 @@ var application = new Vue({
             const response = await this.request(this.path,
             {'action' : 'select_file_item',"model":this.file_nomina}); 
             if (download) { 
-                this.preview_file_load = false;
-                $("#mymodal").modal('hide'); 
                 var a = document.createElement("a"); //Create <a>
                 a.href = 'data:' + this.file_nomina.type_file +';base64,' + response; //Image Base64 Goes here
                 a.download = this.file_nomina.nombre; //File name Here
+                $("#mymodal").modal('hide');  
                 a.click(); //Downloaded file
             } else { 
                 this.preview_file_load = false;
