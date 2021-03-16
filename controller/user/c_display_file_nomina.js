@@ -1,4 +1,3 @@
- 
 var application = new Vue({
     el:'#app_file_nomina',
     data:{ 
@@ -17,11 +16,8 @@ var application = new Vue({
         paginaActual : 1,
         ////paginador
 
-        filter : '',
-
-        preview_file_load: true,
-        src :null,
-
+        filter : '', 
+        src :null, 
         iterator: [],
         view_modal: false
     },
@@ -57,34 +53,25 @@ var application = new Vue({
             } 
         }, 
         async get_file(file){ 
-            this.view_modal = true;
-            // $("#mymodal").modal(); 
-            this.preview_file_load = true; 
+            this.view_modal = true;  
             this.file_nomina = file; 
-            let download = true; 
-            var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-            if (/android/i.test(userAgent) || /iPad|iPhone|iPod/.test(userAgent)) {
-                download = true;  
-            }else{ 
-                if (this.file_nomina.type_file  == "application/pdf") {
-                    download = false; 
-                }else{
-                    download = true;  
-                } 
-            }  
-            const response = await this.request(this.path,
+            const b64 = await this.request(this.path,
             {'action' : 'select_file_item',"model":this.file_nomina}); 
-            if (download) {   
-                var a = document.createElement("a"); //Create <a>
-                a.href = 'data:' + this.file_nomina.type_file +';base64,' + response; //Image Base64 Goes here
-                a.download = this.file_nomina.nombre.replace('/','_'); //File name Here
-                a.click();//Downloaded file
-                this.view_modal = false;
-                // $("#mymodal").modal('hide');
-            } else { 
-                this.preview_file_load = false;
-                this.src = response;
-            }   
+            var a = document.createElement("a"); //Create <a>
+            a.href = 'data:' + this.file_nomina.type_file +';base64,' + b64; //file Base64 Goes here
+            a.download = this.file_nomina.nombre.replace('/','_'); //File name Here
+            a.click(); 
+            this.view_modal = false; 
+        },
+        async base64ToArrayBuffer(base64) {
+            base64 = base64.replace(/^data\:([^\;]+)\;base64,/gmi, '');
+            var binaryString = atob(base64);
+            var len = binaryString.length;
+            var bytes = new Uint8Array(len);
+            for (var i = 0; i < len; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            return bytes.buffer;
         },
         async show_message(msg,typeMessage){
             this.msg = msg;
