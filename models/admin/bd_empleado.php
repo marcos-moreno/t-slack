@@ -68,14 +68,15 @@ class Empleado
                         ':fecha_alta_cerberus' => $this->received_data->model->fecha_alta_cerberus,
                         ':perfilcalculo' => $this->received_data->model->perfilcalculo,  
                         ':correo_verificado' => $this->received_data->model->correo_verificado,  
+                        ':id_compac' => $this->received_data->model->id_compac,  
                         
                     ); 
             $query = 'INSERT INTO empleado (id_segmento,id_creadopor,fecha_creado,nombre,paterno,materno,activo,celular,correo,genero,id_actualizadopor,
             fecha_actualizado,usuario,password,fecha_nacimiento,nss,rfc,id_cerberus_empleado,fecha_alta_cerberus,perfilcalculo,
-            correo_verificado) VALUES 
+            correo_verificado,id_compac) VALUES 
             (:id_segmento,:id_creadopor,now(),:nombre,:paterno,:materno,:activo,:celular,:correo,:genero,:id_actualizadopor,
             now(),:usuario,MD5(:password),:fecha_nacimiento,:nss,:rfc,:id_cerberus_empleado,:fecha_alta_cerberus,:perfilcalculo,
-            :correo_verificado) RETURNING id_empleado ;';
+            :correo_verificado,id_compac) RETURNING id_empleado ;';
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);   
@@ -122,14 +123,17 @@ class Empleado
                         ':perfilcalculo' => $this->received_data->model->perfilcalculo, 
                         ':correo_verificado' => $this->received_data->model->correo_verificado, 
                         ':id_empresa' => $this->received_data->model->id_empresa, 
-                         
+                        ':id_compac' => $this->received_data->model->id_compac, 
+                        
                     ); 
             $query = 'UPDATE empleado SET id_segmento=:id_segmento,nombre=:nombre,paterno=:paterno,materno=:materno,
             activo=:activo,
             celular=:celular,correo=:correo,genero=:genero,id_actualizadopor=:id_actualizadopor,fecha_actualizado=now(),
             usuario=:usuario,fecha_nacimiento=:fecha_nacimiento,nss=:nss,rfc=:rfc,id_cerberus_empleado=:id_cerberus_empleado
            ,fecha_alta_cerberus=:fecha_alta_cerberus,perfilcalculo=:perfilcalculo
-            ,correo_verificado=:correo_verificado,id_empresa=:id_empresa WHERE  id_empleado = :id_empleado ;';
+            ,correo_verificado=:correo_verificado,id_empresa=:id_empresa 
+            ,id_compac=:id_compac
+            WHERE  id_empleado = :id_empleado ;';
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  
@@ -160,7 +164,8 @@ class Empleado
              
         $query = 'SELECT id_empleado,id_segmento,id_creadopor,fecha_creado,nombre,paterno,materno,activo,celular,correo,enviar_encuesta
                 ,genero,id_actualizadopor,fecha_actualizado,usuario,password,fecha_nacimiento,nss,rfc,id_cerberus_empleado
-                ,id_talla_playera,id_numero_zapato,fecha_alta_cerberus,perfilcalculo,correo_verificado,id_empresa,desc_mail_v 
+                ,id_talla_playera,id_numero_zapato,fecha_alta_cerberus,perfilcalculo,correo_verificado,
+                id_empresa,desc_mail_v ,id_compac
                     FROM empleado  
                     ' . (isset($this->received_data->filter) ? ' 
                     WHERE ' . $this->received_data->filter:'') . 

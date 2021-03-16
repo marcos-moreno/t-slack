@@ -159,7 +159,11 @@
             <div class='form-group'>
                 <label>ID cerberus empleado</label>
                 <input type='number' class='form-control' v-model='empleado.id_cerberus_empleado' />
-            </div>   
+            </div> 
+            <div class='form-group'>
+                <label>ID CONTPAQi</label>
+                <input type='text' class='form-control' v-model='empleado.id_compac' />
+            </div>  
                                     <!-- <div class='form-group'>
                                         <label>talla playera</label> 
                                         <select class='form-control' size='1'  v-model='empleado.id_talla_playera' >

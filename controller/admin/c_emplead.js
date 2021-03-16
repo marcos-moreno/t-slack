@@ -9,8 +9,8 @@ var application = new Vue({
         typeMessage : '',
         msg:'',
         un_tallaCollection:[],
-            segmentoCollection:[],
-            un_tallaCollection:[],
+        segmentoCollection:[],
+        un_tallaCollection:[],
         //paginador
         numByPag : 25, 
         paginas : [],
@@ -145,7 +145,7 @@ var application = new Vue({
             this.typeMessage = typeMessage;
             setTimeout(function() { application.typeMessage='' ;application.msg =''; }, 15000);
         },model_empty(){
-            this.empleado = {id_empleado:0,id_segmento:'',id_creadopor:'',fecha_creado:'',nombre:'',paterno:'',materno:'',activo:true,celular:'',correo:'',enviar_encuesta:'',genero:'',id_actualizadopor:'',fecha_actualizado:'',usuario:'',password:'',fecha_nacimiento:'',nss:'',rfc:'',id_cerberus_empleado:'',id_talla_playera:'',id_numero_zapato:'',fecha_alta_cerberus:'',perfilcalculo:'',correo_verificado:false,id_empresa:'',desc_mail_v:''};
+            this.empleado = {id_empleado:0,id_segmento:'',id_creadopor:'',fecha_creado:'',nombre:'',paterno:'',materno:'',activo:true,celular:'',correo:'',enviar_encuesta:'',genero:'',id_actualizadopor:'',fecha_actualizado:'',usuario:'',password:'',fecha_nacimiento:'',nss:'',rfc:'',id_cerberus_empleado:'',id_talla_playera:'',id_numero_zapato:'',fecha_alta_cerberus:'',perfilcalculo:'',correo_verificado:false,id_empresa:'',desc_mail_v:'',id_compac:0};
         },
         async request(path,jsonParameters){
             const response = await axios.post(path, jsonParameters).then(function (response) {   
