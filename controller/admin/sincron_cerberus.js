@@ -9,15 +9,16 @@ var sinconizador = new Vue({
       is_newEmployees : false ,
       typeMessage : '',
       msg:'', 
-      id_cerberus : 0
+      id_cerberus : 0,
+      array_duplicate : [],
+      display_duplicate : false
     },
     methods:{
-        async completeSinc(){
+        async completeSinc(){ 
             for (let index = 0; index < this.employesCerberus.length; index++) {
                 const element = this.employesCerberus[index];
                     let employee = {}; 
-                try {
-                    
+                try { 
                     employee.id_empresa_cerberus = element.idEmpresa;
                     employee.nombre = element.nombreEmpleado;
                     employee.paterno = element.apPatEmpleado;
@@ -31,12 +32,7 @@ var sinconizador = new Vue({
                     let i = element.nombreEmpleado.indexOf(" ");
                     
                     let usuario = (element.nombreEmpleado.substring(0,(i > 0 ? i : element.nombreEmpleado.length ) ))   + '.' + element.apPatEmpleado; 
-                    usuario = usuario.toLowerCase();
-                    if (this.validaUser(usuario)) {
-                        employee.usuario =  usuario;
-                    }else{
-                        employee.usuario =  usuario + "_d";
-                    }  
+                    usuario = usuario.toLowerCase(); 
                     employee.fecha_nacimiento = element.fechaNacimiento;
                     employee.nss = element.nss;
                     employee.rfc = element.rfc;
@@ -44,10 +40,20 @@ var sinconizador = new Vue({
                     employee.id_cerberus_empleado = element.idEmpleadoCerberus;
                     employee.organization = element.nombreSucursal.trim(); 
                     employee.perfilcalculo = element.perfilCalculo; 
+                    let user_duplicate = false;
+                    if (this.validaUser(usuario)) {
+                        employee.usuario =  usuario;
+                    }else{
+                        employee.usuario =  usuario + "_d";
+                        user_duplicate = true;
+                    }  
 
                     const res = await this.request('../../models/bd/bd_employee.php', {action:'insertSinc',model:employee}); 
                     if (res.message == 'sinc succes') {
                         this.show_message(this.msg + '\nSincronizado: ' + employee.id_cerberus_empleado,'success'); 
+                        if (user_duplicate) {
+                            this.array_duplicate.push(employee);  
+                        }
                     }else if(res.message == 'error'){ 
                         if(res.error[2].includes('id_segmento') && res.error[2].includes('violates not-null constraint')){
                             this.show_message(this.msg  + ' || '+ employee.organization  +' Error: La organización No existe. ','info'); 
@@ -60,15 +66,16 @@ var sinconizador = new Vue({
                     }else{
                         this.show_message(res,'error');
                     } 
+                    if (this.array_duplicate.length > 0) {
+                        this.display_duplicate = true;
+                    }
                 } catch (error) {
                     this.show_message("Error Al sincronizar el epleado: " + element.idEmpleadoCerberus + '\nError: ' + error +' '
                         + '\n'+ error,'error'); 
                 }
-              
             }
             await this.fetchAllEmployees();  
             this.employesCerberus = [];
-
         },validaUser(user){
             let valid = true;
             try { 
