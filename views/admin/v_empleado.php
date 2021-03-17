@@ -244,4 +244,4 @@
 
 
 </div>
-<script type="text/javascript" src="../../controller/admin/c_emplead.js"></script>
+<script type="text/javascript" src="../../controller/admin/c_empleado.js"></script>
