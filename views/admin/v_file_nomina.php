@@ -46,6 +46,12 @@
                         <label>Filtrar</label>  
                         <table>
                             <tr>
+                                <td> 
+                                    <select class='form-control'  v-model='empresa_id_filter' style="width:150px" > 
+                                        <option value='todo'>Todas las Empresas</option>
+                                        <option v-for='rows in empresas' v-bind:value='rows.id_empresa'>{{ rows.empresa_observaciones }}</option>
+                                    </select>
+                                </td> 
                                 <td>
                                     <input type="text" class="form-control" v-model="filter" />
                                 </td> 
@@ -75,10 +81,11 @@
                         <li><h3> Recibos de Nómina </h3></li>
                         <li>
                             <select class="custom-select mb-2 mr-sm-2 mb-sm-0" v-model="numByPag" @change="paginator(1)" > 
-                                <option value=100  >100</option>
-                                <option value=200 >200</option>
-                                <option value=300 >500</option>
-                                <option value=100000 >100000</option>
+                                <option value=500 >500</option>
+                                <option value=1000 >1,000</option>
+                                <option value=2000 >2,000</option>
+                                <option value=3000 >3,000</option>
+                                <option value=4000 >4,000</option>
                             </select>
                         </li>
                         <li v-for="li in paginas" class="page-item">

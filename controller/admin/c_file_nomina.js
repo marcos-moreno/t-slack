@@ -9,10 +9,9 @@ var application = new Vue({
         typeMessage : '',
         msg:'',
         empresaCollection:[],
-            
-
+             
         //paginador
-        numByPag : 200, 
+        numByPag : 500, 
         paginas : [],
         paginaCollection : [],
         paginaActual : 1,
@@ -21,14 +20,17 @@ var application = new Vue({
         filter : '',
 
         preview_file_load: true,
-        src :null
+        src :null,
+        empresas:[],
+        empresa_id_filter:2,
     },
     methods:{
         async getfile_nominas(){  
             this.file_nominaCollection  = [];
             this.paginaCollection = [];
-            let filtrarPor =  "( nombre ILIKE '%" + this.filter + "%'  OR code ILIKE '%" + this.filter + "%'  OR type_file ILIKE '%" + this.filter + "%'  )";  
-           const response = await this.request(this.path,{'order' : 'ORDER BY id_file_nomina DESC','action' : 'select','filter' : filtrarPor});
+            let filtrarPor =  "( nombre ILIKE '%" + this.filter + "%'  OR code ILIKE '%" + this.filter + "%'  OR type_file ILIKE '%" + 
+            this.filter + "%'  ) AND id_empresa = " + this.empresa_id_filter;  
+            const response = await this.request(this.path,{'order' : 'ORDER BY id_file_nomina DESC','action' : 'select','filter' : filtrarPor});
             try{ 
                 this.show_message(response.length + ' Registros Encontrados.','success');
                 this.file_nominaCollection = response;
@@ -210,10 +212,12 @@ var application = new Vue({
     async mounted() {    
     },
     async created(){
-       await this.getfile_nominas();
-       await this.model_empty();
-       await this.fill_f_keys();
-       this.paginator(1);
+        const response_empresa = await this.request('../../models/bd/bd_company.php',{'action' : 'fetchall'});
+        this.empresas = response_empresa; 
+        await this.getfile_nominas();
+        await this.model_empty();
+        await this.fill_f_keys();
+        this.paginator(1);
     }
 }); 
         
