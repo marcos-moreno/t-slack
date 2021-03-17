@@ -53,15 +53,18 @@ var application = new Vue({
             } 
         }, 
         async get_file(file){ 
-            this.view_modal = true;  
-            this.file_nomina = file; 
-            const b64 = await this.request(this.path,
-            {'action' : 'select_file_item',"model":this.file_nomina}); 
-            var a = document.createElement("a"); //Create <a>
-            a.href = 'data:' + this.file_nomina.type_file +';base64,' + b64; //file Base64 Goes here
-            a.download = this.file_nomina.nombre.replace('/','_'); //File name Here
-            a.click(); 
-            this.view_modal = false; 
+            window.open(this.path+'?type_getFile=1&id_file='+file.id_file_nomina, '_blank');
+            // location.href=this.path+'?type_getFile=1&id_file='+file.id_file_nomina;
+
+            // this.view_modal = true;  
+            // this.file_nomina = file; 
+            // const b64 = await this.request(this.path,
+            // {'action' : 'select_file_item',"model":this.file_nomina}); 
+            // var a = document.createElement("a"); //Create <a>
+            // a.href = 'data:' + this.file_nomina.type_file +';base64,' + b64; //file Base64 Goes here
+            // a.download = this.file_nomina.nombre.replace('/','_'); //File name Here
+            // a.click(); 
+            // this.view_modal = false; 
         },
         async base64ToArrayBuffer(base64) {
             base64 = base64.replace(/^data\:([^\;]+)\;base64,/gmi, '');

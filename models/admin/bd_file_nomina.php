@@ -13,6 +13,11 @@ if (check_session()) {
         $model->insert($_POST,$_FILES);
         return;
     }
+    if (isset($_GET['type_getFile'])) { 
+        $model = new File_nomina($data,$connect,'');
+        $model->getfile_get($_GET);
+        return;
+    }
     switch($received_data->action){
         case 'update': 
             $model = new File_nomina($data,$connect,json_decode("{}"));
@@ -163,8 +168,11 @@ class File_nomina
             $statement->execute($data);
             while($row = $statement->fetch(PDO::FETCH_ASSOC)) { 
                 // echo base64_decode($row['data']);
-                echo $row['data'] ;
-            }   
+                // echo $row['data'] ;
+                $data = base64_decode($row['data']);
+                header('Content-Type: application/pdf');
+                echo $data;
+            }    
         } catch (PDOException $exc) {
             $output = array('message' => $exc->getMessage()); 
             echo json_encode($output); 
@@ -172,6 +180,40 @@ class File_nomina
         }
     } 
     
+    public function getfile_get($_GET_res){ 
+        try {    
+            // http://localhost/new%20version%20t-slack/t-slack/models/admin/bd_file_nomina.php
+            $data = array(
+                ':id_file_nomina' => $_GET_res["id_file"],
+                ':id_empleado' => $_SESSION['id_empleado']
+            ); 
+            $query = "  SELECT encode(data, 'base64') AS data, type_file ,f.code
+                        FROM file_nomina f
+                        INNER JOIN empleado e ON e.id_compac = f.id_compac 
+                            AND e.id_empleado = :id_empleado
+                        WHERE id_file_nomina = :id_file_nomina" ;
+            $statement = $this->connect->prepare($query);  
+            $statement->execute($data);
+            while($row = $statement->fetch(PDO::FETCH_ASSOC)) { 
+                // echo base64_decode($row['data']);
+                // echo $row['data'] ; 
+                $data = base64_decode($row['data']);
+                header('Content-Type: ' . $row['type_file']);
+                if ($row['type_file'] == "text/xml") {
+                    header('Content-Disposition:attachment; filename="' . $row['code'] . '"'); 
+                } else { 
+                    header('Content-Disposition: inline; filename="' . $row['code'] . '"'); 
+                } 
+                // var_dump($row); 
+                echo $data;
+            }    
+        } catch (PDOException $exc) {
+            $output = array('message' => $exc->getMessage()); 
+            echo json_encode($output); 
+            return false;
+        }
+    } 
+
     public function search_union($row,$table_origen,$fk_table_origen,$fk_table_usage){
         $data = array(); 
         try {    
