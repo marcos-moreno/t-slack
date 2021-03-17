@@ -48,7 +48,6 @@
                             <tr>
                                 <td> 
                                     <select class='form-control'  v-model='empresa_id_filter' style="width:150px" > 
-                                        <option value='todo'>Todas las Empresas</option>
                                         <option v-for='rows in empresas' v-bind:value='rows.id_empresa'>{{ rows.empresa_observaciones }}</option>
                                     </select>
                                 </td> 
