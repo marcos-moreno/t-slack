@@ -65,17 +65,7 @@ var application = new Vue({
             // a.download = this.file_nomina.nombre.replace('/','_'); //File name Here
             // a.click(); 
             // this.view_modal = false; 
-        },
-        async base64ToArrayBuffer(base64) {
-            base64 = base64.replace(/^data\:([^\;]+)\;base64,/gmi, '');
-            var binaryString = atob(base64);
-            var len = binaryString.length;
-            var bytes = new Uint8Array(len);
-            for (var i = 0; i < len; i++) {
-                bytes[i] = binaryString.charCodeAt(i);
-            }
-            return bytes.buffer;
-        },
+        }, 
         async show_message(msg,typeMessage){
             this.msg = msg;
             this.typeMessage = typeMessage;

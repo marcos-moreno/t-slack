@@ -18,6 +18,11 @@ if (check_session()) {
         $model->getfile_get($_GET);
         return;
     }
+    if (isset($_GET['type_getFile_admin'])) { 
+        $model = new File_nomina($data,$connect,'');
+        $model->getfile_admin($_GET);
+        return;
+    }
     switch($received_data->action){
         case 'update': 
             $model = new File_nomina($data,$connect,json_decode("{}"));
@@ -35,10 +40,10 @@ if (check_session()) {
             $model = new File_nomina($data,$connect,$received_data);
             $model->select();
         break;
-        case 'select_file_item': 
-            $model = new File_nomina($data,$connect,$received_data);
-            $model->getfile();
-        break;
+        // case 'select_file_item': 
+        //     $model = new File_nomina($data,$connect,$received_data);
+        //     $model->getfile();
+        // break;
         case 'select_user': 
             $model = new File_nomina($data,$connect,$received_data);
             $model->select_user();
@@ -155,23 +160,35 @@ class File_nomina
             return false;
         }  
     } 
-    public function getfile(){ 
+    public function getfile_admin($_GET_res){  
         try {    
-            // http://localhost/new%20version%20t-slack/t-slack/models/admin/bd_file_nomina.php
             $data = array(
-                ':id_file_nomina' => $this->received_data->model->id_file_nomina
+                ':id_file_nomina' => $_GET_res["id_file"],
+                ':id_empleado' => $_SESSION['id_empleado']
             ); 
-            $query = "SELECT encode(data, 'base64') AS data, type_file 
-                        FROM file_nomina
-                      WHERE id_file_nomina = :id_file_nomina" ;
+            $query = "  SELECT encode(data, 'base64') AS data, type_file ,f.code
+                        FROM file_nomina f 
+                        INNER JOIN empleado e ON e.id_empleado = :id_empleado
+                        INNER JOIN empleado_rol rol ON e.id_empleado = rol.id_empleado 
+                            AND rol.id_rol = 5
+                        WHERE id_file_nomina = :id_file_nomina";
             $statement = $this->connect->prepare($query);  
             $statement->execute($data);
-            while($row = $statement->fetch(PDO::FETCH_ASSOC)) { 
-                // echo base64_decode($row['data']);
-                // echo $row['data'] ;
+            while($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
                 $data = base64_decode($row['data']);
-                header('Content-Type: application/pdf');
-                echo $data;
+                if ($row['type_file'] == "text/xml") {
+                    header('Content-Type: ' . $row['type_file']); 
+                    header('Content-Disposition: attachment; filename="' . $row['code'] . '"'); 
+                } else { 
+                    header('Content-Disposition: inline; filename="' . $row['code'] . '"'); 
+                    header('Content-Description: File Transfer');
+                    header('Pragma: public');
+                    header('Expires: 0');
+                    header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+                    header('Content-Type: application/pdf');
+                    header('Content-Transfer-Encoding: binary');
+                }  
+                print $data;
             }    
         } catch (PDOException $exc) {
             $output = array('message' => $exc->getMessage()); 
@@ -198,14 +215,19 @@ class File_nomina
                 // echo base64_decode($row['data']);
                 // echo $row['data'] ; 
                 $data = base64_decode($row['data']);
-                
-                
                 if ($row['type_file'] == "text/xml") {
                     header('Content-Type: ' . $row['type_file']); 
                     header('Content-Disposition: attachment; filename="' . $row['code'] . '"'); 
-                } else {
-                    header('Content-Type: vnd.adobe.pdf');  
+                } else {  
                     header('Content-Disposition: inline; filename="' . $row['code'] . '"'); 
+
+                    header('Content-Description: File Transfer');
+                    // header('Content-Type:  application/octet-stream'); 
+                    header('Pragma: public');
+                    header('Expires: 0');
+                    header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+                    header('Content-Type: application/pdf');
+                    header('Content-Transfer-Encoding: binary');
                 } 
                 // var_dump($row); 
                 print $data;

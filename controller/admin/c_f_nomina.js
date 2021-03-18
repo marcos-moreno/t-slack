@@ -43,32 +43,7 @@ var application = new Vue({
             } 
         }, 
         async get_file(file){ 
-            $("#mymodal").modal(); 
-            this.preview_file_load = true; 
-            this.file_nomina = file; 
-            let download = true; 
-            var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-            if (/android/i.test(userAgent) || /iPad|iPhone|iPod/.test(userAgent)) {
-                download = true;  
-            }else{ 
-                if (this.file_nomina.type_file  == "application/pdf") {
-                    download = false; 
-                }else{
-                    download = true;  
-                } 
-            }  
-            const response = await this.request(this.path,
-            {'action' : 'select_file_item',"model":this.file_nomina}); 
-            if (download) { 
-                var a = document.createElement("a"); //Create <a>
-                a.href = 'data:' + this.file_nomina.type_file +';base64,' + response; //Image Base64 Goes here
-                a.download = this.file_nomina.nombre; //File name Here
-                $("#mymodal").modal('hide'); 
-                a.click(); //Downloaded file
-            } else { 
-                this.preview_file_load = false;
-                this.src = response;
-            }  
+            window.open(this.path+'?type_getFile_admin=1&id_file='+file.id_file_nomina, '_blank');
         }, 
         async delete_file_nomina(id_file_nomina){  
             this.file_nomina = this.search_file_nominaByID(id_file_nomina);
