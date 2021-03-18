@@ -185,13 +185,7 @@ class File_nomina
                     header('Pragma: public');
                     header('Expires: 0');
                     header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-                    // header('Content-Type: application/pdf');
                     header('Content-Transfer-Encoding: binary');
-                    echo($this->getBase64Size($data)); 
-                    if (!stripos($_SERVER['HTTP_USER_AGENT'], 'iPhone') && !stripos($_SERVER['HTTP_USER_AGENT'], 'iPad') && !stripos($_SERVER['HTTP_USER_AGENT'], 'iPod')) {
-                    }else {
-                        header('Content-Length: ' . $this->getBase64Size($data) );
-                    }
                 }  
                 print $data;
             }    
@@ -214,7 +208,6 @@ class File_nomina
     }
     public function getfile_get($_GET_res){ 
         try {    
-            // http://localhost/new%20version%20t-slack/t-slack/models/admin/bd_file_nomina.php
             $data = array(
                 ':id_file_nomina' => $_GET_res["id_file"],
                 ':id_empleado' => $_SESSION['id_empleado']
@@ -227,8 +220,6 @@ class File_nomina
             $statement = $this->connect->prepare($query);  
             $statement->execute($data);
             while($row = $statement->fetch(PDO::FETCH_ASSOC)) { 
-                // echo base64_decode($row['data']);
-                // echo $row['data'] ; 
                 $data = base64_decode($row['data']);
                 if ($row['type_file'] == "text/xml") {
                     header('Content-Type: ' . $row['type_file']); 
@@ -239,15 +230,8 @@ class File_nomina
                     header('Pragma: public');
                     header('Expires: 0');
                     header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-                    // header('Content-Type: application/pdf');
-                    header('Content-Transfer-Encoding: binary');
-                    echo($this->getBase64Size($data)); 
-                    if (!stripos($_SERVER['HTTP_USER_AGENT'], 'iPhone') && !stripos($_SERVER['HTTP_USER_AGENT'], 'iPad') && !stripos($_SERVER['HTTP_USER_AGENT'], 'iPod')) {
-                    }else {
-                        header('Content-Length: ' . $this->getBase64Size($data) );
-                    }
+                    header('Content-Transfer-Encoding: binary'); 
                 } 
-                // var_dump($row); 
                 print $data;
             }    
         } catch (PDOException $exc) {
