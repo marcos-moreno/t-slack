@@ -37,8 +37,8 @@
         <label>ID: {{notificationSelected.id_notification}}</label> 
       </div> 
       <div class="form-group">
-        <label>Enviar Correo</label> 
-        <input type='checkbox' v-model="sendEmail"  /> 
+        <label>¿Mostrar al Iniciar Sesión?</label> 
+        <input type='checkbox' v-model="notificationSelected.display_start"  /> 
       </div>  
       <div class="form-group">
         <label>Mensaje</label>
@@ -105,6 +105,6 @@
   </div>
 </div>
 
-<script type="text/javascript" src="../../controller/admin/notifications.js"></script>
+<script type="text/javascript" src="../../controller/admin/notifications_a.js"></script>
 
 

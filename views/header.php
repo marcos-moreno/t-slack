@@ -95,8 +95,8 @@ if ($valido == false) {  header('location: ../logout.php'); }
                       <div v-for="item in allNotications">  
                         <div class='notification-item container-fluid'  v-bind:class="[item.viewed ? '': 'viewed']" 
                               @click="viewNotification(item.id_notification_detail,item.viewed)" >
-                          <div>  <strong> {{ item.msg }} </strong>  </div> 
-                          <div class='container-fluid'> {{ item.description.substring(0,160) }}  </div> 
+                          <h4>{{ item.msg }}</h4> 
+                          <div  style="max-height:100px;overflow:auto;" v-html="item.description"></div> 
                         </div> 
                       </div> 
                     </div>
@@ -110,22 +110,26 @@ if ($valido == false) {  header('location: ../logout.php'); }
                   <div class="modal-dialog modal-dialog-scrollable">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h4 class="modal-title"></h4>
+                        <h4 class="modal-title">{{ notificationSelected.msg }}</h4>
                         <button type="button" class="close" @click="modalNotification=false;notificationSelected='';"><span aria-hidden="true">&times;</span></button>
                       </div>  
                       <div class="modal-body"> 
                         <div class="card-body">   
-                          <div class="custom-control custom-checkbox">
-                            <h3> {{ notificationSelected.msg }} </h3> 
-                            <p> {{ notificationSelected.description }} </p>
+                          <div class="custom-control custom-checkbox"> 
+                            <div v-html="notificationSelected.description"></div>
                           </div> 
                         </div>
+                        <button type="button" class="btn btn-info" @click="modalNotification=false;notificationSelected='';">
+                          Cerrar
+                        </button>
                       </div>
                     </div> 
                   </div>
                 </div>
               </transition>
             </div>
+
+            
           </div>   
         </div>
 
@@ -156,5 +160,5 @@ if ($valido == false) {  header('location: ../logout.php'); }
 
 
 <script type="text/javascript" src="../../controller/user/c_leccion.js"></script>
-<script type="text/javascript" src="../../controller/user/notifications.js"></script>
+<script type="text/javascript" src="../../controller/user/notifications_u.js"></script>
 <script type="text/javascript" src="../../controller/admin/changePasword.js"></script>  

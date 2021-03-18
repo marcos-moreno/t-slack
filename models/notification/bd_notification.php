@@ -9,7 +9,9 @@ if (check_session()) {
 
     if ($received_data->action == 'fetchallNotifications') {
         $query = "
-        SELECT id_notification_detail, n.id_notification, id_employee, viewed, msg, description FROM refividrio.notification n
+        SELECT id_notification_detail, n.id_notification, id_employee, viewed, msg, description 
+        ,display_start
+        FROM refividrio.notification n
             INNER JOIN refividrio.notification_detail nd ON n.id_notification = nd.id_notification
         WHERE -- viewed = 'N' AND
           nd.id_employee =" . $_SESSION['id_empleado']  . " ORDER BY n.id_notification DESC"; 
@@ -26,7 +28,7 @@ if (check_session()) {
             ':id_notification_detail' => $received_data->id_notification_detail ,
             ':id_empleado' => $_SESSION['id_empleado'], 
         );  
-        $query = "UPDATE refividrio.notification_detail SET viewed = 'Y' 
+        $query = "UPDATE refividrio.notification_detail SET viewed = true 
                     WHERE id_notification_detail = :id_notification_detail
                     AND id_employee= :id_empleado; ";  
         $statement = $connect->prepare($query); 
@@ -83,8 +85,9 @@ if (check_session()) {
         $data = array(
             ':msg' => $received_data->data->msg ,
             ':description' => $received_data->data->description,  
+            ':display_start' => $received_data->data->display_start,  
         ); 
-        $query = "INSERT INTO refividrio.notification(msg, description)  VALUES (:msg, :description)RETURNING id_notification;"; 
+        $query = "INSERT INTO refividrio.notification(msg, description,display_start)  VALUES (:msg, :description,:display_start) RETURNING id_notification;"; 
         $statement = $connect->prepare($query); 
         $statement->execute($data); 
         $id = 0;

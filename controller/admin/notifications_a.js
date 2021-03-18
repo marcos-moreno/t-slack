@@ -6,7 +6,7 @@ var notification = new Vue({
         allDataFilter: "",
         openModel:false,
         modalNotification:false,
-        notificationSelected: '',
+        notificationSelected: {},
         allNotications:'',
         isCrud:false,
         actionButton:'Agregar',
@@ -15,12 +15,11 @@ var notification = new Vue({
         countNotifications: "",  
         to_notify: [],
         data_to_filter:"",
-        filter_value:"",
-        sendEmail: true 
+        filter_value:"", 
     },
     methods:{
     newNotification() {   
-        this.notificationSelected = {msg:"",description:"",id_notification:0};
+        this.notificationSelected = {msg:"",description:"",id_notification:0,display_start: false};
         this.isCrud=true;
         this.getAllData();
     },  
@@ -107,9 +106,6 @@ var notification = new Vue({
             const responces_nt_detalil = await axios.post('../../models/notification/bd_notification.php', { action:'insertNotification',  id_notification: responce_nt.id 
                                         ,filter: this.to_notify ,type: this.search_by })
                                         .then(function(response){  return response.data;});  
-            if (responce_nt.id > 0 && this.sendEmail) {
-                await this.send_Email(responce_nt.id);
-            }   
             this.fetchAllNotifications();  
             this.isCrud=false;
         }  
@@ -127,24 +123,28 @@ var notification = new Vue({
         }
     },
     async updateData(){ 
-        const responce =  await axios.post('../../models/notification/bd_notification.php', {  action:'updateData', 
+        const responce =  await axios.post('../../models/notification/bd_notification.php', 
+                                {  action:'updateData', 
                                 data: this.notificationSelected })
-        .then(function(response){  return response.data;    });   
+                                .then(function(response){  return response.data;    });   
         if (responce.message == "Data Updated") { 
             this.fetchAllNotifications();  
             this.isCrud=false;
         }   
     }, 
     async deleteData(id_notification){ 
-        const responce =  await axios.post('../../models/notification/bd_notification.php', {  action:'deleteData',  id_notification: id_notification })
-        .then(function(response){ return response.data; });   
+        const responce =  await axios.post('../../models/notification/bd_notification.php', 
+                                        { action:'deleteData',  id_notification: id_notification })
+                                    .then(function(response){ return response.data; });   
         if (responce.message == "Data Deleteted") {  
         }  
         this.fetchAllNotifications();  
         this.isCrud=false;
     }, 
      async fetchAllNotifications(){
-        const responce = await axios.post('../../models/notification/bd_notification.php', {  action:'fetchallNotificationsAndmin'  }).then(function(response){   return response.data;   });   
+        const responce = await axios.post('../../models/notification/bd_notification.php', 
+                                                {  action:'fetchallNotificationsAndmin'  })
+                                    .then(function(response){   return response.data;   });   
         if (responce.length > 0 ) {
             notification.allNotications = responce;  
         } else{

@@ -35,9 +35,23 @@ var notification = new Vue({
      async fetchAllNotifications(){
         const responce = await axios.post('../../models/notification/bd_notification.php', {  action:'fetchallNotifications'  }).then(function(response){   return response.data;   });   
         if (responce.length > 0 ) {
-            notification.allNotications = responce;  
+            this.allNotications = responce;  
             let NotifiactionPending = 0;
-            notification.allNotications.forEach(element => { element.viewed == false ?  NotifiactionPending ++ : NotifiactionPending = NotifiactionPending  });
+            for (let index = 0; index < this.allNotications.length; index++) {
+                const element = this.allNotications[index];
+                if (element.viewed == false  && element.display_start == true) { 
+                    const responce =  await axios.post('../../models/notification/bd_notification.php', 
+                    { action:'updateViewed', id_notification_detail: element.id_notification_detail })
+                    .then(function(response){  return response.data;    });  
+                    if (responce.message == "Data Updated") { 
+                        this.allNotications[index].viewed = true;
+                        this.notificationSelected= element ;
+                        this.modalNotification = true;
+                    }  
+                    break;
+                }
+            }  
+            this.allNotications.forEach(element => { element.viewed == false ?  NotifiactionPending ++ : NotifiactionPending = NotifiactionPending  });
             NotifiactionPending > 0 ? notification.countNotifications = NotifiactionPending : notification.countNotifications = "" ;
         }  
      },  
