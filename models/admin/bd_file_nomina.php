@@ -198,14 +198,17 @@ class File_nomina
                 // echo base64_decode($row['data']);
                 // echo $row['data'] ; 
                 $data = base64_decode($row['data']);
-                header('Content-Type: ' . $row['type_file']);
+                
+                
                 if ($row['type_file'] == "text/xml") {
-                    header('Content-Disposition:attachment; filename="' . $row['code'] . '"'); 
-                } else { 
+                    header('Content-Type: ' . $row['type_file']); 
+                    header('Content-Disposition: attachment; filename="' . $row['code'] . '"'); 
+                } else {
+                    header('Content-Type: vnd.adobe.pdf');  
                     header('Content-Disposition: inline; filename="' . $row['code'] . '"'); 
                 } 
                 // var_dump($row); 
-                echo $data;
+                print $data;
             }    
         } catch (PDOException $exc) {
             $output = array('message' => $exc->getMessage()); 
