@@ -180,6 +180,7 @@ class File_nomina
                     header('Content-Type: ' . $row['type_file']); 
                     header('Content-Disposition: attachment; filename="' . $row['code'] . '"'); 
                 } else { 
+                    header('Content-Type: ' . $row['type_file']); 
                     header('Content-Disposition: inline; filename="' . $row['code'] . '"'); 
                     header('Content-Description: File Transfer');
                     header('Pragma: public');
@@ -225,6 +226,7 @@ class File_nomina
                     header('Content-Type: ' . $row['type_file']); 
                     header('Content-Disposition: attachment; filename="' . $row['code'] . '"'); 
                 } else {  
+                    header('Content-Type: ' . $row['type_file']); 
                     header('Content-Disposition: inline; filename="' . $row['code'] . '"'); 
                     header('Content-Description: File Transfer');
                     header('Pragma: public');
