@@ -32,10 +32,10 @@ var application = new Vue({
         if(confirm("¿Estas seguro de Restablecer la Contraseña?"))
             {
                 this.empleado = this.search_empleadoByID(id_empleado); 
-                console.log( this.empleado);
+                // console.log( this.empleado);
                 const response = await this.request(this.path,{model:this.empleado,'action' : 'resetPassword'});
                 try {
-                    console.log(response);
+                    // console.log(response);
                     if (response == "Reset Password Success") { 
                         alert("La contraseña del empleado con ID:" + id_empleado + " he sido Restablecida."); 
                     } else { 
@@ -60,7 +60,7 @@ var application = new Vue({
                                    this.filter + "%'  OR rfc ILIKE '%" + this.filter + "%'  OR perfilcalculo ILIKE '%" + this.filter + 
                                    "%'  OR   CAST (id_cerberus_empleado AS VARCHAR (100)) = '" + this.filter + "'  ) " + filtrar_segmento + "  AND  activo = " +  this.activos_filter + " ";  
            const response = await this.request(this.path,{'order' : 'ORDER BY id_empleado DESC','action' : 'select','filter' : filtrarPor});
-          console.log(response);
+        //   console.log(response);
            try{ 
                 this.show_message(response.length + ' Registros Encontrados.','success');
                 this.empleadoCollection = response;

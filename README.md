@@ -1,7 +1,2 @@
  
-/**
- 
- * @author    
-             					       ___ __ _ _	
-Grupo Refividrio
- */ 
+/** @author Marcos Moreno */ 
