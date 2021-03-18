@@ -185,8 +185,13 @@ class File_nomina
                     header('Pragma: public');
                     header('Expires: 0');
                     header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-                    header('Content-Type: application/pdf');
+                    // header('Content-Type: application/pdf');
                     header('Content-Transfer-Encoding: binary');
+                    echo($this->getBase64Size($data)); 
+                    if (!stripos($_SERVER['HTTP_USER_AGENT'], 'iPhone') && !stripos($_SERVER['HTTP_USER_AGENT'], 'iPad') && !stripos($_SERVER['HTTP_USER_AGENT'], 'iPod')) {
+                    }else {
+                        header('Content-Length: ' . $this->getBase64Size($data) );
+                    }
                 }  
                 print $data;
             }    
@@ -196,7 +201,17 @@ class File_nomina
             return false;
         }
     } 
-    
+    public function getBase64Size($base64){ //return memory size in B, KB, MB
+        try{
+            $size_in_bytes = (int) (strlen(rtrim($base64, '=')) * 3 / 4);
+            $size_in_kb    = $size_in_bytes / 1024;
+            $size_in_mb    = $size_in_kb / 1024; 
+            return $size_in_kb;
+        }
+        catch(Exception $e){
+            return $e;
+        }
+    }
     public function getfile_get($_GET_res){ 
         try {    
             // http://localhost/new%20version%20t-slack/t-slack/models/admin/bd_file_nomina.php
@@ -220,14 +235,17 @@ class File_nomina
                     header('Content-Disposition: attachment; filename="' . $row['code'] . '"'); 
                 } else {  
                     header('Content-Disposition: inline; filename="' . $row['code'] . '"'); 
-
                     header('Content-Description: File Transfer');
-                    // header('Content-Type:  application/octet-stream'); 
                     header('Pragma: public');
                     header('Expires: 0');
                     header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-                    header('Content-Type: application/pdf');
+                    // header('Content-Type: application/pdf');
                     header('Content-Transfer-Encoding: binary');
+                    echo($this->getBase64Size($data)); 
+                    if (!stripos($_SERVER['HTTP_USER_AGENT'], 'iPhone') && !stripos($_SERVER['HTTP_USER_AGENT'], 'iPad') && !stripos($_SERVER['HTTP_USER_AGENT'], 'iPod')) {
+                    }else {
+                        header('Content-Length: ' . $this->getBase64Size($data) );
+                    }
                 } 
                 // var_dump($row); 
                 print $data;
