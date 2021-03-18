@@ -56,7 +56,7 @@ var login = new Vue({
                                     location.href="views/sp/v_marca.php"; 
                                 } else if (rolParam.rol == 'SuperAdmin'){
                                     location.href="views/generales/v_acceso_rol.php"; 
-                                }  else if (rolParam.rol == 'admin uniformes'){
+                                }  else if (rolParam.rol == 'Administracion'){
                                     location.href="views/un/v_almacen.php"; 
                                 } 
                             }     
