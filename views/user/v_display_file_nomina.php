@@ -66,5 +66,4 @@
     </div>
     <canvas id="the-canvas"></canvas>
 </div>
-<script src="http://mozilla.github.io/pdf.js/build/pdf.js"></script>
 <script type="text/javascript" src="../../controller/user/c_display_files_nomina.js"></script>
