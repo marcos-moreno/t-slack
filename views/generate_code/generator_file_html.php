@@ -32,12 +32,13 @@ class generator_file_html{
             ';
         }  
         $cadena = '
-        <br><br>
+        <br>
         <div class="panel-body"  v-if="isFormCrud==false">
+            <h4>'. $this->name_crud .'</h4>
+            <br>
             <div class="table-responsive">
                 <nav aria-label="Page navigation example">
                     <ul class="pagination">  
-                        <li><h3> '.strtoupper ( $this->name_crud) .' </h3></li>
                         <li>
                             <select class="custom-select mb-2 mr-sm-2 mb-sm-0" v-model="numByPag" @change="paginator(1)" > 
                                 <option value=5  >5</option>
@@ -182,12 +183,12 @@ class generator_file_html{
     function generator_content(){
         $contenido = 
 '<?php require "../header.php";?> 
-<div class="container" style="width:90%">  
+<div  class="container-fluid" style="width:90%;"> 
     <div id="app_'. $this->name_crud .'" style="margin-top:15px;"> 
         <div class="table-responsive">
             <table class="table table-bordered table-striped">
                 <tr>
-                    <td style="weight: 30%">
+                    <td style="weight: 30%" v-if="isFormCrud==false">
                         <label>Filtrar</label>  
                         <table>
                             <tr>

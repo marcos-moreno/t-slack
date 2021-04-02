@@ -1,15 +1,13 @@
  
 var application = new Vue({
-    el:'#app_ev_puesto_nivel',
+    el:'#app_ev_indicador',
     data:{ 
-        ev_puesto_nivel : null,
-        ev_puesto_nivelCollection : [],
+        ev_indicador : null,
+        ev_indicadorCollection : [],
         isFormCrud: false,
-        path : '../../models/ev/bd_ev_puesto_nivel.php',
+        path : '../../models/ev/bd_ev_indicador.php',
         typeMessage : '',
         msg:'',
-        ev_puestoCollection:[],
-            ev_nivel_pCollection:[],
             
 
         //paginador
@@ -20,33 +18,33 @@ var application = new Vue({
         ////paginador
 
         filter : '',
-
+        puesto_nivel : {}
 
     },
     methods:{
-        async getev_puesto_nivels(){  
-            this.ev_puesto_nivelCollection  = [];
-            this.paginaCollection = [];
-            let filtrarPor =  "($ )";  
-           const response = await this.request(this.path,{'order' : 'ORDER BY ev_puesto_nivel_id DESC','action' : 'select'/*,'filter' : filtrarPor*/});
-           try{ 
+        async getev_indicadors(){  
+            this.ev_indicadorCollection  = [];
+            this.paginaCollection = []; 
+            let filtrarPor =  " ev_puesto_nivel_id = " +this.puesto_nivel.ev_puesto_nivel_id+ " AND ( nombre ILIKE '%" + this.filter + "%'  OR descripcion ILIKE '%" + this.filter + "%'  OR origen ILIKE '%" + this.filter + "%'  )";  
+           const response = await this.request(this.path,{'order' : 'ORDER BY ev_indicador_id DESC','action' : 'select','filter' : filtrarPor});
+            try{ 
                 this.show_message(response.length + ' Registros Encontrados.','success');
-                this.ev_puesto_nivelCollection = response;
+                this.ev_indicadorCollection = response;
                 this.paginaCollection = response;
                 this.paginator(1);  
                 this.isFormCrud=false;
             }catch(error){
                 this.show_message('No hay datos Para Mostrar.','info');
                 this.isFormCrud=false;
-            }
+            } 
         }, 
-        async delete_ev_puesto_nivel(ev_puesto_nivel_id){  
-            this.ev_puesto_nivel = this.search_ev_puesto_nivelByID(ev_puesto_nivel_id);
-            if(this.ev_puesto_nivel.ev_puesto_nivel_id > 0){
-                const response = await this.request(this.path,{model:this.ev_puesto_nivel,'action' : 'delete'});
-                this.ev_puesto_nivelCollection = response; 
+        async delete_ev_indicador(ev_indicador_id){  
+            this.ev_indicador = this.search_ev_indicadorByID(ev_indicador_id);
+            if(this.ev_indicador.ev_indicador_id > 0){
+                const response = await this.request(this.path,{model:this.ev_indicador,'action' : 'delete'});
+                this.ev_indicadorCollection = response; 
                 if(response.message == 'Data Deleted'){
-                    await this.getev_puesto_nivels();
+                    await this.getev_indicadors();
                     this.show_message('Registro Eliminado','success');
                 }else{
                     this.show_message(response.message,'error');
@@ -55,21 +53,23 @@ var application = new Vue({
                 this.show_message('Un ID 0 No es posible Eliminar.','info');
             } 
         },   
-        async save_ev_puesto_nivel(){ 
-            if(this.ev_puesto_nivel.ev_puesto_nivel_id > 0){
-                const response = await this.request(this.path,{model:this.ev_puesto_nivel,'action' : 'update'});
+        async save_ev_indicador(){ 
+            if(this.ev_indicador.ev_indicador_id > 0){
+                this.ev_indicador.ev_puesto_nivel_id = this.puesto_nivel.ev_puesto_nivel_id;
+                const response = await this.request(this.path,{model:this.ev_indicador,'action' : 'update'});
                 if(response.message == 'Data Updated'){
-                    await this.getev_puesto_nivels();
+                    await this.getev_indicadors();
                     this.show_message('Registro Actualizado','success');
                     this.model_empty();
                     this.isFormCrud = false;
                 }else{
                     this.show_message(response.message,'error');
                 }
-            }else if(this.ev_puesto_nivel.ev_puesto_nivel_id == 0){ 
-                const response = await this.request(this.path,{model:this.ev_puesto_nivel,'action' : 'insert'}); 
+            }else if(this.ev_indicador.ev_indicador_id == 0){ 
+                this.ev_indicador.ev_puesto_nivel_id = this.puesto_nivel.ev_puesto_nivel_id;
+                const response = await this.request(this.path,{model:this.ev_indicador,'action' : 'insert'}); 
                  if(response.message == 'Data Inserted'){
-                    await this.getev_puesto_nivels();
+                    await this.getev_indicadors();
                     this.show_message('Registro Guardado.','success');
                     this.model_empty();
                     this.isFormCrud = false;
@@ -78,10 +78,10 @@ var application = new Vue({
                 }  
             }
         },
-        async update_ev_puesto_nivel(ev_puesto_nivel_id){ 
-            if(ev_puesto_nivel_id > 0){
-                this.ev_puesto_nivel = this.search_ev_puesto_nivelByID(ev_puesto_nivel_id);
-                if(this.ev_puesto_nivel.ev_puesto_nivel_id > 0){
+        async update_ev_indicador(ev_indicador_id){ 
+            if(ev_indicador_id > 0){
+                this.ev_indicador = this.search_ev_indicadorByID(ev_indicador_id);
+                if(this.ev_indicador.ev_indicador_id > 0){
                     this.isFormCrud = true;
                 }else{
                     this.show_message('Hay un problema con este Registro.','info');
@@ -90,18 +90,18 @@ var application = new Vue({
                 this.show_message('Hay un problema con este Registro.','info');
             } 
         }, 
-        add_ev_puesto_nivel(){  
+        add_ev_indicador(){  
             this.model_empty();
             this.isFormCrud = true;
         },  
-        cancel_ev_puesto_nivel(){  
+        cancel_ev_indicador(){  
             this.model_empty();
             this.isFormCrud = false;
         },  
-        search_ev_puesto_nivelByID(ev_puesto_nivel_id){
-            for (let index = 0; index < this.ev_puesto_nivelCollection.length; index++) {
-                const element = this.ev_puesto_nivelCollection[index]; 
-                if (ev_puesto_nivel_id == element.ev_puesto_nivel_id) { 
+        search_ev_indicadorByID(ev_indicador_id){
+            for (let index = 0; index < this.ev_indicadorCollection.length; index++) {
+                const element = this.ev_indicadorCollection[index]; 
+                if (ev_indicador_id == element.ev_indicador_id) { 
                     return element;
                 }
             }  
@@ -110,7 +110,8 @@ var application = new Vue({
             this.typeMessage = typeMessage;
             setTimeout(function() { application.typeMessage='' ;application.msg =''; }, 5000);
         },model_empty(){
-            this.ev_puesto_nivel = {ev_puesto_nivel_id:0,ev_puesto_id:'',ev_nivel_p_id:'',creado:'',creadopor:'',actualizado:'',actualizadopor:''};
+            this.ev_indicador = {ev_indicador_id:0,ev_puesto_nivel_id:this.puesto_nivel.ev_puesto_nivel_id,nombre:''
+            ,descripcion:'',porcentaje:'',origen:'',creado:'',creadopor:'',actualizado:'',actualizadopor:'',tendencia:'CRECIENTE'};
         },
         async request(path,jsonParameters){
             const response = await axios.post(path, jsonParameters).then(function (response) {   
@@ -120,26 +121,9 @@ var application = new Vue({
                 })
             return response; 
         },
-        async fill_f_keys(){
-             
-            const response_ev_puesto = await this.request('../../models/ev/bd_ev_puesto.php',{'order' : 'ORDER BY ev_puesto_id DESC','action' : 'select'});
-            try{  
-                if(response_ev_puesto.length > 0){  
-                    this.ev_puestoCollection = response_ev_puesto; 
-                }  
-            }catch(error){
-                this.show_message('No hay ev_puestos.','info');
-            }  
-            const response_ev_nivel_p = await this.request('../../models/ev/bd_ev_nivel_p.php',{'order' : 'ORDER BY ev_nivel_p_id DESC','action' : 'select'});
-            try{  
-                if(response_ev_nivel_p.length > 0){  
-                    this.ev_nivel_pCollection = response_ev_nivel_p; 
-                }  
-            }catch(error){
-                this.show_message('No hay ev_nivel_ps.','info');
-            } 
+        async fill_f_keys(){ 
         },paginator(i){ 
-            let cantidad_pages = Math.ceil(this.ev_puesto_nivelCollection.length / this.numByPag);
+            let cantidad_pages = Math.ceil(this.ev_indicadorCollection.length / this.numByPag);
             this.paginas = []; 
             if (i === 'Ant' ) {
                 if (this.paginaActual == 1) {  i = 1;  }else{  i = this.paginaActual -1; } 
@@ -154,9 +138,9 @@ var application = new Vue({
                     this.paginaCollection = [];  
                     let inicio = ( i == 1 ? 0 : ((i-1) *  parseInt(this.numByPag)));
                     inicio = parseInt(inicio);
-                    let fin = (cantidad_pages == i ? this.ev_puesto_nivelCollection.length : (parseInt(inicio) + parseInt(this.numByPag)));  
+                    let fin = (cantidad_pages == i ? this.ev_indicadorCollection.length : (parseInt(inicio) + parseInt(this.numByPag)));  
                     for (let index = inicio; index < fin; index++) {
-                        const element = this.ev_puesto_nivelCollection[index];
+                        const element = this.ev_indicadorCollection[index];
                         this.paginaCollection.push(element); 
                     }  
                 }  
@@ -168,9 +152,19 @@ var application = new Vue({
     async mounted() {    
     },
     async created(){
-       await this.getev_puesto_nivels();
-       await this.model_empty();
-       await this.fill_f_keys();
+        let ev_puesto_nivel_id = document.getElementById("ev_puesto_nivel_id").value;
+        if (!isNaN(ev_puesto_nivel_id) && ev_puesto_nivel_id > 0) {
+            const puesto_nivel = await this.request('../../models/ev/bd_ev_puesto_nivel.php',{'action' : 'select','filter' : ' ev_puesto_nivel_id = ' + ev_puesto_nivel_id});
+            if (puesto_nivel[0].ev_puesto_nivel_id > 0) {
+                this.puesto_nivel = puesto_nivel[0];
+            }else{
+                location.href="v_ev_puesto_nivel.php";
+            } 
+        } else {
+            location.href="v_ev_puesto_nivel.php";
+        }
+       await this.getev_indicadors();
+       await this.model_empty(); 
        this.paginator(1);
     }
 }); 

@@ -1,10 +1,10 @@
 <?php require "../header.php";?> 
-<div class="container" style="width:90%">  
+<div  class="container-fluid" style="width:90%;">  
     <div id="app_ev_puesto_nivel" style="margin-top:15px;"> 
-        <div class="table-responsive">
+        <div class="table-responsive" >
             <table class="table table-bordered table-striped">
                 <tr>
-                    <td style="weight: 30%">
+                    <td style="weight: 30%"  v-if="isFormCrud==false">
                         <label>Filtrar</label>  
                         <table>
                             <tr>
@@ -34,7 +34,7 @@
             <div class="table-responsive">
                 <nav aria-label="Page navigation example">
                     <ul class="pagination">  
-                        <li><h3> EV_PUESTO_NIVEL </h3></li>
+                        <li><h3> PUESTO NIVEL </h3></li>
                         <li>
                             <select class="custom-select mb-2 mr-sm-2 mb-sm-0" v-model="numByPag" @change="paginator(1)" > 
                                 <option value=5  >5</option>
@@ -49,6 +49,9 @@
                     </ul>  
                 </nav>
                 <td><button type="button" class="btn btn-info btn-xs edit" @click="add_ev_puesto_nivel()">Agregar</button></td>
+                <td><a type="button" class="btn btn-warning btn-xs edit" href="v_ev_puesto.php" >Puestos</a></td>
+                <td><a type="button" class="btn btn-secondary btn-xs edit" href="v_ev_nivel_p.php">Niveles</a></td>
+
                 <table class="table table-bordered table-striped">
                     <tr> 
                         <th>ID</th>
@@ -56,7 +59,9 @@
                         <th>Puesto</th>
                                     
                         <th>Nivel</th> 
-                                     
+
+                        <th></th> 
+
                         <th></th> 
                     </tr>
                     <tr v-for="ev_puesto_nivel in paginaCollection" >
@@ -66,6 +71,8 @@
                         <td>{{ ev_puesto_nivel.ev_puesto[0].nombre_puesto}}</td>
             
                         <td>{{ ev_puesto_nivel.ev_nivel_p[0].nombre_nivel_puesto}}</td> 
+
+                        <td><a :href="'./v_ev_indicador.php?ev_puesto_nivel_id=' + ev_puesto_nivel.ev_puesto_nivel_id" >Indicadores</a></td> 
                
                         <td style="width:150px" >
                             <button type="button" class="btn btn" @click="update_ev_puesto_nivel(ev_puesto_nivel.ev_puesto_nivel_id)"><img src="../../img/lapiz.svg" width="25px" /></button>
@@ -83,14 +90,14 @@
                 <label>ID: {{ ev_puesto_nivel.ev_puesto_nivel_id }}</label>  
             </div> 
                                     <div class='form-group'>
-                                        <label>Puesto</label> 
+                                        <label>ev puesto id</label> 
                                         <select class='form-control' size='1'  v-model='ev_puesto_nivel.ev_puesto_id' >
                                             <option value='0' >-</option>
                                             <option v-for='rows in ev_puestoCollection' v-bind:value='rows.ev_puesto_id'>{{ rows.nombre_puesto }}</option>
                                         </select>
                                     </div>  
                                     <div class='form-group'>
-                                        <label>Nivel</label> 
+                                        <label>ev nivel p id</label> 
                                         <select class='form-control' size='1'  v-model='ev_puesto_nivel.ev_nivel_p_id' >
                                             <option value='0' >-</option>
                                             <option v-for='rows in ev_nivel_pCollection' v-bind:value='rows.ev_nivel_p_id'>{{ rows.nombre_nivel_puesto }}</option>
