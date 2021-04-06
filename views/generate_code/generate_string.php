@@ -246,8 +246,7 @@ class ".ucwords($this->name_crud)."
             return %data; 
         } catch (PDOException %exc) {
             %output = array('message' => %exc->getMessage()); 
-            echo json_encode(%output); 
-            return false;
+            return json_encode(%output);  
         }  
     }
     public function delete(){

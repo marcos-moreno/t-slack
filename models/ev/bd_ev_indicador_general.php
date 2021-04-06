@@ -8,19 +8,19 @@
 if (check_session()) { 
     switch($received_data->action){
         case 'update': 
-            $model = new Ev_indicador($data,$connect,$received_data);
+            $model = new Ev_indicador_general($data,$connect,$received_data);
             $model->update();
         break;
         case 'insert':
-            $model = new Ev_indicador($data,$connect,$received_data);
+            $model = new Ev_indicador_general($data,$connect,$received_data);
             $model->insert();
         break;
         case 'delete':
-            $model = new Ev_indicador($data,$connect,$received_data);
+            $model = new Ev_indicador_general($data,$connect,$received_data);
             $model->delete(); 
         break;
         case 'select': 
-            $model = new Ev_indicador($data,$connect,$received_data);
+            $model = new Ev_indicador_general($data,$connect,$received_data);
             $model->select();
         break;
     }
@@ -29,7 +29,7 @@ if (check_session()) {
     echo json_encode($output); 
 } 
 
-class Ev_indicador 
+class Ev_indicador_general 
 {   
     
     private $output = null;
@@ -45,18 +45,16 @@ class Ev_indicador
     public function insert(){
         try {
             $data = array(
-                    ':ev_puesto_nivel_id' => $this->received_data->model->ev_puesto_nivel_id,
-                        ':nombre' => $this->received_data->model->nombre,
+                    ':nombre' => $this->received_data->model->nombre,
                         ':descripcion' => $this->received_data->model->descripcion,
-                        ':porcentaje' => $this->received_data->model->porcentaje,
-                        ':origen' => $this->received_data->model->origen,
+                        ':tendencia' => $this->received_data->model->tendencia,
+                        ':activo' => $this->received_data->model->activo,
                         ':creadopor' => $_SESSION['id_empleado'],
                         ':actualizadopor' => $_SESSION['id_empleado'],
-                        ':tendencia' => $this->received_data->model->tendencia,
-
+                        ':origen' => $this->received_data->model->origen,
+                        
                     ); 
-        $query = 'INSERT INTO ev_indicador (ev_puesto_nivel_id,nombre,descripcion,porcentaje,origen,creado,creadopor,actualizado,actualizadopor,tendencia) 
-        VALUES (:ev_puesto_nivel_id,:nombre,:descripcion,:porcentaje,:origen,Now(),:creadopor,Now(),:actualizadopor,:tendencia) ;';
+        $query = 'INSERT INTO ev_indicador_general (nombre,descripcion,tendencia,activo,creado,creadopor,actualizado,actualizadopor,origen) VALUES (:nombre,:descripcion,:tendencia,:activo,Now(),:creadopor,Now(),:actualizadopor,:origen) ;';
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  
@@ -73,18 +71,16 @@ class Ev_indicador
     public function update(){
         try {
             $data = array(
-                    ':ev_indicador_id' => $this->received_data->model->ev_indicador_id, 
-                        ':ev_puesto_nivel_id' => $this->received_data->model->ev_puesto_nivel_id, 
+                    ':ev_indicador_general_id' => $this->received_data->model->ev_indicador_general_id, 
                         ':nombre' => $this->received_data->model->nombre, 
                         ':descripcion' => $this->received_data->model->descripcion, 
-                        ':porcentaje' => $this->received_data->model->porcentaje, 
-                        ':origen' => $this->received_data->model->origen, 
+                        ':tendencia' => $this->received_data->model->tendencia, 
+                        ':activo' => $this->received_data->model->activo, 
                         ':actualizadopor' => $_SESSION['id_empleado'],
-                        ':tendencia' => $this->received_data->model->tendencia,
+                        ':origen' => $this->received_data->model->origen, 
+                         
                     ); 
-            $query = 'UPDATE ev_indicador SET ev_puesto_nivel_id=:ev_puesto_nivel_id,nombre=:nombre,descripcion=:descripcion,
-            porcentaje=:porcentaje,origen=:origen,actualizado=Now(),actualizadopor=:actualizadopor ,tendencia=:tendencia
-            WHERE  ev_indicador_id = :ev_indicador_id ;';
+            $query = 'UPDATE ev_indicador_general SET nombre=:nombre,descripcion=:descripcion,tendencia=:tendencia,activo=:activo,actualizado=Now(),actualizadopor=:actualizadopor,origen=:origen WHERE  ev_indicador_general_id = :ev_indicador_general_id ;';
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  
@@ -101,17 +97,15 @@ class Ev_indicador
     public function select(){
         try {  
              
-        $query = 'SELECT ev_indicador_id,ev_puesto_nivel_id,nombre,descripcion,porcentaje,origen,creado,creadopor,actualizado,actualizadopor,tendencia 
-                    FROM ev_indicador  
+        $query = 'SELECT ev_indicador_general_id,nombre,descripcion,tendencia,activo,creado,creadopor,actualizado,actualizadopor,origen 
+                    FROM ev_indicador_general  
                     ' . (isset($this->received_data->filter) ? ' 
                     WHERE ' . $this->received_data->filter:'') . 
                     (isset($this->received_data->order) ? $this->received_data->order:'') ;
                         
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);   
-            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
-                    $row['ev_puesto_nivel'] = $this->search_union($row,'ev_puesto_nivel','ev_puesto_nivel_id','ev_puesto_nivel_id');
-                    $data[] = $row;
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {    $data[] = $row;
             }
 
         
@@ -143,10 +137,10 @@ class Ev_indicador
     public function delete(){
         try {  
             $data = array(
-                   ':ev_indicador_id' => $this->received_data->model->ev_indicador_id,
+                   ':ev_indicador_general_id' => $this->received_data->model->ev_indicador_general_id,
                             
                     ); 
-        $query = 'DELETE FROM ev_indicador WHERE ev_indicador_id = :ev_indicador_id ;'; 
+        $query = 'DELETE FROM ev_indicador_general WHERE ev_indicador_general_id = :ev_indicador_general_id ;'; 
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  

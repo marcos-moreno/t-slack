@@ -72,7 +72,7 @@
             
                         <td>{{ ev_puesto_nivel.ev_nivel_p[0].nombre_nivel_puesto}}</td> 
 
-                        <td><a :href="'./v_ev_indicador.php?ev_puesto_nivel_id=' + ev_puesto_nivel.ev_puesto_nivel_id" >Indicadores</a></td> 
+                        <td><a :href="'./v_ev_indicador_puesto.php?ev_puesto_nivel_id=' + ev_puesto_nivel.ev_puesto_nivel_id" >Indicadores</a></td> 
                
                         <td style="width:150px" >
                             <button type="button" class="btn btn" @click="update_ev_puesto_nivel(ev_puesto_nivel.ev_puesto_nivel_id)"><img src="../../img/lapiz.svg" width="25px" /></button>

@@ -4,7 +4,7 @@
         echo '<input id="ev_indicador_id" value="'.$_GET['ev_indicador_id'].'" style="display:none" >';
     }else{ 
 ?>  
-<script> location.href="v_ev_indicador.php";</script>  
+<script> location.href="v_ev_indicador_puesto.php";</script>  
 <?php } ?> 
 
 <div  class="container-fluid" style="width:90%;"> 
@@ -49,19 +49,46 @@
                                     <button @click="save_ev_punto_evaluar_ln()" class="btn btn-info btn-xs" ><img src="../../img/send.png" width="18px" /> *Guardar</button>
                                 </div>   
                             </div>
-                            <div v-else>
+                            <div v-else> 
 
-                                <ul id="example-1">
-                                    <li v-for="item in ev_punto_evaluar_lnCollection">
-                                        {{ item.nombre }} = {{ item.valor }}
-                                        <br>
-                                        <button type="button" class="btn btn" @click="update_ev_punto_evaluar_ln(item.ev_punto_evaluar_ln_id)"><img src="../../img/lapiz.svg" width="25px" /></button>
-                                        <button type="button" class="btn btn" @click="delete_ev_punto_evaluar_ln(item.ev_punto_evaluar_ln_id)"><img src="../../img/borrar.png" width="25px" /></button>
-                                    </li>
-                                </ul>
+                                <div v-if="isFormCrudRubro==false" >
+                                    <button type="button" class="btn btn-info" @click="add_ev_punto_evaluar_ln()">Agregar</button>
+                                    <ul>
+                                        <li v-for="item in ev_punto_evaluar_lnCollection" class="border-top border-bottom border-primary" style=" margin: 20px;">
+                                            {{ item.nombre }} = {{ item.valor }}
+                                            <br>
+                                            <button type="button" class="btn btn" @click="update_ev_punto_evaluar_ln(item)"><img src="../../img/lapiz.svg" width="25px" /></button>
+                                            <button type="button" class="btn btn" @click="delete_ev_punto_evaluar_ln(item)"><img src="../../img/borrar.png" width="25px" /></button>
+                                        </li>
+                                    </ul>
+                                </div> 
+
+                                <div v-else >   
+                                    <div class="form-group">
+                                        <label>ID: {{ ev_punto_evaluar_ln.ev_punto_evaluar_ln_id }}</label>  
+                                    </div>  
+                                    <div class='form-group'>
+                                        <label>nombre</label>
+                                        <textarea class='form-control' rows="5" v-model='ev_punto_evaluar_ln.nombre'></textarea>
+                                    </div>  
+                                    <!-- <div class='form-group'>
+                                        <label>icon</label>
+                                        <input type='text' class='form-control' v-model='ev_punto_evaluar_ln.icon' />
+                                    </div>   -->
+                                    <div class='form-group'>
+                                        <label>valor</label>
+                                        <input type='number' class='form-control' v-model='ev_punto_evaluar_ln.valor' />
+                                    </div>    
+                                    <br>
+                                    <br>
+                                    <div class="form-group">
+                                        <td><button type="button" class="btn btn btn-xs" @click="cancel_ev_punto_evaluar_ln()"><img src="../../img/regresar.png" width="28px" /> Regresar</button></td> 
+                                        <button @click="save_ev_punto_evaluar_ln()" class="btn btn-info btn-xs" ><img src="../../img/send.png" width="18px" /> *Guardar</button>
+                                    </div>   
+                                </div>    
                             
-                            </div>
-                             
+                            </div> 
+
                         </div>
                     </div>
                 </div> 
@@ -91,7 +118,7 @@
                             <div class="alert alert-danger"  v-if="typeMessage == 'error'" role="alert">{{msg}}</div>
                             <div class="alert alert-success" v-if="typeMessage == 'success'" role="alert">{{msg}}</div>
                         </div> 
-                        <a type="button" class="btn btn btn-xs" :href="'./v_ev_indicador.php?ev_puesto_nivel_id='+ev_indicador.ev_puesto_nivel_id">
+                        <a type="button" class="btn btn btn-xs" :href="'./v_ev_indicador_puesto.php?ev_puesto_nivel_id='+ev_indicador.ev_puesto_nivel_id">
                         <img src="../../img/regresar.png" width="28px" /> Ir a los Indicadores</a>
 
                     </td> 
@@ -101,15 +128,12 @@
 
         
         <br>
-        <div class="panel-body"  v-if="isFormCrud==false"> 
-            <div class="row">   
-                <div class="col-md-auto">
-                   <h4>Puntos a Evaluar -> Indicador: </h4>
-                </div> 
-                <div class="col-md-auto" style="color:#858C8A">
-                    <h4> {{ev_indicador.nombre}}</h4>
-                </div> 
-            </div> 
+        <div class="panel-body"  v-if="isFormCrud==false">  
+            <div class="col-md-auto" style="color:#858C8A">
+                <a href="v_ev_puesto_nivel.php" >{{ev_indicador.puesto}}</a> > 
+                <a :href="'v_ev_indicador_puesto.php?ev_puesto_nivel_id='+ev_indicador.ev_puesto_nivel_id">{{ev_indicador.nombre}}</a> 
+                > PUNTOS A EVALUAR
+            </div>  
             <br>
             <div class="table-responsive">
                 <nav aria-label="Page navigation example">

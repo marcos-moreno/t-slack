@@ -9,9 +9,8 @@ var application = new Vue({
         typeMessage : '',
         msg:'',
         ev_indicador:{},
-            ev_tipo_capturaCollection:[],
+        ev_tipo_capturaCollection:[],
             
-
         //paginador
         numByPag : 5, 
         paginas : [],
@@ -25,73 +24,92 @@ var application = new Vue({
         isFormCrudRubro: false,
         ev_punto_evaluar_ln : {},
         ev_punto_evaluar_lnCollection : [],
+        pathRubro : '../../models/ev/bd_ev_punto_evaluar_ln.php',
 
     },
     methods:{
 // Rubros Start
+        add_ev_punto_evaluar_ln(){  
+            this.model_emptyRubro();
+            this.isFormCrudRubro = true;
+        },
         async openModalRubros(model){
+            this.isFormCrudRubro = false;
             this.load = true;
             this.ev_punto_evaluar = model;
             this.display_modal_rubros = true;
-            const response = await this.request('../../models/ev/bd_ev_punto_evaluar_ln.php',
+            const response = await this.request(this.pathRubro,
             {'order' : 'ORDER BY ev_punto_evaluar_ln_id DESC','action' : 'select','filter' : "ev_punto_evaluar_id= " + model.ev_punto_evaluar_id});
-            this.ev_punto_evaluar_lnCollection = response
-            console.log(response);
+            this.ev_punto_evaluar_lnCollection = response;
             this.load = false;
         },
-        async delete_ev_punto_evaluar_ln(ev_punto_evaluar_ln_id){  
-            this.ev_punto_evaluar_ln = this.search_ev_punto_evaluar_lnByID(ev_punto_evaluar_ln_id);
+        async delete_ev_punto_evaluar_ln(ev_punto_evaluar_ln){  
+            this.ev_punto_evaluar_ln = ev_punto_evaluar_ln;
             if(this.ev_punto_evaluar_ln.ev_punto_evaluar_ln_id > 0){
-                const response = await this.request(this.path,{model:this.ev_punto_evaluar_ln,'action' : 'delete'});
+                const response = await this.request(this.pathRubro,{model:this.ev_punto_evaluar_ln,'action' : 'delete'});
                 this.ev_punto_evaluar_lnCollection = response; 
                 if(response.message == 'Data Deleted'){
                     await this.getev_punto_evaluar_lns();
-                    this.show_message('Registro Eliminado','success');
+                    alert('Registro Eliminado');
                 }else{
-                    this.show_message(response.message,'error');
+                    alert(response.message);
                 }
             }else{ 
-                this.show_message('Un ID 0 No es posible Eliminar.','info');
+                alert('Un ID 0 No es posible Eliminar.');
             } 
         },   
         async save_ev_punto_evaluar_ln(){ 
             if(this.ev_punto_evaluar_ln.ev_punto_evaluar_ln_id > 0){
-                const response = await this.request(this.path,{model:this.ev_punto_evaluar_ln,'action' : 'update'});
+                this.ev_punto_evaluar_ln.ev_punto_evaluar_id = this.ev_punto_evaluar.ev_punto_evaluar_id;
+                const response = await this.request(this.pathRubro,{model:this.ev_punto_evaluar_ln,'action' : 'update'});
                 if(response.message == 'Data Updated'){
                     await this.getev_punto_evaluar_lns();
-                    this.show_message('Registro Actualizado','success');
-                    this.model_empty();
+                    alert('Registro Actualizado');
+                    this.model_emptyRubro();
                     this.isFormCrudRubro = false;
                 }else{
-                    this.show_message(response.message,'error');
+                    alert(response.message);
                 }
             }else if(this.ev_punto_evaluar_ln.ev_punto_evaluar_ln_id == 0){ 
-                const response = await this.request(this.path,{model:this.ev_punto_evaluar_ln,'action' : 'insert'}); 
-                 if(response.message == 'Data Inserted'){
+                this.ev_punto_evaluar_ln.ev_punto_evaluar_id = this.ev_punto_evaluar.ev_punto_evaluar_id;
+                const response = await this.request(this.pathRubro,{model:this.ev_punto_evaluar_ln,'action' : 'insert'}); 
+                if(response.message == 'Data Inserted'){
                     await this.getev_punto_evaluar_lns();
-                    this.show_message('Registro Guardado.','success');
-                    this.model_empty();
+                    alert('Registro Guardado.');
+                    this.model_emptyRubro();
                     this.isFormCrudRubro = false;
                 }else{
-                    this.show_message(response.message,'error');
+                    alert(response.message);
                 }  
             }
         },
-        async update_ev_punto_evaluar_ln(ev_punto_evaluar_ln_id){ 
-            if(ev_punto_evaluar_ln_id > 0){
-                this.ev_punto_evaluar_ln = this.search_ev_punto_evaluar_lnByID(ev_punto_evaluar_ln_id);
+        async update_ev_punto_evaluar_ln(ev_punto_evaluar_ln){ 
+            if(ev_punto_evaluar_ln.ev_punto_evaluar_ln_id > 0){
+                this.ev_punto_evaluar_ln = ev_punto_evaluar_ln;
                 if(this.ev_punto_evaluar_ln.ev_punto_evaluar_ln_id > 0){
                     this.isFormCrudRubro = true;
                 }else{
-                    this.show_message('Hay un problema con este Registro.','info');
+                    alert('Hay un problema con este Registro.');
                 } 
             }else{
-                this.show_message('Hay un problema con este Registro.','info');
+                alert('Hay un problema con este Registro.');
             } 
         }, 
+        model_emptyRubro(){
+            this.ev_punto_evaluar_ln = {ev_punto_evaluar_ln_id:0,ev_punto_evaluar_id:this.ev_punto_evaluar.ev_punto_evaluar_id
+                ,nombre:'',icon:'',valor:'',creado:'',creadopor:'',actualizado:'',actualizadopor:''};
+        },
+        cancel_ev_punto_evaluar_ln(){   
+            this.model_emptyRubro();
+            this.isFormCrudRubro = false;
+        },  
+        async getev_punto_evaluar_lns(){  
+            const response = await this.request(this.pathRubro,
+                {'order' : 'ORDER BY ev_punto_evaluar_ln_id DESC','action' : 'select',
+                'filter' : "ev_punto_evaluar_id= " + this.ev_punto_evaluar.ev_punto_evaluar_id});
+                this.ev_punto_evaluar_lnCollection = response;
+        }, 
 // Rubros ENd
-
-
         async getev_punto_evaluars(){  
             this.ev_punto_evaluarCollection  = [];
             this.paginaCollection = [];
@@ -225,16 +243,17 @@ var application = new Vue({
             }  
             this.paginas.push({'element':'Sig'});
         }
-
     },
     async mounted() {    
     },
     async created(){
         let ev_indicador_id = document.getElementById("ev_indicador_id").value;
         if (!isNaN(ev_indicador_id) && ev_indicador_id > 0) {
-            const ev_indicador = await this.request('../../models/ev/bd_ev_indicador.php',{'action' : 'select','filter' : ' ev_indicador_id = ' + ev_indicador_id});
+            const ev_indicador = await this.request('../../models/ev/bd_ev_indicador_puesto.php',{'action' : 'select','filter' : ' ev_indicador_id = ' + ev_indicador_id});
             if (ev_indicador[0].ev_indicador_id > 0) {
                 this.ev_indicador = ev_indicador[0];
+                let puesto = await this.request('../../models/ev/bd_ev_puesto.php',{'action' : 'select','filter' : ' ev_puesto_id = ' + ev_indicador[0].ev_puesto_nivel[0].ev_puesto_id});
+                this.ev_indicador.puesto = puesto[0].nombre_puesto;
             }else{
                 location.href="v_ev_puesto_nivel.php";
             } 
