@@ -59,7 +59,7 @@ var login = new Vue({
                                 }  else if (rolParam.rol == 'Administracion'){
                                     location.href="views/un/v_almacen.php"; 
                                 }  else if (rolParam.rol == 'Evaluaciones'){
-                                    location.href="views/ev/v_ev_puesto.php";
+                                    location.href="views/ev/v_ev_puesto_nivel.php";
                                 } 
                             }     
                         }else{
