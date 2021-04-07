@@ -8,7 +8,7 @@ var application = new Vue({
         path : '../../models/ev/bd_ev_punto_evaluar.php',
         typeMessage : '',
         msg:'',
-        ev_indicador:{},
+        ev_indicador:{ev_indicador_general:[{}]},
         ev_tipo_capturaCollection:[],
             
         //paginador

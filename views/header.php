@@ -39,7 +39,7 @@ if ($valido == false) {  header('location: ../logout.php'); }
 
           <div id='chagePassword_DIV'>  
             <li class="nav-item active">
-              <button @click="showModal()" style="background:none;border:none;" > <a class="nav-link"   >Cambiar Contraseña<span class="sr-only">(current)</span></a></button>
+              <button @click="showModal()" style="background:none;border:none;" > <a class="nav-link">Cambiar Contraseña<span class="sr-only">(current)</span></a></button>
             </li> 
             <div v-if="modalchagePassword" >  
               <transition name="model" >
@@ -128,8 +128,6 @@ if ($valido == false) {  header('location: ../logout.php'); }
                 </div>
               </transition>
             </div>
-
-            
           </div>   
         </div>
 
@@ -158,7 +156,28 @@ if ($valido == false) {  header('location: ../logout.php'); }
           </div>
         </div>
 
+<script>
+  async function hover() {
+    httpGet( '../../models/auth/check_session.php', 
+      function(response) { 
+        if (response == 1) { 
+        }else{
+          location.href="../";
+        }
+      }); 
+  }  
+  async function  httpGet(theUrl, callback){
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.onreadystatechange = function() { 
+          if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+              callback(xmlHttp.responseText);
+      }
+      xmlHttp.open("GET", theUrl, true); 
+      xmlHttp.send(null);
+  }
+</script>
 
+<body  onclick="hover()" >
 <script type="text/javascript" src="../../controller/user/c_leccion.js"></script>
 <script type="text/javascript" src="../../controller/user/notifications_u.js"></script>
 <script type="text/javascript" src="../../controller/admin/changePasword.js"></script>  

@@ -7,7 +7,7 @@ var app_chagePassword = new Vue({
         pass_new_repeat:"",  
         disables_bte_save: false
     },
-    methods:{ 
+    methods:{  
         showModal(){   
             this.modalchagePassword= true;this.disables_bte_save = false;
         },

@@ -1,10 +1,11 @@
 <?php require "../header.php";?> 
-<div class="container" style="width:90%">  
-    <div id="app_empleado" style="margin-top:15px;"> 
+
+<div class="container-fluid" style="width:80%;">  
+    <div id="app_empleado" style="margin-top:5px;"> 
         <div class="table-responsive">
-            <table class="table table-bordered table-striped">
+            <table class="table table-bordered table-striped" >
                 <tr>
-                    <td style="weight: 30%">
+                    <td style="weight: 30%"  v-if="isFormCrud==false">
                         <label>Filtrar</label>  
                         <table>
                             <tr>
@@ -32,9 +33,6 @@
                                         <option v-for='rows in segmentoCollection' v-bind:value='rows.id_segmento'>{{ rows.nombre }}</option>
                                     </select>
                                 </td>
-                               
-                            
-                                 
                             </tr>
                         </table>
                     </td>
@@ -48,10 +46,8 @@
                     </td> 
                 </tr>
             </table> 
-        </div> 
-
-        
-        <br><br>
+        </div>  
+        <br> 
         <div class="panel-body"  v-if="isFormCrud==false">
             <div class="table-responsive">
                 <nav aria-label="Page navigation example">
@@ -71,7 +67,9 @@
                     </ul>  
                 </nav>
                 <td><button type="button" class="btn btn-info btn-xs edit" @click="add_empleado()">Agregar</button></td>
-                <table class="table table-bordered table-striped">
+                <table class="table table-bordered table-striped"
+                style='font-size:90%'
+                >
                     <tr> 
                         <th>id</th>
                         <th>id cerberus</th> 
@@ -81,8 +79,7 @@
                         <th>Perfil-Calculo</th>   
                         <th></th> 
                     </tr>
-                    <tr v-for="empleado in paginaCollection" >
-                        
+                    <tr v-for="empleado in paginaCollection" > 
                         <td>{{ empleado.id_empleado}}</td>
                         <td>{{ empleado.id_cerberus_empleado}}</td> 
                         <td>{{ empleado.empresa[0].empresa_observaciones }}</td>
@@ -90,9 +87,9 @@
                         <td>{{ empleado.paterno + ' ' + empleado.materno  + ' ' + empleado.nombre }}</td>
                         <td>{{ empleado.perfilcalculo}}</td> 
                         <td style="width:250px" >
-                            <button type="button" class="btn btn" @click="resetPassword(empleado.id_empleado)"><img src="../../img/synchronize.png" width="25px" /></button>
-                            <button type="button" class="btn btn" @click="update_empleado(empleado.id_empleado)"><img src="../../img/ojo.png" width="25px" /></button>
-                            <button type="button" class="btn btn" @click="delete_empleado(empleado.id_empleado)"><img src="../../img/borrar.png" width="25px" /></button>
+                            <button type="button" class="btn btn" @click="resetPassword(empleado.id_empleado)"><img src="../../img/synchronize.png" width="18px" /></button>
+                            <button type="button" class="btn btn" @click="update_empleado(empleado.id_empleado)"><img src="../../img/ojo.png" width="18px" /></button>
+                            <button type="button" class="btn btn" @click="delete_empleado(empleado.id_empleado)"><img src="../../img/borrar.png" width="18px" /></button>
                             <button type="button" class="btn btn-link"  @click="asingRols(empleado)">Rol</button> 
                         </td> 
                     </tr>
@@ -100,13 +97,24 @@
                 <br>
                 <br>
             </div>
-        </div>  
+        </div>   
             
-        <div v-if="isFormCrud" >   
-            <div class="form-group">
-                <label>ID: {{ empleado.id_empleado }}</label>  
-            </div> 
-
+        <div v-if="isFormCrud" >  
+            <div class='form-group'>
+                <div class="row">
+                    <div  class="col-sm">
+                        <label>ID: {{ empleado.id_empleado }}</label>  
+                    </div> 
+                    <div class="col-sm">
+                        <input type='checkbox' class='custom-control-input' id='empleadoactivo _id'   v-model='empleado.activo'  false-value='false' true-value='true' >
+                        <label class='custom-control-label' for='empleadoactivo _id'  >activo</label>
+                    </div> 
+                    <div class='col-sm'>
+                        <input type='checkbox' class='custom-control-input' id='empleadocorreo_verificado _id'   v-model='empleado.correo_verificado'  false-value='false' true-value='true' >
+                        <label class='custom-control-label' for='empleadocorreo_verificado _id'  >correo verificado</label>
+                    </div>  
+                </div>
+            </div>   
             <div class='form-group'>
                 <label>segmento</label> 
                 <select class='form-control' size='1'  v-model='empleado.id_segmento' >
@@ -116,53 +124,132 @@
             </div>   
 
             <div class='form-group'>
-                <label>nombre</label>
-                <input type='text' class='form-control' v-model='empleado.nombre' />
+                <div class="row">
+                    <div class="col-3">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="inputGroupSelect01">Puesto</label>
+                            </div>
+                            <input class="form-control mr-sm-2" type="search"  v-model="filtroPuesto" 
+                                v-on:keyup ="buscarValorPuesto"
+                                placeholder="Buscar Puesto" aria-label="Search"> 
+                        </div>
+                    </div>
+                    <div class="col-9">
+                        <select class='form-control' size='1'  v-model='empleado.ev_puesto_nivel_id' >    
+                            <option value='null' >No asignado</option>
+                            <option v-for='rows in ev_puesto_nivelCollectionFiltro' v-bind:value='rows.ev_puesto_nivel_id'>{{ rows.ev_puesto[0].nombre_puesto }} ({{ rows.ev_nivel_p[0].nombre_nivel_puesto }})</option>
+                        </select>
+                    </div>
+                </div>
             </div>  
+ 
             <div class='form-group'>
-                <label>paterno</label>
-                <input type='text' class='form-control' v-model='empleado.paterno' />
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <label  class="input-group-text">nombre</label>
+                            <input type='text' class='form-control' v-model='empleado.nombre' />
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <label  class="input-group-text">paterno</label>
+                            <input type='text' class='form-control' v-model='empleado.paterno' />
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <label  class="input-group-text">materno</label>
+                            <input type='text' class='form-control' v-model='empleado.materno' />
+                        </div>
+                    </div>
+                </div>
             </div>  
+
             <div class='form-group'>
-                <label>materno</label>
-                <input type='text' class='form-control' v-model='empleado.materno' />
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <label  class="input-group-text" >celular</label>
+                            <input type='number'  class='form-control' v-model='empleado.celular' />
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <label  class="input-group-text">correo</label>
+                            <input type='email' class='form-control' v-model='empleado.correo' />
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <label  class="input-group-text">usuario</label>
+                            <input type='text' class='form-control' v-model='empleado.usuario' />
+                        </div>
+                    </div>
+                </div>
             </div>   
-           
-            <div class='form-group'>
-                <label>celular</label>
-                <input type='number'  class='form-control' v-model='empleado.celular' />
-            </div>  
-            <div class='form-group'>
-                <label>correo</label>
-                <input type='email' class='form-control' v-model='empleado.correo' />
-            </div>       
-            <div class='form-group'>
-                <label>usuario</label>
-                <input type='text' class='form-control' v-model='empleado.usuario' />
-            </div>  
+
             <!-- <div class='form-group'>
                 <label>password</label>
                 <input type='text' class='form-control' v-model='empleado.password' />
             </div>   -->
+
             <div class='form-group'>
-                <label>fecha nacimiento</label>
-                <input type='date' class='form-control' v-model='empleado.fecha_nacimiento' />
-            </div>  
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <label  class="input-group-text">fecha nacimiento</label>
+                            <input type='date' class='form-control' v-model='empleado.fecha_nacimiento' />
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <label  class="input-group-text">nss</label>
+                            <input type='text' class='form-control' v-model='empleado.nss' />
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <label  class="input-group-text">rfc</label>
+                            <input type='text' class='form-control' v-model='empleado.rfc' />
+                        </div>
+                    </div>
+                </div>
+            </div>   
+
             <div class='form-group'>
-                <label>nss</label>
-                <input type='text' class='form-control' v-model='empleado.nss' />
-            </div>  
-            <div class='form-group'>
-                <label>rfc</label>
-                <input type='text' class='form-control' v-model='empleado.rfc' />
-            </div>  
-            <div class='form-group'>
-                <label>ID cerberus empleado</label>
-                <input type='number' class='form-control' v-model='empleado.id_cerberus_empleado' />
-            </div> 
-            <div class='form-group'>
-                <label>ID CONTPAQi</label>
-                <input type='text' class='form-control' v-model='empleado.id_compac' />
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <label  class="input-group-text">ID cerberus empleado</label>
+                            <input type='number' class='form-control' v-model='empleado.id_cerberus_empleado' />
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="input-group mb-3">
+                            <label  class="input-group-text">ID CONTPAQi</label>
+                            <input type='text' class='form-control' v-model='empleado.id_compac' />
+                        </div>
+                    </div>
+                    <div class='col-sm'>
+                        <div class="input-group mb-3">
+                            <label  class="input-group-text">fecha alta cerberus</label>
+                            <input type='date' class='form-control' v-model='empleado.fecha_alta_cerberus' />
+                        </div>
+                    </div>  
+                    <div class='col-sm'>
+                        <div class="input-group mb-3">
+                            <label class="input-group-text">perfilcalculo</label>
+                            <select class='form-control' v-model='empleado.perfilcalculo'>
+                                <option value="Tabulador">Tabulador</option>
+                                <option  value="Estadia">Estadia</option>
+                                <option value="Destajista">Destajista</option>
+                                <option value="X Horas">X Horas</option>
+                            </select> 
+                        </div>  
+                    </div>  
+                </div>
             </div>  
                                     <!-- <div class='form-group'>
                                         <label>talla playera</label> 
@@ -178,28 +265,6 @@
                                             <option v-for='rows in un_tallaCollection' v-bind:value='rows.id_talla'>{{ rows }}</option>
                                         </select>
                                     </div>  -->
-            <div class='form-group'>
-                <label>fecha alta cerberus</label>
-                <input type='date' class='form-control' v-model='empleado.fecha_alta_cerberus' />
-            </div>  
-            <div class='form-group'>
-                <label>perfilcalculo</label>
-                <select class='form-control' v-model='empleado.perfilcalculo'>
-                    <option value="Tabulador">Tabulador</option>
-                    <option  value="Estadia">Estadia</option>
-                    <option value="Destajista">Destajista</option>
-                    <option value="X Horas">X Horas</option>
-                </select> 
-            </div>
-            <div class='custom-control custom-checkbox'>
-                <input type='checkbox' class='custom-control-input' id='empleadoactivo _id'   v-model='empleado.activo'  false-value='false' true-value='true' >
-                <label class='custom-control-label' for='empleadoactivo _id'  >activo</label>
-            </div>  
-            <div class='custom-control custom-checkbox'>
-                <input type='checkbox' class='custom-control-input' id='empleadocorreo_verificado _id'   v-model='empleado.correo_verificado'  false-value='false' true-value='true' >
-                <label class='custom-control-label' for='empleadocorreo_verificado _id'  >correo verificado</label>
-            </div>  
-            <br>
             <br>
             <div class="form-group">
                 <td><button type="button" class="btn btn btn-xs" @click="cancel_empleado()"><img src="../../img/regresar.png" width="28px" /> Regresar</button></td> 
@@ -245,3 +310,11 @@
 
 </div>
 <script type="text/javascript" src="../../controller/admin/c_empleado.js"></script>
+
+  
+
+
+
+
+
+

@@ -131,9 +131,9 @@
         <div class="panel-body"  v-if="isFormCrud==false">  
             <div class="col-md-auto" style="color:#858C8A">
                 <a href="v_ev_puesto_nivel.php" >{{ev_indicador.puesto}}</a> > 
-                <a :href="'v_ev_indicador_puesto.php?ev_puesto_nivel_id='+ev_indicador.ev_puesto_nivel_id">{{ev_indicador.nombre}}</a> 
-                > PUNTOS A EVALUAR
-            </div>  
+                <a :href="'v_ev_indicador_puesto.php?ev_puesto_nivel_id='+ev_indicador.ev_puesto_nivel_id">{{ev_indicador.ev_indicador_general[0].nombre}}</a> 
+                 > PUNTOS A EVALUAR
+            </div>   
             <br>
             <div class="table-responsive">
                 <nav aria-label="Page navigation example">

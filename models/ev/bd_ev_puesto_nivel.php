@@ -104,6 +104,7 @@ class Ev_puesto_nivel
                 $keyword = $this->received_data->filter;
                 $query .= " ev_puesto_nivel_id = :filter";
             }
+            $query .= " ORDER BY p.nombre_puesto";
             $statement = $this->connect->prepare($query); 
             
             $statement->bindParam(':filter', $keyword, PDO::PARAM_STR);

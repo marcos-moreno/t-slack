@@ -25,17 +25,34 @@ var application = new Vue({
         myModelRol : false,
         dynamicTitle: "",
         rols:[],
-        isDisabledSC:true
+        isDisabledSC:true,
+        ev_puesto_nivelCollection:[],
+        ev_puesto_nivelCollectionFiltro:[],
+        filtroPuesto:""
     },
     methods:{
+        
+        async buscarValorPuesto(){
+            this.ev_puesto_nivelCollectionFiltro = [];
+            let asignado = false;
+            for (let index = 0; index < this.ev_puesto_nivelCollection.length; index++) {
+                const element = this.ev_puesto_nivelCollection[index];
+                let nomCompuesto = element.ev_puesto[0].nombre_puesto + ' (' + element.ev_nivel_p[0].nombre_nivel_puesto + ")";
+                if (nomCompuesto.toUpperCase().includes(this.filtroPuesto.toUpperCase())) {
+                    this.ev_puesto_nivelCollectionFiltro.push(element);
+                    if (asignado==false) {
+                        this.empleado.ev_puesto_nivel_id = element.ev_puesto_nivel_id;
+                        asignado = true;
+                    }
+                }
+            }
+        },
         async resetPassword(id_empleado){ 
-        if(confirm("¿Estas seguro de Restablecer la Contraseña?"))
+            if(confirm("¿Estas seguro de Restablecer la Contraseña?"))
             {
                 this.empleado = this.search_empleadoByID(id_empleado); 
-                // console.log( this.empleado);
                 const response = await this.request(this.path,{model:this.empleado,'action' : 'resetPassword'});
                 try {
-                    // console.log(response);
                     if (response == "Reset Password Success") { 
                         alert("La contraseña del empleado con ID:" + id_empleado + " he sido Restablecida."); 
                     } else { 
@@ -43,7 +60,7 @@ var application = new Vue({
                     }
                 } catch (error) {
                     alert("No se pudo completar la Acción.");
-                } 
+                }
             } 
         },
         async getempleados(){  
@@ -173,6 +190,16 @@ var application = new Vue({
             try{  
                 if(response_empresa.length > 0){  
                     this.empresas = response_empresa; 
+                }  
+            }catch(error){
+                this.show_message('No hay Empresas.','info');
+            } 
+            const response_ev_puesto_nivel = await this.request('../../models/ev/bd_ev_puesto_nivel.php',{'type':"ilike",'action' : 'select','filter' : ''});
+            try{  
+                if(response_ev_puesto_nivel.length > 0){  
+                    this.ev_puesto_nivelCollection = response_ev_puesto_nivel; 
+                    this.ev_puesto_nivelCollectionFiltro = this.ev_puesto_nivelCollection;
+
                 }  
             }catch(error){
                 this.show_message('No hay Empresas.','info');
