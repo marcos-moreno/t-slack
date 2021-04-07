@@ -27,7 +27,6 @@ var application = new Vue({
             this.paginaCollection = [];
             let filtrarPor =  "(empresa_nombre ILIKE '%" + this.filter + "%' )";  
            const response = await this.request(this.path,{'order' : 'ORDER BY id_empresa DESC','action' : 'select','filter' : filtrarPor});
-           console.log(response);
             try{ 
                 this.show_message(response.length + ' Registros Encontrados.','success');
                 this.empresaCollection = response;

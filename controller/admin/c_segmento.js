@@ -120,9 +120,7 @@ var application = new Vue({
             return response; 
         },
         async fill_f_keys(){
-             
             const response_empresa = await this.request('../../models/generales/bd_empresa.php',{'order' : 'ORDER BY id_empresa DESC','action' : 'select'});
-            console.log(response_empresa);
             try{  
                 if(response_empresa.length > 0){  
                     this.empresaCollection = response_empresa; 

@@ -27,7 +27,7 @@ var application = new Vue({
             this.segmentoCollection  = [];
             this.paginaCollection = [];
             let filtrarPor =  "(nombre ILIKE '%" + this.filter + "%' )";  
-           const response = await this.request(this.path,{'order' : 'ORDER BY id_segmento DESC','action' : 'select','filter' : filtrarPor});
+            const response = await this.request(this.path,{'order' : 'ORDER BY id_segmento DESC','action' : 'select','filter' : filtrarPor});
             try{ 
                 this.show_message(response.length + ' Registros Encontrados.','success');
                 this.segmentoCollection = response;
@@ -120,7 +120,6 @@ var application = new Vue({
             return response; 
         },
         async fill_f_keys(){
-             
             const response_empresa = await this.request('../../models/general/bd_empresa.php',{'order' : 'ORDER BY id_empresa DESC','action' : 'select'});
             try{  
                 if(response_empresa.length > 0){  
