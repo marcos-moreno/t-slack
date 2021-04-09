@@ -10,6 +10,7 @@ foreach ($elementos as $key) {
   }
 }  
 if ($valido == false) {  header('location: ../logout.php'); } 
+
 ?>
 <head> 
   <meta charset="utf-8">  
@@ -177,7 +178,7 @@ if ($valido == false) {  header('location: ../logout.php'); }
   }
 </script>
 
-<body  onclick="hover()" >
+<body  onclick="hover()" style="background-color: <?php session_start();   echo $_SESSION['color_back'] ?>" >
 <script type="text/javascript" src="../../controller/user/c_leccion.js"></script>
 <script type="text/javascript" src="../../controller/user/notifications_u.js"></script>
 <script type="text/javascript" src="../../controller/admin/changePasword.js"></script>  

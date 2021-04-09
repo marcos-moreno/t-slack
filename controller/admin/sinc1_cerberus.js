@@ -14,23 +14,25 @@ var sinconizador = new Vue({
       display_duplicate : false
     },
     methods:{
-        async completeSinc(){ 
+        async completeSinc(){  
             for (let index = 0; index < this.employesCerberus.length; index++) {
                 const element = this.employesCerberus[index];
-                    let employee = {}; 
+                let employee = {}; 
                 try { 
                     employee.id_empresa_cerberus = element.idEmpresa;
                     employee.nombre = element.nombreEmpleado;
                     employee.paterno = element.apPatEmpleado;
                     employee.materno = element.apMatEmpleado;
-                    employee.activo = element.esActivo;
-                    employee.celular = (element.telcontacto != '' && element.telcontacto != '0' && !element.telcontacto.includes('--') ? element.telcontacto :
-                                        (element.telcasa != '' && element.telcasa != '0' && !element.telcasa.includes('--') ? element.telcasa : "" ));
+                    try {
+                        employee.celular = (element.telcontacto != '' && element.telcontacto != '0' && !element.telcontacto.includes('--') ? element.telcontacto :
+                        (element.telcasa != '' && element.telcasa != '0' && !element.telcasa.includes('--') ? element.telcasa : "" ));
+                        employee.celular.replace(' ','');
+                    } catch (error) {
+                        employee.celular = null
+                    }
                     employee.correo = element.correoPersonal;
                     employee.genero = (element.genero == 'MASCULINO' ? 'H' : 'M' );
-    
                     let i = element.nombreEmpleado.indexOf(" ");
-                    
                     let usuario = (element.nombreEmpleado.substring(0,(i > 0 ? i : element.nombreEmpleado.length ) ))   + '.' + element.apPatEmpleado; 
                     usuario = usuario.toLowerCase(); 
                     employee.fecha_nacimiento = element.fechaNacimiento;
@@ -38,8 +40,10 @@ var sinconizador = new Vue({
                     employee.rfc = element.rfc;
                     employee.fecha_alta_cerberus = element.fechaAlta;
                     employee.id_cerberus_empleado = element.idEmpleadoCerberus;
-                    employee.organization = element.nombreSucursal.trim(); 
                     employee.perfilcalculo = element.perfilCalculo; 
+                    employee.iddepartamento_cerbeus = element.idDepartamento; 
+                    employee.idempresa_cerberus = element.idEmpresa; 
+                    employee.idsucursal_cerberus = element.idSucursal; 
                     let user_duplicate = false;
                     if (this.validaUser(usuario)) {
                         employee.usuario =  usuario;
@@ -47,17 +51,18 @@ var sinconizador = new Vue({
                         employee.usuario =  usuario + "_d";
                         user_duplicate = true;
                     }  
-
                     const res = await this.request('../../models/bd/bd_employee.php', {action:'insertSinc',model:employee}); 
                     if (res.message == 'sinc succes') {
                         this.show_message(this.msg + '\nSincronizado: ' + employee.id_cerberus_empleado,'success'); 
                         if (user_duplicate) {
                             this.array_duplicate.push(employee);  
                         }
-                    }else if(res.message == 'error'){ 
-                        if(res.error[2].includes('id_segmento') && res.error[2].includes('violates not-null constraint')){
+                    }else if(res.message == 'error'){  
+                        if(res.error.includes('SQLSTATE[23505]')){
+                            this.show_message(this.msg  + ' Este empleado cuenta con una clave Duplucada. ' + res.error,'info'); 
+                        }else if(res.error.includes('id_segmento') && res.error.includes('violates not-null constraint')){
                             this.show_message(this.msg  + ' || '+ employee.organization  +' Error: La organización No existe. ','info'); 
-                        }else if(res.error[2].includes('already exists') && res.error[2].includes('unique constraint')){
+                        }else if(res.error.includes('already exists') && res.error.includes('unique constraint')){
                             this.show_message(this.msg  + '\nError: ' + employee.id_cerberus_empleado + "  Este ID cerberus,Nss o RFC ya estan en el sistema.",'info'); 
                         } else{
                             this.show_message(this.msg  + '\nError: ' + employee.id_cerberus_empleado +' '
@@ -70,7 +75,7 @@ var sinconizador = new Vue({
                         this.display_duplicate = true;
                     }
                 } catch (error) {
-                    this.show_message("Error Al sincronizar el epleado: " + element.idEmpleadoCerberus + '\nError: ' + error +' '
+                    this.show_message("Error al sincronizar el epleado: " + element.idEmpleadoCerberus + '\nError: ' + error +' '
                         + '\n'+ error,'error'); 
                 }
             }
@@ -92,6 +97,7 @@ var sinconizador = new Vue({
         },async buscarCerberus(){
             const res = await this.get_data_cerberusByID(this.id_cerberus);
             this.employesCerberus = [];
+            console.log(this.employesCerberus);
             try {
                 if (res.idEmpleadoCerberus > 0) {
                     this.employesCerberus[0] = res; 
@@ -106,7 +112,7 @@ var sinconizador = new Vue({
         },async show_message(msg,typeMessage){ 
             this.msg = msg;
             this.typeMessage = typeMessage;
-            setTimeout(function() { sinconizador.typeMessage='' ;sinconizador.msg =''; }, 30000);
+            setTimeout(function() { sinconizador.typeMessage='' ;sinconizador.msg =''; }, 90000);
         },async searchNewEmployees(){
             let cadena = "";
             let arrayEmpleadoSlacknss = ""; 
@@ -125,7 +131,6 @@ var sinconizador = new Vue({
             const res = await this.get_data_new_employees_cerberus(cadena,arrayEmpleadoSlacknss);
             this.employesCerberus = res;
             // console.log(this.employesCerberus);
-            // console.log(this.employesSlack);
             this.is_newEmployees = true;
         },DelNewEmployee(row){
             let array_result= [];
@@ -156,7 +161,6 @@ var sinconizador = new Vue({
         },
         async fetchAllEmployees(){
            const res = await this.request('../../models/bd/bd_employee.php', {  
-            // action:'filterEmpleado',filter:'VICTOR VICENTE'});
             action:'fetchall'});
             sinconizador.employesSlack = res;
             sinconizador.data_to_filter = res; 
@@ -171,10 +175,10 @@ var sinconizador = new Vue({
                         element.id_cerberus_empleado = employee_cerberus.idEmpleadoCerberus;
                         element.nss = employee_cerberus.nss;
                         element.rfc = employee_cerberus.rfc; 
-                        console.log(element);
+                        // console.log(element);
                         const res = await this.request('../../models/bd/bd_employee.php', { 
                             action:'updateSync',model:element});
-                        console.log(res);
+                        // console.log(res);
                     }else{ 
                         console.log( "El modelo esta vacio IdEmpleado t-Slack:" +element.id_empleado);
                     } 
@@ -184,18 +188,17 @@ var sinconizador = new Vue({
             }  
          }
          ,async get_data_new_employees_cerberus(arrayEmpleadoSlack,arrayEmpleadoSlacknss){ 
-            //  console.log(arrayEmpleadoSlack);
             const response = await axios.get('https://rep.refividrio.com.mx:5858/api/NewEmpleado' 
-            ,{params:{
+           ,{params:{
                  //'arrayEmpleadoSlack':arrayEmpleadoSlack,
                  'arrayEmpleadoSlacknss':arrayEmpleadoSlack,
                 //'arrayEmpleadoSlacknss':arrayEmpleadoSlacknss
             } 
             }).then(function (response) {   
-                return response.data.recordset; 
+                return response.data.data; 
             }).catch(function (response) {  
                 return response;
-            })  
+            });
             return response;
         },async get_data_cerberusByName(employe){ 
             const response = await axios.get('https://rep.refividrio.com.mx:5858/api/empleado' 
@@ -216,11 +219,11 @@ var sinconizador = new Vue({
             ,{params:{
                 'id_cerberus_empleado':id, 
             } 
-            }).then(function (response) {   
-                return response.data.recordset[0]; 
+            }).then(function (response) {    
+                return response.data.data[0]; 
             }).catch(function (response) {  
-                return response;
-            })  
+                return response.data;
+            }) 
             return response;
         },async request(path,jsonParameters){
             const response = await axios.post(path, jsonParameters).then(function (response) {   

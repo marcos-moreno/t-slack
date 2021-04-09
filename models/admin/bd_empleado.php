@@ -70,13 +70,16 @@ class Empleado
                         ':correo_verificado' => $this->received_data->model->correo_verificado,  
                         ':id_compac' => $this->received_data->model->id_compac,  
                         ':ev_puesto_nivel_id' => $this->received_data->model->ev_puesto_nivel_id,  
+                        ':departamento_id' => $this->received_data->model->departamento_id,  
+
                     ); 
             $query = 'INSERT INTO empleado (id_segmento,id_creadopor,fecha_creado,nombre,paterno,materno,activo,celular,correo,genero,id_actualizadopor,
             fecha_actualizado,usuario,password,fecha_nacimiento,nss,rfc,id_cerberus_empleado,fecha_alta_cerberus,perfilcalculo,
-            correo_verificado,id_compac,ev_puesto_nivel_id) VALUES 
+            correo_verificado,id_compac,ev_puesto_nivel_id,departamento_id) 
+                VALUES 
             (:id_segmento,:id_creadopor,now(),:nombre,:paterno,:materno,:activo,:celular,:correo,:genero,:id_actualizadopor,
             now(),:usuario,MD5(:password),:fecha_nacimiento,:nss,:rfc,:id_cerberus_empleado,:fecha_alta_cerberus,:perfilcalculo,
-            :correo_verificado,id_compac,:ev_puesto_nivel_id) RETURNING id_empleado ;';
+            :correo_verificado,id_compac,:ev_puesto_nivel_id,:departamento_id) RETURNING id_empleado ;';
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);   
@@ -125,7 +128,7 @@ class Empleado
                         ':id_empresa' => $this->received_data->model->id_empresa, 
                         ':id_compac' => $this->received_data->model->id_compac, 
                         ':ev_puesto_nivel_id' => $this->received_data->model->ev_puesto_nivel_id,  
-
+                        ':departamento_id' => $this->received_data->model->departamento_id,   
                     ); 
             $query = 'UPDATE empleado SET id_segmento=:id_segmento,nombre=:nombre,paterno=:paterno,materno=:materno,
             activo=:activo,
@@ -133,7 +136,7 @@ class Empleado
             usuario=:usuario,fecha_nacimiento=:fecha_nacimiento,nss=:nss,rfc=:rfc,id_cerberus_empleado=:id_cerberus_empleado
            ,fecha_alta_cerberus=:fecha_alta_cerberus,perfilcalculo=:perfilcalculo
             ,correo_verificado=:correo_verificado,id_empresa=:id_empresa 
-            ,id_compac=:id_compac,ev_puesto_nivel_id=:ev_puesto_nivel_id
+            ,id_compac=:id_compac,ev_puesto_nivel_id=:ev_puesto_nivel_id,departamento_id=:departamento_id
             WHERE  id_empleado = :id_empleado ;';
 
             $statement = $this->connect->prepare($query); 
@@ -166,7 +169,7 @@ class Empleado
         $query = 'SELECT id_empleado,id_segmento,id_creadopor,fecha_creado,nombre,paterno,materno,activo,celular,correo,enviar_encuesta
                 ,genero,id_actualizadopor,fecha_actualizado,usuario,password,fecha_nacimiento,nss,rfc,id_cerberus_empleado
                 ,id_talla_playera,id_numero_zapato,fecha_alta_cerberus,perfilcalculo,correo_verificado,
-                id_empresa,desc_mail_v ,id_compac,ev_puesto_nivel_id
+                id_empresa,desc_mail_v ,id_compac,ev_puesto_nivel_id,departamento_id
                     FROM empleado  
                     ' . (isset($this->received_data->filter) ? ' 
                     WHERE ' . $this->received_data->filter:'') . 
@@ -180,6 +183,8 @@ class Empleado
                     // $row['un_talla'] = $this->search_union($row,'un_talla','id_talla','id_talla_playera');
                     $row['empresa'] = $this->search_unions('empresa','id_empresa', $row['segmento'][0]['id_empresa']  );
                     $row['ev_puesto_nivel'] = $this->search_union($row,'ev_puesto_nivel','ev_puesto_nivel_id','ev_puesto_nivel_id');
+                    $row['departamento'] = $this->search_union($row,'departamento','departamento_id','departamento_id');
+                    
                     // $row['un_talla'] = $this->search_union($row,'un_talla','id_talla','id_talla_playera');
                     $data[] = $row;
             } 
@@ -204,7 +209,7 @@ class Empleado
             return $data; 
         } catch (PDOException $exc) {
             $output = array('message' => $exc->getMessage());  
-            return $output;
+            return array("nombre"=>"No Asignado","id_departamento"=>0); 
         }  
     }
 
@@ -219,10 +224,9 @@ class Empleado
             }  
             return $data; 
         } catch (PDOException $exc) {
-            $output = array('message' => $exc->getMessage()
-        ); 
+            $output = array('message' => $exc->getMessage()); 
             echo json_encode($output); 
-            return false;
+            return array("nombre"=>"No Asignado","id_departamento"=>0); 
         }  
     }
     public function delete(){
@@ -240,8 +244,7 @@ class Empleado
             return true;
         } catch (PDOException $exc) {
             $output = array('message' => $exc->getMessage()); 
-            echo json_encode($output); 
-            return false;
+            return array(); 
         }  
     }
 

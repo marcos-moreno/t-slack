@@ -10,6 +10,7 @@ var application = new Vue({
         msg:'',
         un_tallaCollection:[],
         segmentoCollection:[],
+        segmentoFilterCollection:[], 
         un_tallaCollection:[],
         //paginador
         numByPag : 25, 
@@ -28,7 +29,8 @@ var application = new Vue({
         isDisabledSC:true,
         ev_puesto_nivelCollection:[],
         ev_puesto_nivelCollectionFiltro:[],
-        filtroPuesto:""
+        filtroPuesto:"",
+        departamentoCollection:[], 
     },
     methods:{
         
@@ -162,7 +164,13 @@ var application = new Vue({
             this.typeMessage = typeMessage;
             setTimeout(function() { application.typeMessage='' ;application.msg =''; }, 15000);
         },model_empty(){
-            this.empleado = {id_empleado:0,id_segmento:'',id_creadopor:'',fecha_creado:'',nombre:'',paterno:'',materno:'',activo:true,celular:'',correo:'',enviar_encuesta:'',genero:'',id_actualizadopor:'',fecha_actualizado:'',usuario:'',password:'',fecha_nacimiento:'',nss:'',rfc:'',id_cerberus_empleado:'',id_talla_playera:'',id_numero_zapato:'',fecha_alta_cerberus:'',perfilcalculo:'',correo_verificado:false,id_empresa:'',desc_mail_v:'',id_compac:0};
+            this.empleado = {id_empleado:0,id_segmento:'',id_creadopor:'',fecha_creado:'',nombre:''
+            ,paterno:'',materno:'',activo:true,celular:'',
+            correo:'',enviar_encuesta:'',genero:'',id_actualizadopor:''
+            ,fecha_actualizado:'',usuario:'',password:'',fecha_nacimiento:''
+            ,nss:'',rfc:'',id_cerberus_empleado:'',id_talla_playera:'',id_numero_zapato:''
+            ,fecha_alta_cerberus:'',perfilcalculo:'',correo_verificado:false,id_empresa:''
+            ,desc_mail_v:'',id_compac:0,departamento_id:null};
         },
         async request(path,jsonParameters){
             const response = await axios.post(path, jsonParameters).then(function (response) {   
@@ -173,18 +181,33 @@ var application = new Vue({
             return response; 
         },
         async get_segmentos(){
-            const response_segmento = await this.request('../../models/admin/bd_segmento.php',{'order' : 'ORDER BY id_segmento ASC','action' : 'select',filter:" id_empresa = " + this.empresa_id_filter});
+            const response_segmento = await this.request('../../models/admin/bd_segmento.php',
+            {'order' : 'ORDER BY id_empresa,id_segmento ASC','action' : 'select'});
             try{  
                 if(response_segmento.length > 0){  
                     this.segmentoCollection = response_segmento; 
+                    // console.log(this.segmentoCollection);
                 }  
                 this.getempleados();
             }catch(error){
                 this.show_message('No hay segmentos.','info');
             }  
         }, 
+        async get_segmentosFilter(){
+            const response_segmento = await this.request('../../models/admin/bd_segmento.php',{'order' : 'ORDER BY id_segmento ASC','action' : 'select',filter:" id_empresa = " + this.empresa_id_filter});
+            try{  
+                if(response_segmento.length > 0){  
+                    this.segmentoFilterCollection = response_segmento; 
+                }  
+                this.getempleados();
+            }catch(error){
+                this.show_message('No hay segmentos.','info');
+            }  
+        }, 
+        
         async fill_f_keys(){
             this.get_segmentos(); 
+            this.get_segmentosFilter()
             this.segmento_id_filter = 'todo';
             const response_empresa = await this.request('../../models/bd/bd_company.php',{'action' : 'fetchall'});
             try{  
@@ -192,7 +215,7 @@ var application = new Vue({
                     this.empresas = response_empresa; 
                 }  
             }catch(error){
-                this.show_message('No hay Empresas.','info');
+                this.show_message('No se encontrarón Empresas.','info');
             } 
             const response_ev_puesto_nivel = await this.request('../../models/ev/bd_ev_puesto_nivel.php',{'type':"ilike",'action' : 'select','filter' : ''});
             try{  
@@ -202,9 +225,19 @@ var application = new Vue({
 
                 }  
             }catch(error){
-                this.show_message('No hay Empresas.','info');
+                this.show_message('No se encontrarón Empresas.','info');
             }
-            
+
+            const response_departamento = await this.request('../../models/admin/bd_departamento.php'
+            ,{'order' : 'ORDER BY id_empresa,id_segmento,nombre ASC','action' : 'select'});
+            // console.log(response_departamento);
+            try{  
+                if(response_departamento.length > 0){  
+                    this.departamentoCollection = response_departamento;  
+                }  
+            }catch(error){
+                this.show_message('No se encontrarón Departamentos.','info');
+            } 
         },paginator(i){ 
             let cantidad_pages = Math.ceil(this.empleadoCollection.length / this.numByPag);
             this.paginas = []; 

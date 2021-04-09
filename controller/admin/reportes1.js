@@ -16,10 +16,14 @@ var report = new Vue({
     methods:{ 
        
         async getEmployeesBySegment(){  
-            await axios.post("../../models/bd/bd_employee.php", {   action:'fetchByDepartament',   id_segmento: this.segmentSelected  })
-            .then(function (response) { report.empleados =  response.data;    })
-            .catch(function (response) {    return response.data;  })   ;
-               
+            let filtrarPor =  " id_segmento=" + this.segmentSelected;  
+            const response = await axios.post('../../models/admin/bd_empleado.php',{'order' : 'ORDER BY id_empleado DESC','action' : 'select','filter' : filtrarPor})
+                            .then(function (response) {   
+                                return response.data; 
+                            }).catch(function (response) {  
+                                return response.data;
+                            })
+            report.empleados = response;
         } 
         ,async getCompanys(){ 
             const response =  await 

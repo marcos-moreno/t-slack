@@ -22,15 +22,16 @@
                             </tr>
                             <tr> 
                                 <td> 
-                                    <select class='form-control'  v-model='empresa_id_filter' style="width:150px" @change="get_segmentos()" > 
+                                    <select class='form-control'  v-model='empresa_id_filter' style="width:150px" @change="get_segmentosFilter()" > 
                                         <option value='todo'>Todas las Empresas</option>
                                         <option v-for='rows in empresas' v-bind:value='rows.id_empresa'>{{ rows.empresa_observaciones }}</option>
                                     </select>
                                 </td> 
                                 <td>
+                                <!-- {{segmentoFilterCollection}} -->
                                     <select class='form-control'  v-model='segmento_id_filter' style="width:150px" @change="getempleados()" > 
                                         <option value='todo'>Todo los Segmentos</option>
-                                        <option v-for='rows in segmentoCollection' v-bind:value='rows.id_segmento'>{{ rows.nombre }}</option>
+                                        <option v-for='rows in segmentoFilterCollection' v-bind:value='rows.id_segmento'>{{ rows.nombre }}</option>
                                     </select>
                                 </td>
                             </tr>
@@ -75,6 +76,7 @@
                         <th>id cerberus</th> 
                         <th>Empresa</th>   
                         <th>Segmento</th>
+                        <th>Departamento</th>
                         <th>nombre</th>        
                         <th>Perfil-Calculo</th>   
                         <th></th> 
@@ -83,7 +85,13 @@
                         <td>{{ empleado.id_empleado}}</td>
                         <td>{{ empleado.id_cerberus_empleado}}</td> 
                         <td>{{ empleado.empresa[0].empresa_observaciones }}</td>
-                        <td>{{ empleado.segmento[0].nombre}}</td>
+                        <td>{{ empleado.segmento[0].nombre}}</td>  
+                        <td>
+                            <div  v-if="empleado.departamento.length>0">
+                                {{ empleado.departamento[0].nombre}}
+                            </div>
+                            <div v-else></div>
+                        </td> 
                         <td>{{ empleado.paterno + ' ' + empleado.materno  + ' ' + empleado.nombre }}</td>
                         <td>{{ empleado.perfilcalculo}}</td> 
                         <td style="width:250px" >
@@ -114,28 +122,30 @@
                         <label class='custom-control-label' for='empleadocorreo_verificado _id'  >correo verificado</label>
                     </div>  
                 </div>
-            </div>   
+            </div> 
+
             <div class='form-group'>
                 <label>segmento</label> 
                 <select class='form-control' size='1'  v-model='empleado.id_segmento' >
-                    <option value='0' >-</option>
-                    <option v-for='rows in segmentoCollection' v-bind:value='rows.id_segmento'>{{ rows.nombre }}</option>
+                    <optgroup v-for="(empresa, i) in empresas" :label="empresa.empresa_observaciones" > 
+                        <option v-if="empresa.id_empresa==rows.id_empresa" v-for='rows in segmentoCollection' v-bind:value='rows.id_segmento'>{{ rows.nombre }}</option>
+                    </optgroup>
                 </select>
             </div>   
 
             <div class='form-group'>
                 <div class="row">
-                    <div class="col-3">
+                    <div class="col-5">
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <label class="input-group-text" for="inputGroupSelect01">Puesto</label>
+                                <label class="input-group-text" >Puesto</label>
                             </div>
-                            <input class="form-control mr-sm-2" type="search"  v-model="filtroPuesto" 
+                            <input class="form-control" type="search"  v-model="filtroPuesto" 
                                 v-on:keyup ="buscarValorPuesto"
                                 placeholder="Buscar Puesto" aria-label="Search"> 
                         </div>
                     </div>
-                    <div class="col-9">
+                    <div class="col-7">
                         <select class='form-control' size='1'  v-model='empleado.ev_puesto_nivel_id' >    
                             <option value='null' >No asignado</option>
                             <option v-for='rows in ev_puesto_nivelCollectionFiltro' v-bind:value='rows.ev_puesto_nivel_id'>{{ rows.ev_puesto[0].nombre_puesto }} ({{ rows.ev_nivel_p[0].nombre_nivel_puesto }})</option>
@@ -199,7 +209,7 @@
                 <div class="row">
                     <div class="col-sm">
                         <div class="input-group mb-3">
-                            <label  class="input-group-text">fecha nacimiento</label>
+                            <label  class="input-group-text">Nacimiento</label>
                             <input type='date' class='form-control' v-model='empleado.fecha_nacimiento' />
                         </div>
                     </div>
@@ -222,34 +232,56 @@
                 <div class="row">
                     <div class="col-sm">
                         <div class="input-group mb-3">
-                            <label  class="input-group-text">ID cerberus empleado</label>
+                            <label  class="input-group-text">Cerberus</label>
                             <input type='number' class='form-control' v-model='empleado.id_cerberus_empleado' />
                         </div>
                     </div>
                     <div class="col-sm">
                         <div class="input-group mb-3">
-                            <label  class="input-group-text">ID CONTPAQi</label>
+                            <label  class="input-group-text">CONTPAQi</label>
                             <input type='text' class='form-control' v-model='empleado.id_compac' />
                         </div>
                     </div>
                     <div class='col-sm'>
                         <div class="input-group mb-3">
-                            <label  class="input-group-text">fecha alta cerberus</label>
+                            <label  class="input-group-text">Alta Cerb</label>
                             <input type='date' class='form-control' v-model='empleado.fecha_alta_cerberus' />
                         </div>
                     </div>  
-                    <div class='col-sm'>
-                        <div class="input-group mb-3">
-                            <label class="input-group-text">perfilcalculo</label>
-                            <select class='form-control' v-model='empleado.perfilcalculo'>
-                                <option value="Tabulador">Tabulador</option>
-                                <option  value="Estadia">Estadia</option>
-                                <option value="Destajista">Destajista</option>
-                                <option value="X Horas">X Horas</option>
-                            </select> 
-                        </div>  
-                    </div>  
+                    
                 </div>
+            </div>  
+
+            <div class='form-group'>
+            <div class="row">
+                <div class='col-sm'>
+                    <div class="input-group mb-3">
+                        <label class="input-group-text">perfilcalculo</label>
+                        <select class='form-control' v-model='empleado.perfilcalculo'>
+                            <option value="Tabulador">Tabulador</option>
+                            <option  value="Estadia">Estadia</option>
+                            <option value="Destajista">Destajista</option>
+                            <option value="X Horas">X Horas</option>
+                        </select> 
+                    </div>  
+                </div>   
+
+                <div class='col-sm'>
+                    <div class="input-group mb-3">
+                        <label class="input-group-text">Departamento</label>
+                        <select class='form-control' v-model='empleado.departamento_id'>
+                            <optgroup  v-for="(segmento, i) in segmentoCollection"
+                                         :label="'(' + segmento.empresa[0].empresa_observaciones +') ' + segmento.nombre.replace(/\(([^)]*)\)/,'')" >
+                                <option v-if="segmento.id_segmento==depa.id_segmento" 
+                                        v-for='depa in departamentoCollection' 
+                                        v-bind:value='depa.departamento_id'>
+                                        {{depa.nombre}}
+                                </option> 
+                            </optgroup>  
+                        </select> 
+                    </div> 
+                </div>   
+            </div> 
             </div>  
                                     <!-- <div class='form-group'>
                                         <label>talla playera</label> 
@@ -309,7 +341,7 @@
 
 
 </div>
-<script type="text/javascript" src="../../controller/admin/c_empleados.js"></script>
+<script type="text/javascript" src="../../controller/admin/c_empleado1.js"></script>
 
   
 

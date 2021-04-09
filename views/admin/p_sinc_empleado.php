@@ -135,4 +135,4 @@
         </div> 
       </div>
 </div> 
-<script type="text/javascript" src="../../controller/admin/sincron_cerberus.js"></script>  
+<script type="text/javascript" src="../../controller/admin/sinc1_cerberus.js"></script>  

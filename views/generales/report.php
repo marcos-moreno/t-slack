@@ -52,7 +52,7 @@
                               <label>empleado:</label>
                               <select class='form-control'  v-model="empleadoSelected">
                                 <option value='0' >Todos los empleado</option>
-                                <option v-for="rows in empleados" v-bind:value='rows.id_empleado'>{{ rows.nom_largo }}</option>
+                                <option v-for="rows in empleados" v-bind:value='rows.id_empleado'>{{ rows.paterno }} {{ rows.materno }} {{ rows.nombre }}</option>
                               </select>
 
                               <div v-if="reportSelected=='M'">
@@ -113,4 +113,4 @@
 
   <div id="viewReport"> </div>   
   
-<script type="text/javascript" src="../../controller/admin/reportes.js" ></script>
+<script type="text/javascript" src="../../controller/admin/reportes1.js" ></script>

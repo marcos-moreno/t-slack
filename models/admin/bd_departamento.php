@@ -8,28 +8,28 @@
 if (check_session()) { 
     switch($received_data->action){
         case 'update': 
-            $model = new Segmento($data,$connect,$received_data);
+            $model = new Departamento($data,$connect,$received_data);
             $model->update();
         break;
         case 'insert':
-            $model = new Segmento($data,$connect,$received_data);
+            $model = new Departamento($data,$connect,$received_data);
             $model->insert();
         break;
         case 'delete':
-            $model = new Segmento($data,$connect,$received_data);
+            $model = new Departamento($data,$connect,$received_data);
             $model->delete(); 
         break;
         case 'select': 
-            $model = new Segmento($data,$connect,$received_data);
+            $model = new Departamento($data,$connect,$received_data);
             $model->select();
-        break;
+        break; 
     }
 }else{
     $output = array('message' => 'Not authorized'); 
     echo json_encode($output); 
 } 
 
-class Segmento 
+class Departamento 
 {   
     
     private $output = null;
@@ -45,17 +45,16 @@ class Segmento
     public function insert(){
         try {
             $data = array(
-                    ':id_empresa' => $this->received_data->model->id_empresa,
-                        ':id_creadopor' =>  $_SESSION['id_empleado'],  
-                        ':nombre' => $this->received_data->model->nombre,
-                        ':observaciones' => $this->received_data->model->observaciones,
+                    ':nombre' => $this->received_data->model->nombre,
                         ':activo' => $this->received_data->model->activo,
-                        ':id_actualizadopor' => $_SESSION['id_empleado'],  
-                        ':id_cerberus' => $this->received_data->model->id_cerberus, 
+                        ':actualizadopor' => $_SESSION['id_empleado'],
+                        ':creadopor' => $_SESSION['id_empleado'],
+                        ':id_empresa' => $this->received_data->model->id_empresa,
+                        ':id_segmento' => $this->received_data->model->id_segmento,
+                        ':id_cerberus' => $this->received_data->model->id_cerberus,
+                        
                     ); 
-        $query = 'INSERT INTO segmento (id_empresa,id_creadopor,fecha_creado,nombre,observaciones,activo,id_actualizadopor,
-        fecha_actualizado,id_cerberus) 
-        VALUES (:id_empresa,:id_creadopor,now(),:nombre,:observaciones,:activo,:id_actualizadopor,now(),:id_cerberus) ;';
+        $query = 'INSERT INTO departamento (nombre,activo,creado,actualizado,actualizadopor,creadopor,id_empresa,id_segmento,id_cerberus) VALUES (:nombre,:activo,Now(),Now(),:actualizadopor,:creadopor,:id_empresa,:id_segmento,:id_cerberus) ;';
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  
@@ -72,19 +71,16 @@ class Segmento
     public function update(){
         try {
             $data = array(
-                    ':id_segmento' => $this->received_data->model->id_segmento, 
-                        ':id_empresa' => $this->received_data->model->id_empresa, 
-                        ':id_creadopor' =>  $_SESSION['id_empleado'],  
+                    ':departamento_id' => $this->received_data->model->departamento_id, 
                         ':nombre' => $this->received_data->model->nombre, 
-                        ':observaciones' => $this->received_data->model->observaciones, 
                         ':activo' => $this->received_data->model->activo, 
-                        ':id_actualizadopor' =>  $_SESSION['id_empleado'],   
+                        ':actualizadopor' => $_SESSION['id_empleado'],
+                        ':id_empresa' => $this->received_data->model->id_empresa, 
+                        ':id_segmento' => $this->received_data->model->id_segmento, 
                         ':id_cerberus' => $this->received_data->model->id_cerberus, 
+                         
                     ); 
-            $query = 'UPDATE segmento SET id_empresa=:id_empresa,id_creadopor=:id_creadopor,
-                            nombre=:nombre,observaciones=:observaciones,activo=:activo,
-                            id_actualizadopor=:id_actualizadopor,
-                            fecha_actualizado=Now(),id_cerberus=:id_cerberus WHERE  id_segmento = :id_segmento ;';
+            $query = 'UPDATE departamento SET nombre=:nombre,activo=:activo,actualizado=Now(),actualizadopor=:actualizadopor,id_empresa=:id_empresa,id_segmento=:id_segmento,id_cerberus=:id_cerberus WHERE  departamento_id = :departamento_id ;';
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  
@@ -101,9 +97,8 @@ class Segmento
     public function select(){
         try {  
              
-        $query = 'SELECT id_segmento,id_empresa,id_creadopor,fecha_creado,nombre,observaciones,activo,id_actualizadopor
-                    ,fecha_actualizado,id_cerberus
-                    FROM segmento  
+        $query = 'SELECT departamento_id,nombre,activo,creado,actualizado,actualizadopor,creadopor,id_empresa,id_segmento,id_cerberus 
+                    FROM departamento  
                     ' . (isset($this->received_data->filter) ? ' 
                     WHERE ' . $this->received_data->filter:'') . 
                     (isset($this->received_data->order) ? $this->received_data->order:'') ;
@@ -112,8 +107,11 @@ class Segmento
             $statement->execute($data);   
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
                     $row['empresa'] = $this->search_union($row,'empresa','id_empresa','id_empresa');
+                    $row['segmento'] = $this->search_union($row,'segmento','id_segmento','id_segmento');
                     $data[] = $row;
-            } 
+            }
+
+        
             echo json_encode($data); 
             return true;
         } catch (PDOException $exc) {
@@ -122,7 +120,7 @@ class Segmento
             return false;
         }  
     }
-    
+ 
     public function search_union($row,$table_origen,$fk_table_origen,$fk_table_usage){
         $data = array(); 
         try {    
@@ -135,17 +133,16 @@ class Segmento
             return $data; 
         } catch (PDOException $exc) {
             $output = array('message' => $exc->getMessage()); 
-            echo json_encode($output); 
-            return false;
+            return json_encode($output);  
         }  
     }
     public function delete(){
         try {  
             $data = array(
-                   ':id_segmento' => $this->received_data->model->id_segmento,
+                   ':departamento_id' => $this->received_data->model->departamento_id,
                             
                     ); 
-        $query = 'DELETE FROM segmento WHERE id_segmento = :id_segmento ;'; 
+        $query = 'DELETE FROM departamento WHERE departamento_id = :departamento_id ;'; 
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  

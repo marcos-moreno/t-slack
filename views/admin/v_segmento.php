@@ -62,7 +62,7 @@
                                     
                         <th>empresa</th>
                                     
-                        <!-- <th>id_creadopor</th> -->
+                        <th>Cerberus</th>
                                     
                         <!-- <th>fecha_creado</th> -->
                                     
@@ -84,7 +84,7 @@
             
                         <td>{{ segmento.empresa[0].empresa_nombre}}</td>
             
-                        <!-- <td>{{ segmento.id_creadopor}}</td> -->
+                        <td>{{ segmento.id_cerberus}}</td>
             
                         <!-- <td>{{ segmento.fecha_creado}}</td> -->
             
@@ -133,6 +133,10 @@
             <div class='form-group'>
                 <label>nombre</label>
                 <input type='text' class='form-control' v-model='segmento.nombre' />
+            </div>  
+            <div class='form-group'>
+                <label>ID Cerberus</label>
+                <input type='text' class='form-control' v-model='segmento.id_cerberus' />
             </div>  
             <div class='form-group'>
                 <label>observaciones</label>

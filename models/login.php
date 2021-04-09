@@ -14,6 +14,7 @@ if ($received_data->action == 'login') {
             $_SESSION['materno'] = $rol->materno;  
             $_SESSION['rol'] = $rol->rol;  
             $_SESSION['password'] = $rol->password; 
+            $_SESSION['color_back'] = $rol->color_back;   
             echo 'succes';  
         } catch (\Throwable $th) {  echo  $th;   }   
     } else {
@@ -30,10 +31,17 @@ if ($received_data->action == 'login') {
                     $query =  "
                     SELECT 	
                         e.id_empleado,e.id_segmento, e.nombre, e.materno, e.paterno, e.genero,e.usuario,r.rol,r.id_rol,e.password
+                        ,coalesce(e.color_back,'#fff') color_back
                     FROM refividrio.empleado e
                     INNER JOIN empleado_rol er ON er.id_empleado = e.id_empleado
                     INNER JOIN rol r ON r.id_rol = er.id_rol
-                    WHERE UPPER(usuario) = UPPER(:user) AND password = md5(:password)   
+                    WHERE 
+                    ( 
+                        (UPPER(usuario) = UPPER(:user) AND usuario IS NOT NULL) 
+                        OR (UPPER(celular) = UPPER(:user) AND celular IS NOT NULL) 
+                        OR (UPPER(correo) = UPPER(:user) AND correo IS NOT NULL) 
+                    ) 
+                    AND password = md5(:password)
                     AND e.activo = true"; 
                     $statement = $connect->prepare($query);
                     $statement->execute($parametros); 

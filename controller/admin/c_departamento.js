@@ -1,36 +1,32 @@
  
 var application = new Vue({
-    el:'#app_segmento',
+    el:'#app_departamento',
     data:{ 
-        segmento : null,
-        segmentoCollection : [],
+        departamento : null,
+        departamentoCollection : [],
         isFormCrud: false,
-        path : '../../models/admin/bd_segmento.php',
+        path : '../../models/admin/bd_departamento.php',
         typeMessage : '',
         msg:'',
         empresaCollection:[],
-            
-
+        segmentoCollection:[], 
         //paginador
-        numByPag : 5, 
+        numByPag : 20, 
         paginas : [],
         paginaCollection : [],
         paginaActual : 1,
-        ////paginador
-
-        filter : '',
-        filterCompany : 0,
-
+        ////paginador 
+        filter : '', 
     },
     methods:{
-        async getsegmentos(){  
-            this.segmentoCollection  = [];
+        async getdepartamentos(){  
+            this.departamentoCollection  = [];
             this.paginaCollection = [];
-            let filtrarPor =  "( nombre ILIKE '%" + this.filter + "%' ) AND (CASE WHEN " + this.filterCompany + " = 0 THEN id_empresa ELSE " + this.filterCompany + " END) = id_empresa ";  
-           const response = await this.request(this.path,{'order' : 'ORDER BY id_empresa,nombre ASC','action' : 'select','filter' : filtrarPor});
+            let filtrarPor =  "( nombre ILIKE '%" + this.filter + "%'  )";  
+           const response = await this.request(this.path,{'order' : 'ORDER BY departamento_id DESC','action' : 'select','filter' : filtrarPor});
             try{ 
                 this.show_message(response.length + ' Registros Encontrados.','success');
-                this.segmentoCollection = response;
+                this.departamentoCollection = response;
                 this.paginaCollection = response;
                 this.paginator(1);  
                 this.isFormCrud=false;
@@ -39,13 +35,13 @@ var application = new Vue({
                 this.isFormCrud=false;
             } 
         }, 
-        async delete_segmento(id_segmento){  
-            this.segmento = this.search_segmentoByID(id_segmento);
-            if(this.segmento.id_segmento > 0){
-                const response = await this.request(this.path,{model:this.segmento,'action' : 'delete'});
-                this.segmentoCollection = response; 
+        async delete_departamento(departamento_id){  
+            this.departamento = this.search_departamentoByID(departamento_id);
+            if(this.departamento.departamento_id > 0){
+                const response = await this.request(this.path,{model:this.departamento,'action' : 'delete'});
+                this.departamentoCollection = response; 
                 if(response.message == 'Data Deleted'){
-                    await this.getsegmentos();
+                    await this.getdepartamentos();
                     this.show_message('Registro Eliminado','success');
                 }else{
                     this.show_message(response.message,'error');
@@ -54,21 +50,23 @@ var application = new Vue({
                 this.show_message('Un ID 0 No es posible Eliminar.','info');
             } 
         },   
-        async save_segmento(){ 
-            if(this.segmento.id_segmento > 0){
-                const response = await this.request(this.path,{model:this.segmento,'action' : 'update'});
+        async save_departamento(){ 
+            if(this.departamento.departamento_id > 0){
+                this.departamento.activo == true || this.departamento.activo == 'true' ?  this.departamento.activo = 'true' : this.departamento.activo = 'false';
+                const response = await this.request(this.path,{model:this.departamento,'action' : 'update'});
                 if(response.message == 'Data Updated'){
-                    await this.getsegmentos();
+                    await this.getdepartamentos();
                     this.show_message('Registro Actualizado','success');
                     this.model_empty();
                     this.isFormCrud = false;
                 }else{
                     this.show_message(response.message,'error');
                 }
-            }else if(this.segmento.id_segmento == 0){ 
-                const response = await this.request(this.path,{model:this.segmento,'action' : 'insert'}); 
+            }else if(this.departamento.departamento_id == 0){ 
+                this.departamento.activo == true || this.departamento.activo == 'true' ?  this.departamento.activo = 'true' : this.departamento.activo = 'false';
+                const response = await this.request(this.path,{model:this.departamento,'action' : 'insert'}); 
                  if(response.message == 'Data Inserted'){
-                    await this.getsegmentos();
+                    await this.getdepartamentos();
                     this.show_message('Registro Guardado.','success');
                     this.model_empty();
                     this.isFormCrud = false;
@@ -77,10 +75,10 @@ var application = new Vue({
                 }  
             }
         },
-        async update_segmento(id_segmento){ 
-            if(id_segmento > 0){
-                this.segmento = this.search_segmentoByID(id_segmento);
-                if(this.segmento.id_segmento > 0){
+        async update_departamento(departamento_id){ 
+            if(departamento_id > 0){
+                this.departamento = this.search_departamentoByID(departamento_id);
+                if(this.departamento.departamento_id > 0){
                     this.isFormCrud = true;
                 }else{
                     this.show_message('Hay un problema con este Registro.','info');
@@ -89,18 +87,18 @@ var application = new Vue({
                 this.show_message('Hay un problema con este Registro.','info');
             } 
         }, 
-        add_segmento(){  
+        add_departamento(){  
             this.model_empty();
             this.isFormCrud = true;
         },  
-        cancel_segmento(){  
+        cancel_departamento(){  
             this.model_empty();
             this.isFormCrud = false;
         },  
-        search_segmentoByID(id_segmento){
-            for (let index = 0; index < this.segmentoCollection.length; index++) {
-                const element = this.segmentoCollection[index]; 
-                if (id_segmento == element.id_segmento) { 
+        search_departamentoByID(departamento_id){
+            for (let index = 0; index < this.departamentoCollection.length; index++) {
+                const element = this.departamentoCollection[index]; 
+                if (departamento_id == element.departamento_id) { 
                     return element;
                 }
             }  
@@ -109,8 +107,7 @@ var application = new Vue({
             this.typeMessage = typeMessage;
             setTimeout(function() { application.typeMessage='' ;application.msg =''; }, 5000);
         },model_empty(){
-            this.segmento = {id_segmento:0,id_empresa:'',id_creadopor:'',fecha_creado:'',nombre:'',observaciones:'',activo:''
-            ,id_actualizadopor:'',fecha_actualizado:'',id_cerberus:''};
+            this.departamento = {departamento_id:0,nombre:'',activo:'',creado:'',actualizado:'',actualizadopor:'',creadopor:'',id_empresa:'',id_segmento:'',id_cerberus:''};
         },
         async request(path,jsonParameters){
             const response = await axios.post(path, jsonParameters).then(function (response) {   
@@ -121,17 +118,24 @@ var application = new Vue({
             return response; 
         },
         async fill_f_keys(){
-            const response_empresa = await this.request('../../models/generales/bd_empresa.php',
-            {'order' : 'ORDER BY id_empresa DESC','action' : 'select'});
+            const response_empresa = await this.request('../../models/generales/bd_empresa.php',{'order' : 'ORDER BY id_empresa DESC','action' : 'select'});
             try{  
                 if(response_empresa.length > 0){  
                     this.empresaCollection = response_empresa; 
                 }  
             }catch(error){
-                this.show_message('No hay empresas.','info');
+                // this.show_message('No hay empresas.','info');
+            }  
+            const response_segmento = await this.request('../../models/admin/bd_segmento.php',{'order' : 'ORDER BY id_empresa,nombre ASC','action' : 'select'});
+            try{  
+                if(response_segmento.length > 0){  
+                    this.segmentoCollection = response_segmento; 
+                }  
+            }catch(error){
+                // this.show_message('No hay segmentos.','info');
             } 
         },paginator(i){ 
-            let cantidad_pages = Math.ceil(this.segmentoCollection.length / this.numByPag);
+            let cantidad_pages = Math.ceil(this.departamentoCollection.length / this.numByPag);
             this.paginas = []; 
             if (i === 'Ant' ) {
                 if (this.paginaActual == 1) {  i = 1;  }else{  i = this.paginaActual -1; } 
@@ -146,9 +150,9 @@ var application = new Vue({
                     this.paginaCollection = [];  
                     let inicio = ( i == 1 ? 0 : ((i-1) *  parseInt(this.numByPag)));
                     inicio = parseInt(inicio);
-                    let fin = (cantidad_pages == i ? this.segmentoCollection.length : (parseInt(inicio) + parseInt(this.numByPag)));  
+                    let fin = (cantidad_pages == i ? this.departamentoCollection.length : (parseInt(inicio) + parseInt(this.numByPag)));  
                     for (let index = inicio; index < fin; index++) {
-                        const element = this.segmentoCollection[index];
+                        const element = this.departamentoCollection[index];
                         this.paginaCollection.push(element); 
                     }  
                 }  
@@ -160,7 +164,7 @@ var application = new Vue({
     async mounted() {    
     },
     async created(){
-       await this.getsegmentos();
+       await this.getdepartamentos();
        await this.model_empty();
        await this.fill_f_keys();
        this.paginator(1);
