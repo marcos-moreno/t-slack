@@ -1,6 +1,8 @@
 <?php require '../header.php'; ?>  
  
-<div class="container" id="sinconizador">
+<div class="container-fluid" style="width:90%;" id="sinconizador">
+<button type="button"  class="btn btn-info btn-xs" @click="searchNewEmployees">Buscar Empleados Nuevos</button>
+
   <br/> 
   <div >
       <div class="alert alert-primary" v-if="typeMessage == 'info'" role="alert">{{msg}}</div>
@@ -9,7 +11,6 @@
   </div> 
   <!-- <button type="button"  class="btn btn-info btn-xs" @click="sync_IDs"> Sincro IDs</button> -->
   <!-- <button type="button"  class="btn btn-info btn-xs" @click="fn_empleados_parametro">Parametro</button> -->
-  <button type="button"  class="btn btn-info btn-xs" @click="searchNewEmployees">Buscar Empleados Nuevos</button>
   <br>
     <div v-if="is_newEmployees">
      
@@ -77,11 +78,19 @@
 
   <div class="row" v-if="is_newEmployees==false" >
         <div class="col"> 
-          <label>Filtro</label>
-          <input type="text" class="form-control" v-model="filter_value" /> 
-          <input type="button" class="btn btn-info btn-xs" @click="filter()" value="Buscar" />  
-          <div class="table-responsive" style=" max-height: 400px; max-width: 600px; overflow-y: auto;" >
-            <table class="table table-bordered table-striped"  >
+          <div>
+            <div class="row"> 
+              <div class="col">  
+                <input type="text" class="form-control" v-model="filter_value" placeholder="Buscar Empleado" /> 
+              </div>
+              <div class="col"> 
+                <input type="button" class="btn btn-info btn-xs" @click="filter()" value="Buscar" />  
+              </div>
+            </div>
+          </div>
+          <br/>
+          <div class="table-responsive" style="height:600px;" >
+            <table class="table table-bordered table-striped" >
               <tr>
                 <th>ID</th>
                 <th>ID Cerberus</th>
