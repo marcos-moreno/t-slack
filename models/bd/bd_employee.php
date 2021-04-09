@@ -42,11 +42,12 @@ if (check_session()) {
                 ':iddepartamento_cerbeus' => $received_data->model->iddepartamento_cerbeus, 
                 ':idempresa_cerberus' => $received_data->model->idempresa_cerberus, 
                 ':idsucursal_cerberus' => $received_data->model->idsucursal_cerberus,  
+                ':id_compac' => $received_data->model->id_compac,  
             ); 
             $query = "INSERT INTO empleado (id_segmento,id_creadopor,fecha_creado,nombre,paterno,materno,activo
                                 ,celular,correo,genero,id_actualizadopor,fecha_actualizado,usuario
                                 ,password,fecha_nacimiento,nss,rfc,id_cerberus_empleado
-                                ,fecha_alta_cerberus,perfilcalculo,id_empresa,departamento_id) 
+                                ,fecha_alta_cerberus,perfilcalculo,id_empresa,departamento_id,id_compac) 
                     VALUES (
                     (SELECT id_segmento FROM refividrio.segmento WHERE id_cerberus = :idsucursal_cerberus LIMIT 1)
                     ,:id_creadopor,CURRENT_TIMESTAMP,:nombre,:paterno,:materno,true,:celular,:correo,:genero,
@@ -56,6 +57,7 @@ if (check_session()) {
                     ,:id_cerberus_empleado,:fecha_alta_cerberus,:perfilcalculo
                     ,(SELECT id_empresa FROM refividrio.empresa WHERE id_empresa_cerberus = :idempresa_cerberus LIMIT 1)
                     ,(SELECT departamento_id FROM refividrio.departamento WHERE id_cerberus = :iddepartamento_cerbeus LIMIT 1)
+                    ,:id_compac
                     )  RETURNING id_empleado";
             $statement = $connect->prepare($query);
             $statement->execute($data);

@@ -7,7 +7,7 @@
 <script> location.href="p_poll.php";</script>  
 <?php } ?> 
 
-<div class="container" >  
+<div class="container-fluid" style="width:80%;" >  
     <div id="app_enc_leccion" style="margin-top:15px;"> 
         <div class="table-responsive"> 
             <table class="table table-bordered table-striped">
@@ -27,8 +27,8 @@
                     </td>
                     <td >
                         <div class="pre-scrollable" >
-                            <h1>{{encuesta.nombre}}</h1>
-                            <h2>Lecciones</h2>
+                            <h4>{{encuesta.nombre}}</h4>
+                            <h4>Lecciones</h4>
                             <a href="../admin/p_poll.php"><button type="button" class="btn btn btn-xs"><img src="../../img/regresar.png" width="28px" />
                                 Regresar
                             </button></a>

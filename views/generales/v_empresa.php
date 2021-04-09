@@ -1,5 +1,5 @@
 <?php require "../header.php";?> 
-<div class="container" style="width:90%">  
+<div class="container-fluid" style="width:90%;" >  
     <div id="app_empresa" style="margin-top:15px;"> 
         <div class="table-responsive">
             <table class="table table-bordered table-striped">

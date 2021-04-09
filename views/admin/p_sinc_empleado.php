@@ -29,27 +29,30 @@
         <table class="table table-bordered table-striped"    > 
           <tr> 
             <th>ID Cerberus</th>
-            <th>activo</th>
+            <th>ID Contpaqi</th>
+            <th>Perfil C.</th>
             <th>Nombre</th>
             <th>fecha Alta</th>  
             <th>rfc</th> 
             <th>segmento</th> 
-            <th>usuario</th> 
+            <!-- <th>usuario</th>  -->
             <th>nss</th> 
             <th>empresa_nombre</th> 
             <th>fecha_nacimiento</th> 
           </tr>
           <tr v-for="row in employesCerberus" v-on:dblclick="DelNewEmployee(row)" style="cursor: pointer" > 
             <td>{{ row.idEmpleadoCerberus }}</td> 
-            <td> 
+            <td>{{ row.idConpaq }}</td> 
+            <td>{{ row.perfilCalculo }}</td>
+            <!-- <td> 
               <div v-if="row.esActivo" >Si</div> 
               <div v-else >No</div> 
-            </td> 
+            </td>  -->
             <td>{{ row.nombreEmpleado }} {{ row.apPatEmpleado }} {{ row.apMatEmpleado }}</td>
             <td>{{ fn_format(row.fechaAlta) }}</td> 
             <td>{{ row.rfc }}</td> 
             <td>{{ row.nombreSucursal }}</td> 
-            <td>{{ row.usuario }}</td> 
+            <!-- <td>{{ row.usuario }}</td>  -->
             <td>{{ row.nss }}</td> 
             <td>{{ row.nombreEmpresa }}</td> 
             <td>{{ fn_format(row.fechaNacimiento) }}</td> 
@@ -144,4 +147,4 @@
         </div> 
       </div>
 </div> 
-<script type="text/javascript" src="../../controller/admin/sinc1_cerberus.js"></script>  
+<script type="text/javascript" src="../../controller/admin/sinc2_cerberus.js"></script>  

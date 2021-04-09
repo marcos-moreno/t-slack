@@ -1,5 +1,5 @@
 <?php require '../header.php';?>
-<div class="container" id="notifications"> 
+<div class="container-fluid" style="width:90%;"  id="notifications"> 
    <h3 align="center">Notificaciones</h3>
    <div class="panel panel-default" v-if="isCrud==false">
     <div class="panel-heading">

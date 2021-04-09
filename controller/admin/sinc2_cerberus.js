@@ -19,6 +19,7 @@ var sinconizador = new Vue({
                 const element = this.employesCerberus[index];
                 let employee = {}; 
                 try { 
+                    console.log(element);
                     employee.id_empresa_cerberus = element.idEmpresa;
                     employee.nombre = element.nombreEmpleado;
                     employee.paterno = element.apPatEmpleado;
@@ -44,6 +45,7 @@ var sinconizador = new Vue({
                     employee.iddepartamento_cerbeus = element.idDepartamento; 
                     employee.idempresa_cerberus = element.idEmpresa; 
                     employee.idsucursal_cerberus = element.idSucursal; 
+                    employee.id_compac = element.idConpaq;
                     let user_duplicate = false;
                     if (this.validaUser(usuario)) {
                         employee.usuario =  usuario;

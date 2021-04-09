@@ -1,7 +1,7 @@
 <?php require '../header.php'; ?>  
  
 <!-- <div class="container" id="crudPoll">  -->
-<div class="container" style="width:100%" id="crudPoll">
+<div class="container-fluid" style="width:90%;" id="crudPoll">
     <h3>Encuesta</h3><br/> 
     <div class="alert alert-danger" role="alert"   v-if="msgError" > {{alert}}
     </div>
@@ -20,7 +20,7 @@
       </div> 
       <div class="panel-body">
       <div class="table-responsive">
-        <table class="table table-bordered table-striped">
+        <table style='font-size:95%' class="table table-bordered table-striped">
           <tr>
             <th>ID</th>
             <th>Nombre</th>
@@ -37,16 +37,16 @@
           </tr>
           <tr v-for="row in allData_Poll">
             <td>{{ row.id_encuesta }}</td>
-            <td>{{ row.nombre }}</td>
+            <td><strong>{{ row.nombre }}</strong></td>
             <td>
               <div v-if="row.activo">Si</div>
               <div v-else >No</div>
             </td>
             <td>{{ row.validodesde }}</td>
             <td>{{ row.validohasta }}</td> 
-            <td><a type="button" name="company" class="btn-xs delete" @click="openModelIntent(row)">Nuevo Intento</a></td>
-            <td><a type="button" name="company" class="btn-xs delete" @click="asingCompany(row)">Asignar Empresa</a></td>
-            <td><a type="button" v-bind:href="'v_enc_leccion.php?id_encuesta=' + row.id_encuesta " name="company" class="btn-xs delete" h>Lecciones</a></td>
+            <td><a style="color:#3B64C4" type="button" @click="openModelIntent(row)"><strong>Nuevo Intento</strong></a></td>
+            <td><a style="color:#3B64C4" type="button" @click="asingCompany(row)"><strong>Asignar Empresa</strong></a></td>
+            <td><a style="color:#3B64C4" type="button" v-bind:href="'v_enc_leccion.php?id_encuesta=' + row.id_encuesta " ><strong>Lecciones</strong></a></td>
             <td><center><img src="../../img/cuestionario.svg"   @click="question(row.id_encuesta)"  width="30px" height="30px" /></center></td>
             <td><img src="../../img/lapiz.svg" @click="fetchData(row.id_encuesta)" width="30px" height="30px" /></td>
             <td><img src="../../img/basura.svg" @click="deleteData(row.id_encuesta)" width="30px" height="30px" /> </td>

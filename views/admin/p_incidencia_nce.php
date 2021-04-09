@@ -1,6 +1,6 @@
 <?php require '../header.php'; ?>  
  
-<div class="container" id="sinconizador">
+<div class="container-fluid" style="width:90%;"  id="sinconizador">
 <br/> 
 <div style="height: 80px;" >
     <div class="alert alert-primary" v-if="typeMessage == 'info'" role="alert">{{msg}}</div>
