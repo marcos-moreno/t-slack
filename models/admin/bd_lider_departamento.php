@@ -8,28 +8,28 @@
 if (check_session()) { 
     switch($received_data->action){
         case 'update': 
-            $model = new Departamento($data,$connect,$received_data);
+            $model = new Lider_departamento($data,$connect,$received_data);
             $model->update();
         break;
         case 'insert':
-            $model = new Departamento($data,$connect,$received_data);
+            $model = new Lider_departamento($data,$connect,$received_data);
             $model->insert();
         break;
         case 'delete':
-            $model = new Departamento($data,$connect,$received_data);
+            $model = new Lider_departamento($data,$connect,$received_data);
             $model->delete(); 
         break;
         case 'select': 
-            $model = new Departamento($data,$connect,$received_data);
+            $model = new Lider_departamento($data,$connect,$received_data);
             $model->select();
-        break; 
+        break;
     }
 }else{
     $output = array('message' => 'Not authorized'); 
     echo json_encode($output); 
 } 
 
-class Departamento 
+class Lider_departamento 
 {   
     
     private $output = null;
@@ -45,16 +45,14 @@ class Departamento
     public function insert(){
         try {
             $data = array(
-                    ':nombre' => $this->received_data->model->nombre,
-                        ':activo' => $this->received_data->model->activo,
-                        ':actualizadopor' => $_SESSION['id_empleado'],
+                    ':id_empleado' => $this->received_data->model->id_empleado,
+                        ':departamento_id' => $this->received_data->model->departamento_id,
+                        ':tipo_lider' => $this->received_data->model->tipo_lider,
                         ':creadopor' => $_SESSION['id_empleado'],
-                        ':id_empresa' => $this->received_data->model->id_empresa,
-                        ':id_segmento' => $this->received_data->model->id_segmento,
-                        ':id_cerberus' => $this->received_data->model->id_cerberus,
+                        ':actualizadopor' => $_SESSION['id_empleado'],
                         
                     ); 
-        $query = 'INSERT INTO departamento (nombre,activo,creado,actualizado,actualizadopor,creadopor,id_empresa,id_segmento,id_cerberus) VALUES (:nombre,:activo,Now(),Now(),:actualizadopor,:creadopor,:id_empresa,:id_segmento,:id_cerberus) ;';
+        $query = 'INSERT INTO lider_departamento (id_empleado,departamento_id,tipo_lider,creado,actualizado,creadopor,actualizadopor) VALUES (:id_empleado,:departamento_id,:tipo_lider,Now(),Now(),:creadopor,:actualizadopor) ;';
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  
@@ -71,16 +69,14 @@ class Departamento
     public function update(){
         try {
             $data = array(
-                    ':departamento_id' => $this->received_data->model->departamento_id, 
-                        ':nombre' => $this->received_data->model->nombre, 
-                        ':activo' => $this->received_data->model->activo, 
+                    ':lider_departamento_id' => $this->received_data->model->lider_departamento_id, 
+                        ':id_empleado' => $this->received_data->model->id_empleado, 
+                        ':departamento_id' => $this->received_data->model->departamento_id, 
+                        ':tipo_lider' => $this->received_data->model->tipo_lider, 
                         ':actualizadopor' => $_SESSION['id_empleado'],
-                        ':id_empresa' => $this->received_data->model->id_empresa, 
-                        ':id_segmento' => $this->received_data->model->id_segmento, 
-                        ':id_cerberus' => $this->received_data->model->id_cerberus, 
                          
                     ); 
-            $query = 'UPDATE departamento SET nombre=:nombre,activo=:activo,actualizado=Now(),actualizadopor=:actualizadopor,id_empresa=:id_empresa,id_segmento=:id_segmento,id_cerberus=:id_cerberus WHERE  departamento_id = :departamento_id ;';
+            $query = 'UPDATE lider_departamento SET id_empleado=:id_empleado,departamento_id=:departamento_id,tipo_lider=:tipo_lider,actualizado=Now(),actualizadopor=:actualizadopor WHERE  lider_departamento_id = :lider_departamento_id ;';
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  
@@ -97,16 +93,18 @@ class Departamento
     public function select(){
         try {  
              
-        $query = 'SELECT departamento_id,nombre,activo,creado,actualizado,actualizadopor,creadopor,id_empresa,id_segmento,id_cerberus 
-                    FROM departamento  
+        $query = 'SELECT lider_departamento_id,id_empleado,departamento_id,tipo_lider,creado,actualizado,creadopor,actualizadopor 
+                    FROM lider_departamento  
                     ' . (isset($this->received_data->filter) ? ' 
-                    WHERE ' . $this->received_data->filter:'') .  ' ORDER BY id_empresa,departamento_id DESC';
+                    WHERE ' . $this->received_data->filter:'') . 
+                    (isset($this->received_data->order) ? $this->received_data->order:'') ;
                         
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);   
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
-                    $row['empresa'] = $this->search_union($row,'empresa','id_empresa','id_empresa');
-                    $row['segmento'] = $this->search_union($row,'segmento','id_segmento','id_segmento');
+                    $row['empleado'] = $this->search_union($row,'empleado','id_empleado','id_empleado');
+                  
+                    $row['departamento'] = $this->search_union($row,'departamento','departamento_id','departamento_id');
                     $data[] = $row;
             }
 
@@ -119,7 +117,7 @@ class Departamento
             return false;
         }  
     }
- 
+    
     public function search_union($row,$table_origen,$fk_table_origen,$fk_table_usage){
         $data = array(); 
         try {    
@@ -138,10 +136,10 @@ class Departamento
     public function delete(){
         try {  
             $data = array(
-                   ':departamento_id' => $this->received_data->model->departamento_id,
+                   ':lider_departamento_id' => $this->received_data->model->lider_departamento_id,
                             
                     ); 
-        $query = 'DELETE FROM departamento WHERE departamento_id = :departamento_id ;'; 
+        $query = 'DELETE FROM lider_departamento WHERE lider_departamento_id = :lider_departamento_id ;'; 
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  

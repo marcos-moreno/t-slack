@@ -160,7 +160,8 @@ if (check_session()) {
         LEFT JOIN refividrio.enc_encuesta_leccion_empleado esta_lecc ON esta_lecc.id_encuesta = enc.id_encuesta AND esta_lecc.id_empleado = emp.id_empleado
         WHERE 
             emp.id_empleado = " . $_SESSION['id_empleado'] ."
-        ORDER BY enc.id_encuesta DESC "; 
+            AND  emp.fecha_alta_cerberus < enc.validodesde 
+            ORDER BY enc.id_encuesta DESC "; 
         $statement = $connect->prepare($query);
         $statement->execute();
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {

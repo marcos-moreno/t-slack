@@ -23,7 +23,7 @@ var application = new Vue({
             this.departamentoCollection  = [];
             this.paginaCollection = [];
             let filtrarPor =  "( nombre ILIKE '%" + this.filter + "%'  )";  
-           const response = await this.request(this.path,{'order' : 'ORDER BY departamento_id DESC','action' : 'select','filter' : filtrarPor});
+           const response = await this.request(this.path,{'action' : 'select','filter' : filtrarPor});
             try{ 
                 this.show_message(response.length + ' Registros Encontrados.','success');
                 this.departamentoCollection = response;

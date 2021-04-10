@@ -50,37 +50,30 @@
                         </li>
                     </ul>  
                 </nav>
-                <td><button type="button" class="btn btn-info btn-xs edit" @click="add_departamento()">Agregar</button></td>
+                <div class="row">
+                    <div class="col">
+                        <button type="button" class="btn btn-info btn-xs edit" @click="add_departamento()">Agregar</button>
+                    </div> 
+                </div>
                 <table class="table table-bordered table-striped">
                     <tr> 
                         <th>ID</th>
-                                    
                         <th>nombre</th>
-                                    
                         <th>activo</th>
-                                  
                         <th>empresa</th>
-                                    
                         <th>segmento</th>
-                                    
                         <th>id Cerberus</th>
-                                     
+                        <th></th> 
                         <th></th> 
                     </tr>
                     <tr v-for="departamento in paginaCollection" >
-                        
                         <td>{{ departamento.departamento_id}}</td>
-            
                         <td>{{ departamento.nombre}}</td>
-            
                         <td>{{ departamento.activo}}</td>
-            
                         <td>{{ departamento.empresa[0].empresa_observaciones}}</td>
-                   
                         <td>{{ departamento.segmento[0].nombre}}</td>
-            
                         <td>{{ departamento.id_cerberus}}</td>
-               
+                        <td><a :href="'v_lider_departamento.php?departamento_id='+departamento.departamento_id" >Lider</a></td>
                         <td style="width:150px" >
                             <button type="button" class="btn btn" @click="update_departamento(departamento.departamento_id)"><img src="../../img/lapiz.svg" width="25px" /></button>
                             <button type="button" class="btn btn" @click="delete_departamento(departamento.departamento_id)"><img src="../../img/borrar.png" width="25px" /></button>
