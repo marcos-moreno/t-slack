@@ -55,6 +55,9 @@ var application = new Vue({
         },   
         async save_ev_indicador_general(){ 
             if(this.ev_indicador_general.ev_indicador_general_id > 0){
+                this.ev_indicador_general.allowrepor == true || this.ev_indicador_general.allowrepor == 'true' ?  
+                this.ev_indicador_general.allowrepor = 'true' : this.ev_indicador_general.allowrepor = 'false';
+
                 this.ev_indicador_general.activo == true || this.ev_indicador_general.activo == 'true' ?  
                 this.ev_indicador_general.activo = 'true' : this.ev_indicador_general.activo = 'false';
                 const response = await this.request(this.path,{model:this.ev_indicador_general,'action' : 'update'});
@@ -67,6 +70,9 @@ var application = new Vue({
                     this.show_message(response.message,'error');
                 }
             }else if(this.ev_indicador_general.ev_indicador_general_id == 0){ 
+                this.ev_indicador_general.allowrepor == true || this.ev_indicador_general.allowrepor == 'true' ?  
+                this.ev_indicador_general.allowrepor = 'true' : this.ev_indicador_general.allowrepor = 'false';
+
                 this.ev_indicador_general.activo == true || this.ev_indicador_general.activo == 'true' ?  
                 this.ev_indicador_general.activo = 'true' : this.ev_indicador_general.activo = 'false';
                 const response = await this.request(this.path,{model:this.ev_indicador_general,'action' : 'insert'}); 
@@ -112,7 +118,9 @@ var application = new Vue({
             this.typeMessage = typeMessage;
             setTimeout(function() { application.typeMessage='' ;application.msg =''; }, 5000);
         },model_empty(){
-            this.ev_indicador_general = {ev_indicador_general_id:0,nombre:'',descripcion:'',tendencia:'',activo:'true',creado:'',creadopor:'',actualizado:'',actualizadopor:'',origen:''};
+            this.ev_indicador_general = {ev_indicador_general_id:0,nombre:'',descripcion:''
+            ,tendencia:'',activo:'true',creado:'',creadopor:'',actualizado:''
+            ,actualizadopor:'',origen:'',allowrepor:false};
         },
         async request(path,jsonParameters){
             const response = await axios.post(path, jsonParameters).then(function (response) {   

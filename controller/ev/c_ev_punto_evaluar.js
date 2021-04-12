@@ -115,7 +115,7 @@ var application = new Vue({
             this.paginaCollection = [];
             let filtrarPor =  "( nombre ILIKE '%" + this.filter + "%'  OR descripcion ILIKE '%" + this.filter + "%'  )";  
            const response = await this.request(this.path,{'order' : 'ORDER BY ev_punto_evaluar_id DESC','action' : 'select','filter' : filtrarPor});
-            try{ 
+           try{ 
                 this.show_message(response.length + ' Registros Encontrados.','success');
                 this.ev_punto_evaluarCollection = response;
                 this.paginaCollection = response;
@@ -261,9 +261,9 @@ var application = new Vue({
             location.href="v_ev_puesto_nivel.php";
         }
        await this.getev_punto_evaluars();
-       await this.model_empty();
-       await this.fill_f_keys();
-       this.paginator(1);
+    //    await this.model_empty();
+    //    await this.fill_f_keys();
+    //    this.paginator(1);
     }
 }); 
         

@@ -8,19 +8,19 @@
 if (check_session()) { 
     switch($received_data->action){
         case 'update': 
-            $model = new Ev_punto_evaluar($data,$connect,$received_data);
+            $model = new Ev_reporte($data,$connect,$received_data);
             $model->update();
         break;
         case 'insert':
-            $model = new Ev_punto_evaluar($data,$connect,$received_data);
+            $model = new Ev_reporte($data,$connect,$received_data);
             $model->insert();
         break;
         case 'delete':
-            $model = new Ev_punto_evaluar($data,$connect,$received_data);
+            $model = new Ev_reporte($data,$connect,$received_data);
             $model->delete(); 
         break;
         case 'select': 
-            $model = new Ev_punto_evaluar($data,$connect,$received_data);
+            $model = new Ev_reporte($data,$connect,$received_data);
             $model->select();
         break;
     }
@@ -29,7 +29,7 @@ if (check_session()) {
     echo json_encode($output); 
 } 
 
-class Ev_punto_evaluar 
+class Ev_reporte 
 {   
     
     private $output = null;
@@ -45,21 +45,16 @@ class Ev_punto_evaluar
     public function insert(){
         try {
             $data = array(
-                    ':ev_indicador_id' => $this->received_data->model->ev_indicador_id,
-                        ':ev_tipo_captura_id' => $this->received_data->model->ev_tipo_captura_id,
-                        ':nombre' => $this->received_data->model->nombre,
-                        ':descripcion' => $this->received_data->model->descripcion,
-                        ':porcentaje_tl' => $this->received_data->model->porcentaje_tl,
+                    ':descripcion' => $this->received_data->model->descripcion,
+                        ':fecha' => $this->received_data->model->fecha,
+                        ':id_empleado' => $this->received_data->model->id_empleado,
+                        ':ev_indicador_puesto_id' => $this->received_data->model->ev_indicador_puesto_id,
                         ':creadopor' => $_SESSION['id_empleado'],
                         ':actualizadopor' => $_SESSION['id_empleado'],
-                        ':min_escala' => $this->received_data->model->min_escala, 
-                        ':max_escala' => $this->received_data->model->max_escala,
-                        ':incremento' => $this->received_data->model->incremento,
+                        
                     ); 
-        $query = 'INSERT INTO ev_punto_evaluar (ev_indicador_id,ev_tipo_captura_id,nombre,
-        descripcion,porcentaje_tl,creado,creadopor,actualizado,actualizadopor,min_escala,max_escala,incremento) 
-        VALUES (:ev_indicador_id,:ev_tipo_captura_id,:nombre,:descripcion,:porcentaje_tl,Now(),:creadopor,Now(),:actualizadopor
-        ,:min_escala,:max_escala,:incremento) ;';
+        $query = 'INSERT INTO ev_reporte (descripcion,fecha,id_empleado,ev_indicador_puesto_id,creado,creadopor,actualizado,actualizadopor) 
+                    VALUES (:descripcion,:fecha,:id_empleado,:ev_indicador_puesto_id,Now(),:creadopor,Now(),:actualizadopor) ;';
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  
@@ -76,22 +71,18 @@ class Ev_punto_evaluar
     public function update(){
         try {
             $data = array(
-                    ':ev_punto_evaluar_id' => $this->received_data->model->ev_punto_evaluar_id, 
-                        ':ev_indicador_id' => $this->received_data->model->ev_indicador_id, 
-                        ':ev_tipo_captura_id' => $this->received_data->model->ev_tipo_captura_id, 
-                        ':nombre' => $this->received_data->model->nombre, 
+                    ':ev_reporte_id' => $this->received_data->model->ev_reporte_id, 
                         ':descripcion' => $this->received_data->model->descripcion, 
-                        ':porcentaje_tl' => $this->received_data->model->porcentaje_tl, 
+                        ':fecha' => $this->received_data->model->fecha, 
+                        ':id_empleado' => $this->received_data->model->id_empleado, 
+                        ':ev_indicador_puesto_id' => $this->received_data->model->ev_indicador_puesto_id, 
                         ':actualizadopor' => $_SESSION['id_empleado'],
-                        ':actualizadopor' => $_SESSION['id_empleado'],
-                        ':min_escala' => $this->received_data->model->min_escala, 
-                        ':max_escala' => $this->received_data->model->max_escala,
-                        ':incremento' => $this->received_data->model->incremento,
+                         
                     ); 
-            $query = 'UPDATE ev_punto_evaluar SET ev_indicador_id=:ev_indicador_id,ev_tipo_captura_id=:ev_tipo_captura_id,
-            nombre=:nombre,descripcion=:descripcion,porcentaje_tl=:porcentaje_tl,actualizado=Now(),actualizadopor=:actualizadopor 
-            ,min_escala=:min_escala,max_escala=:max_escala,incremento=:incremento
-            WHERE  ev_punto_evaluar_id = :ev_punto_evaluar_id ;';
+            $query = 'UPDATE ev_reporte SET descripcion=:descripcion,fecha=:fecha
+                        ,id_empleado=:id_empleado,ev_indicador_puesto_id=:ev_indicador_puesto_id
+                        ,actualizado=Now(),actualizadopor=:actualizadopor 
+                        WHERE  ev_reporte_id = :ev_reporte_id ;';
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  
@@ -107,28 +98,32 @@ class Ev_punto_evaluar
 
     public function select(){
         try {  
-             
-        $query = 'SELECT ev_punto_evaluar_id,ev_indicador_id,ev_tipo_captura_id,nombre,descripcion,porcentaje_tl,creado
-                    ,creadopor,actualizado,actualizadopor,min_escala,max_escala,incremento
-                    FROM ev_punto_evaluar  
-                    ' . (isset($this->received_data->filter) ? ' 
-                    WHERE ' . $this->received_data->filter:'') . 
+            $data = array(
+                ':id_empleado' => $this->received_data->model->id_empleado,
+                ':creadopor' => $_SESSION['id_empleado'],
+                ); 
+            $query = "SELECT rep.ev_reporte_id,rep.descripcion,TO_CHAR(rep.fecha, 'DD/MM/YYYY') as fecha
+                    ,rep.id_empleado,rep.ev_indicador_puesto_id,
+                    rep.creado,rep.creadopor,rep.actualizado,rep.actualizadopor,ig.nombre As nombre_indicador
+                    FROM ev_reporte rep
+                    INNER JOIN ev_indicador_puesto ip ON ip.ev_indicador_id=rep.ev_indicador_puesto_id
+                    INNER JOIN ev_indicador_general ig ON ip.ev_indicador_general_id=ig.ev_indicador_general_id
+                    WHERE rep.creadopor = :creadopor AND rep.id_empleado = :id_empleado
+                    ".
                     (isset($this->received_data->order) ? $this->received_data->order:'') ;
-                        
+            $dataResult=[];       
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);   
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
-                    $row['ev_indicador'] = $this->search_union($row,'ev_indicador_puesto','ev_indicador_id','ev_indicador_id');
-                    $row['ev_tipo_captura'] = $this->search_union($row,'ev_tipo_captura','ev_tipo_captura_id','ev_tipo_captura_id');
-                    $data[] = $row;
+                    $row['empleado'] = $this->search_union($row,'empleado','id_empleado','id_empleado');
+                    $row['ev_indicador_puesto'] = $this->search_union($row,'ev_indicador_puesto','ev_indicador_id','ev_indicador_puesto_id');
+                    $dataResult[] = $row;
             }
-
-        
-            echo json_encode($data); 
+            echo json_encode($dataResult); 
             return true;
         } catch (PDOException $exc) {
             $output = array('message' => $exc->getMessage()); 
-            echo json_encode([]); 
+            echo json_encode($output); 
             return false;
         }  
     }
@@ -145,17 +140,16 @@ class Ev_punto_evaluar
             return $data; 
         } catch (PDOException $exc) {
             $output = array('message' => $exc->getMessage()); 
-            echo json_encode([]); 
-            return false;
+            return json_encode($output);  
         }  
     }
     public function delete(){
         try {  
             $data = array(
-                   ':ev_punto_evaluar_id' => $this->received_data->model->ev_punto_evaluar_id,
+                   ':ev_reporte_id' => $this->received_data->model->ev_reporte_id,
                             
                     ); 
-        $query = 'DELETE FROM ev_punto_evaluar WHERE ev_punto_evaluar_id = :ev_punto_evaluar_id ;'; 
+        $query = 'DELETE FROM ev_reporte WHERE ev_reporte_id = :ev_reporte_id ;'; 
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  

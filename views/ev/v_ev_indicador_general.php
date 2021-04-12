@@ -108,9 +108,15 @@
                     </select> 
             </div> 
             <div class='custom-control custom-checkbox'>
-                <input type='checkbox' class='custom-control-input' id='ev_indicador_generalactivo _id'   v-model='ev_indicador_general.activo'  false-value='false' true-value='true' >
+                <input type='checkbox' class='custom-control-input' id='ev_indicador_generalactivo _id'  
+                 v-model='ev_indicador_general.activo'  false-value='false' true-value='true' >
                 <label class='custom-control-label' for='ev_indicador_generalactivo _id'  >activo</label>
-            </div>    
+            </div>  
+            <div class='custom-control custom-checkbox'>
+                <input type='checkbox' class='custom-control-input' id='ev_indicador_generalactivo_id'  
+                 v-model='ev_indicador_general.allowrepor'  false-value='false' true-value='true' >
+                <label class='custom-control-label' for='ev_indicador_generalactivo_id'  >Permitir Reportes</label>
+            </div>     
             <br>
             <br>
             <div class="form-group">

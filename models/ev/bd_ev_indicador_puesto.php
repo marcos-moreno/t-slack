@@ -23,6 +23,10 @@ if (check_session()) {
             $model = new Ev_indicador_puesto($data,$connect,$received_data);
             $model->select();
         break;
+        case 'selectByEmployee': 
+            $model = new Ev_indicador_puesto($data,$connect,$received_data);
+            $model->selectByEmployee();
+        break;
     }
 }else{
     $output = array('message' => 'Not authorized'); 
@@ -118,6 +122,42 @@ class Ev_indicador_puesto
             return false;
         }  
     }
+    public function selectByEmployee(){
+        try {   
+            $data = array(
+                ':id_empleado' => $this->received_data->model->id_empleado, 
+                ); 
+            $query =   'SELECT ip.*
+                        FROM empleado e  
+                        INNER JOIN ev_puesto_nivel pn ON pn.ev_puesto_nivel_id = e.ev_puesto_nivel_id
+                        INNER JOIN ev_indicador_puesto ip ON ip.ev_puesto_nivel_id = pn.ev_puesto_nivel_id
+                        INNER JOIN ev_indicador_general ig ON ig.ev_indicador_general_id = ip.ev_indicador_general_id 
+                        AND ig.allowrepor = true
+                        WHERE e.id_empleado = :id_empleado ' ;
+            $statement = $this->connect->prepare($query); 
+            $statement->execute($data);   
+            $result = false;
+            $dataResult = array();
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
+                    $row['ev_puesto_nivel'] = $this->search_union($row,'ev_puesto_nivel','ev_puesto_nivel_id','ev_puesto_nivel_id');
+                    $row['ev_indicador_general'] = $this->search_union($row,'ev_indicador_general','ev_indicador_general_id','ev_indicador_general_id');
+                    $dataResult[] = $row;
+                    $result = true;
+            }
+            if ($result) {
+                echo json_encode($dataResult); 
+            } else {
+                echo json_encode(array()); 
+            }
+            return true;
+        } catch (PDOException $exc) {
+            $output = array('message' => $exc->getMessage()); 
+            echo json_encode($output); 
+            return false;
+        }  
+    }
+
+  
     
     public function search_union($row,$table_origen,$fk_table_origen,$fk_table_usage){
         $data = array(); 

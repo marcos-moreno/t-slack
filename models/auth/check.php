@@ -6,7 +6,9 @@ function check_session(){
       if ($_SESSION['rol'] == 'user' || $_SESSION['rol'] == 'admin' 
           || $_SESSION['rol'] == 'soporte técnico' 
           || $_SESSION['rol'] == 'SuperAdmin' || $_SESSION['rol'] == 'Administracion'
-          || $_SESSION['rol'] == 'Evaluaciones' )  { 
+          || $_SESSION['rol'] == 'Evaluaciones'
+          || $_SESSION['rol'] == 'Admin Evaluaciones' 
+          )  { 
           return true;
       }else{
         session_destroy(); 

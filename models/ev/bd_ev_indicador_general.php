@@ -52,9 +52,12 @@ class Ev_indicador_general
                         ':creadopor' => $_SESSION['id_empleado'],
                         ':actualizadopor' => $_SESSION['id_empleado'],
                         ':origen' => $this->received_data->model->origen,
-                        
+                        ':allowrepor' => $this->received_data->model->allowrepor,
+
                     ); 
-        $query = 'INSERT INTO ev_indicador_general (nombre,descripcion,tendencia,activo,creado,creadopor,actualizado,actualizadopor,origen) VALUES (:nombre,:descripcion,:tendencia,:activo,Now(),:creadopor,Now(),:actualizadopor,:origen) ;';
+        $query = 'INSERT INTO ev_indicador_general (nombre,descripcion,tendencia,activo,creado,creadopor
+        ,actualizado,actualizadopor,origen,allowrepor) VALUES (:nombre,:descripcion,:tendencia,:activo
+        ,Now(),:creadopor,Now(),:actualizadopor,:origen,:allowrepor) ;';
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  
@@ -78,9 +81,12 @@ class Ev_indicador_general
                         ':activo' => $this->received_data->model->activo, 
                         ':actualizadopor' => $_SESSION['id_empleado'],
                         ':origen' => $this->received_data->model->origen, 
-                         
+                        ':allowrepor' => $this->received_data->model->allowrepor,
+
                     ); 
-            $query = 'UPDATE ev_indicador_general SET nombre=:nombre,descripcion=:descripcion,tendencia=:tendencia,activo=:activo,actualizado=Now(),actualizadopor=:actualizadopor,origen=:origen WHERE  ev_indicador_general_id = :ev_indicador_general_id ;';
+            $query = 'UPDATE ev_indicador_general SET nombre=:nombre,descripcion=:descripcion,tendencia=:tendencia
+            ,activo=:activo,actualizado=Now(),actualizadopor=:actualizadopor,origen=:origen,allowrepor=:allowrepor 
+            WHERE  ev_indicador_general_id = :ev_indicador_general_id ;';
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  
@@ -97,7 +103,8 @@ class Ev_indicador_general
     public function select(){
         try {  
              
-        $query = 'SELECT ev_indicador_general_id,nombre,descripcion,tendencia,activo,creado,creadopor,actualizado,actualizadopor,origen 
+        $query = 'SELECT ev_indicador_general_id,nombre,descripcion,tendencia,activo,creado,creadopor
+        ,actualizado,actualizadopor,origen,allowrepor
                     FROM ev_indicador_general  
                     ' . (isset($this->received_data->filter) ? ' 
                     WHERE ' . $this->received_data->filter:'') . 

@@ -24,7 +24,8 @@ style="background-image: url('img/walper.jpg');"
 					</div> 
 					<div class="modal-body"> 
 							<div class="form-group">
-								<input type="name" class="form-control" name="user" placeholder="user" id="user" required="required">		
+								<input type="name" class="form-control" name="user" 
+								placeholder="user - cel - mail" id="user" required="required">		
 							</div>
 							<div class="form-group">
 								<input type="password" class="form-control" v-on:keyup.enter="seachUser()" name="password" id="password" placeholder="Password"  required="required">	
@@ -43,4 +44,4 @@ style="background-image: url('img/walper.jpg');"
 	</div>     
 </body>
 
-<script src="controller/generales/c_login_.js"></script> 
+<script src="controller/generales/c_login1.js"></script> 

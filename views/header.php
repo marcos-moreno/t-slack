@@ -38,9 +38,19 @@ if ($valido == false) {  header('location: ../logout.php'); }
       <ul class="navbar-nav mr-auto">  
         <?php echo $elementos_string; ?> 
 
-          <div id='chagePassword_DIV'>  
+          <div id='chagePassword_DIV'> 
+          <input id="resetPassword" style="display:none" value=  
+                   <?php 
+                  session_start(); 
+                  if ($_SESSION['password'] == 'af8d96655446891992fa92383ae70b02') {
+                    echo("reset");
+                  }else{echo("0");} 
+                  ?>>  
+
             <li class="nav-item active">
-              <button @click="showModal()" style="background:none;border:none;" > <a class="nav-link">Cambiar Contraseña<span class="sr-only">(current)</span></a></button>
+              <button @click="showModal()" style="background:none;border:none;" > 
+              <a class="nav-link">Cambiar Contraseña<span class="sr-only">(current)</span></a>
+              </button>
             </li> 
             <div v-if="modalchagePassword" >  
               <transition name="model" >
@@ -48,8 +58,12 @@ if ($valido == false) {  header('location: ../logout.php'); }
                   <div class="modal-dialog modal-dialog-scrollable">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h4 class="modal-title"></h4>
-                        <button type="button" class="close" @click="modalchagePassword=false"><span aria-hidden="true">&times;</span></button>
+                        <p class="alert alert-warning"  v-if="isPass_default==true" 
+                        class="modal-title" />
+                          Es necesario que personalices tu Contraseña
+                        </p>
+                        <button v-if="isPass_default==false" type="button" class="close" @click="modalchagePassword=false">
+                        <span aria-hidden="true">&times;</span></button>
                       </div>  
                         <div class="modal-body"> 
                           <div class="card-body">   
@@ -181,4 +195,4 @@ if ($valido == false) {  header('location: ../logout.php'); }
 <body  onclick="hover()" style="background-color: <?php session_start();   echo $_SESSION['color_back'] ?>" >
 <script type="text/javascript" src="../../controller/user/c_leccion.js"></script>
 <script type="text/javascript" src="../../controller/user/notifications_u.js"></script>
-<script type="text/javascript" src="../../controller/admin/changePasword.js"></script>  
+<script type="text/javascript" src="../../controller/admin/changePasword1.js"></script>  

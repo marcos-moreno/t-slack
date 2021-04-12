@@ -58,8 +58,10 @@ var login = new Vue({
                                     location.href="views/generales/v_acceso_rol.php"; 
                                 }  else if (rolParam.rol == 'Administracion'){
                                     location.href="views/un/v_almacen.php"; 
-                                }  else if (rolParam.rol == 'Evaluaciones'){
+                                }  else if (rolParam.rol == 'Admin Evaluaciones'){
                                     location.href="views/ev/v_ev_puesto_nivel.php";
+                                }  else if (rolParam.rol == 'Evaluaciones'){
+                                    location.href="views/ev/v_ev_reporte.php";
                                 } 
                             }     
                         }else{
@@ -78,7 +80,9 @@ var login = new Vue({
         reset(){  location.href="views/logout.php";   },
         async getRols(userParam,passwordParam,rolParam ){
             if (userParam != '' && passwordParam != '') { 
-               return axios.post("models/login.php", {action:'login',user:userParam,password:passwordParam,rol:rolParam
+               return axios.post("models/login.php", 
+                {
+                    action:'login',user:userParam,password:passwordParam,rol:rolParam
                 }).then(function (response) { 
                     return this.roles = response.data;   
                 })

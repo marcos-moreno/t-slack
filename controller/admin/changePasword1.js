@@ -5,7 +5,8 @@ var app_chagePassword = new Vue({
         pass_old : "",
         pass_new: "",
         pass_new_repeat:"",  
-        disables_bte_save: false
+        disables_bte_save: false,
+        isPass_default : false
     },
     methods:{  
         showModal(){   
@@ -24,20 +25,24 @@ var app_chagePassword = new Vue({
             });   
             if (isPassword_valid) { 
                 if (this.pass_new != '' && this.pass_new_repeat != '') {
-                    if (this.pass_new === this.pass_new_repeat) {
-                        this.disables_bte_save = true; 
-                       const result = await this.changePassword();
-                       if (result == true){  
-                            alert('¡Cambio de contraseña Exitoso!');  
-                            let linkLogout= "../logout.php";
-                            // if (admin) {
-                            //     linkLogout = "../logout.php";
-                            // }  
-                            location.href= linkLogout;   
-                        }else
-                            alert('La Contraseña NO se puede Actualizar en estos momentos.');  
+                    if (this.pass_new != 'refividrio') {
+                        if (this.pass_new === this.pass_new_repeat) {
+                            this.disables_bte_save = true; 
+                            const result = await this.changePassword();
+                            if (result == true){  
+                                    alert('¡Cambio de contraseña Exitoso!');  
+                                    let linkLogout= "../logout.php";
+                                    // if (admin) {
+                                    //     linkLogout = "../logout.php";
+                                    // }  
+                                    location.href= linkLogout;   
+                                }else
+                                    alert('La Contraseña NO se puede Actualizar en estos momentos.');  
+                        }else{
+                            alert('La Nueva cotraseña No coincide.');  
+                        }
                     }else{
-                        alert('La Nueva cotraseña No coincide.');  
+                        alert('La cotraseña no se puede usar.');  
                     }
                 }else{
                     alert('Ingresa la Nueva cotraseña y su comprobación.');  
@@ -59,5 +64,12 @@ var app_chagePassword = new Vue({
         } 
     },
     async mounted() {},
-    created:function(){}
+    created(){
+        let reset = document.getElementById("resetPassword").value;
+        if(reset === "reset"){
+            console.log("YEa");
+            this.modalchagePassword = true;
+            this.isPass_default = true;
+        }
+    }
    });  
