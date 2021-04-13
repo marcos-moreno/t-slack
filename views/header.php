@@ -39,19 +39,22 @@ if ($valido == false) {  header('location: ../logout.php'); }
         <?php echo $elementos_string; ?> 
 
           <div id='chagePassword_DIV'> 
-          <input id="resetPassword" style="display:none" value=  
+            <input id="resetPassword" style="display:none" value=  
                    <?php 
                   session_start(); 
                   if ($_SESSION['password'] == 'af8d96655446891992fa92383ae70b02') {
                     echo("reset");
                   }else{echo("0");} 
                   ?>>  
-
+            
+            <?php if($_SESSION['rol'] == 'user'){?> 
             <li class="nav-item active">
               <button @click="showModal()" style="background:none;border:none;" > 
               <a class="nav-link">Cambiar Contraseña<span class="sr-only">(current)</span></a>
               </button>
             </li> 
+            <?php } ?> 
+
             <div v-if="modalchagePassword" >  
               <transition name="model" >
                 <div class="modal-mask" > 
@@ -59,7 +62,7 @@ if ($valido == false) {  header('location: ../logout.php'); }
                     <div class="modal-content">
                       <div class="modal-header">
                         <p class="alert alert-warning"  v-if="isPass_default==true" 
-                        class="modal-title" />
+                        class="modal-title" >
                           Es necesario que personalices tu Contraseña
                         </p>
                         <button v-if="isPass_default==false" type="button" class="close" @click="modalchagePassword=false">
@@ -71,16 +74,31 @@ if ($valido == false) {  header('location: ../logout.php'); }
                                 <h5 >Cambio de Contraseña.</h5> 
                                 <div class="form-group">
                                   <label>Contraseña Anterior</label>
-                                  <input type="password" class="form-control" v-model="pass_old" />
+                                  <input :type="typeControl" class="form-control" v-model="pass_old" />
                                 </div> 
                                 <div class="md-form md-outline input-with-post-icon datepicker">
                                   <label for="example">Nueva Contraseña</label>
-                                  <input type="password" id="password_old" class="form-control" v-model="pass_new"  />
+                                  <input :type="typeControl" id="password_old" class="form-control" v-model="pass_new"  />
                                 </div> 
                                 <div class="md-form md-outline input-with-post-icon datepicker">
                                   <label for="example">Comprueba Contraseña</label>
-                                  <input type="password" id="copy_validUntil" class="form-control" v-model="pass_new_repeat" />
-                                </div><br/><br/>
+                                  <input :type="typeControl" id="copy_validUntil" class="form-control" v-model="pass_new_repeat" />
+                                </div> 
+                                <br/>
+
+                                <div class="md-form md-outline input-with-post-icon datepicker">
+                                  <label for="example">
+                                      <input type='checkbox' class='custom-control-input' 
+                                      id='show_pass' @change="show_pass()" 
+                                        v-model='show_pass_v'
+                                          false-value=false true-value=true >
+                                    <label class='custom-control-label' for='show_pass'  >
+                                      <img src="../../img/ojo.png" width="7%" />
+                                    </label>
+                                  </label>
+                                </div> 
+ 
+                                <br/>
                                 <div align="center"> 
                                   <input type="button" class="btn btn-success btn-xs" value="Guardar" :disabled="disables_bte_save"  @click="managePassword()" />
                                 </div>
@@ -195,4 +213,4 @@ if ($valido == false) {  header('location: ../logout.php'); }
 <body  onclick="hover()" style="background-color: <?php session_start();   echo $_SESSION['color_back'] ?>" >
 <script type="text/javascript" src="../../controller/user/c_leccion.js"></script>
 <script type="text/javascript" src="../../controller/user/notifications_u.js"></script>
-<script type="text/javascript" src="../../controller/admin/changePasword1.js"></script>  
+<script type="text/javascript" src="../../controller/admin/changePasword2js"></script>  
