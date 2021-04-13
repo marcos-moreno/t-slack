@@ -61,11 +61,11 @@ if ($valido == false) {  header('location: ../logout.php'); }
                   <div class="modal-dialog modal-dialog-scrollable">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <p class="alert alert-warning"  v-if="isPass_default==true" 
+                        <p class="alert alert-warning"  v-if="isPass_default==true || isPass_default=='true'" 
                         class="modal-title" >
                           Es necesario que personalices tu Contraseña
                         </p>
-                        <button v-if="isPass_default==false" type="button" class="close" @click="modalchagePassword=false">
+                        <button v-if="isPass_default==false || isPass_default=='false'" type="button" class="close" @click="modalchagePassword=false">
                         <span aria-hidden="true">&times;</span></button>
                       </div>  
                         <div class="modal-body"> 
