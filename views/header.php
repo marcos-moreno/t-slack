@@ -66,7 +66,7 @@ if ($valido == false) {  header('location: ../logout.php'); }
                           Es necesario que personalices tu Contraseña
                         </p>
                         <button v-if="isPass_default==false || isPass_default=='false'" type="button" class="close" @click="modalchagePassword=false">
-                        <span aria-hidden="true">&times;</span></button>
+                        <span v-if="isPass_default==false || isPass_default=='false'" aria-hidden="true">&times;</span></button>
                       </div>  
                         <div class="modal-body"> 
                           <div class="card-body">   
