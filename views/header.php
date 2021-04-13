@@ -12,6 +12,9 @@ foreach ($elementos as $key) {
 if ($valido == false) {  header('location: ../logout.php'); } 
 
 ?>
+
+
+
 <head> 
   <meta charset="utf-8">  
   <html lang="es">
@@ -26,6 +29,20 @@ if ($valido == false) {  header('location: ../logout.php'); }
   <link href="../../css/modal.css" rel="stylesheet" type="text/css">
   <link rel="stylesheet" href="../../css/notificaciones_model.css"> 
 </head>
+
+
+<input id="resetPassword" style="display:none" value=  
+  <?php 
+  session_start(); 
+  if ($_SESSION['password'] == 'af8d96655446891992fa92383ae70b02') {
+  echo("reset");
+  }else{echo("0");} 
+  ?>
+> 
+
+
+
+
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="overflow: auto;">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -36,17 +53,8 @@ if ($valido == false) {  header('location: ../logout.php'); }
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <?php   echo '<br/><font size="2.5" color="#B1C6CD" >' . $nombre. '</font>' ?>  
       <ul class="navbar-nav mr-auto">  
-        <?php echo $elementos_string; ?> 
+        <?php echo $elementos_string; ?>  
 
-          <div id='chagePassword_DIV'> 
-            <input id="resetPassword" style="display:none" value=  
-                   <?php 
-                  session_start(); 
-                  if ($_SESSION['password'] == 'af8d96655446891992fa92383ae70b02') {
-                    echo("reset");
-                  }else{echo("0");} 
-                  ?>>  
-            
             <?php if($_SESSION['rol'] == 'user'){?> 
             <li class="nav-item active">
               <button @click="showModal()" style="background:none;border:none;" > 
@@ -55,62 +63,7 @@ if ($valido == false) {  header('location: ../logout.php'); }
             </li> 
             <?php } ?> 
 
-            <div v-if="modalchagePassword" >  
-              <transition name="model" >
-                <div class="modal-mask" > 
-                  <div class="modal-dialog modal-dialog-scrollable">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <p class="alert alert-warning"  v-if="isPass_default==true" 
-                        class="modal-title" >
-                          Es necesario que personalices tu Contraseña
-                        </p>
-                        <button v-if="isPass_default==false" type="button" class="close" @click="modalchagePassword=false">
-                        <span aria-hidden="true">&times;</span></button>
-                      </div>  
-                        <div class="modal-body"> 
-                          <div class="card-body">   
-                              <div class="custom-control custom-checkbox">
-                                <h5 >Cambio de Contraseña.</h5> 
-                                <div class="form-group">
-                                  <label>Contraseña Anterior</label>
-                                  <input :type="typeControl" class="form-control" v-model="pass_old" />
-                                </div> 
-                                <div class="md-form md-outline input-with-post-icon datepicker">
-                                  <label for="example">Nueva Contraseña</label>
-                                  <input :type="typeControl" id="password_old" class="form-control" v-model="pass_new"  />
-                                </div> 
-                                <div class="md-form md-outline input-with-post-icon datepicker">
-                                  <label for="example">Comprueba Contraseña</label>
-                                  <input :type="typeControl" id="copy_validUntil" class="form-control" v-model="pass_new_repeat" />
-                                </div> 
-                                <br/>
 
-                                <div class="md-form md-outline input-with-post-icon datepicker">
-                                  <label for="example">
-                                      <input type='checkbox' class='custom-control-input' 
-                                      id='show_pass' @change="show_pass()" 
-                                        v-model='show_pass_v'
-                                          false-value=false true-value=true >
-                                    <label class='custom-control-label' for='show_pass'  >
-                                      <img src="../../img/ojo.png" width="7%" />
-                                    </label>
-                                  </label>
-                                </div> 
- 
-                                <br/>
-                                <div align="center"> 
-                                  <input type="button" class="btn btn-success btn-xs" value="Guardar" :disabled="disables_bte_save"  @click="managePassword()" />
-                                </div>
-                              </div>  
-                          </div>
-                        </div>
-                    </div> 
-                  </div>
-                </div>
-              </transition>
-            </div>
-          </div>  
         <li class="nav-item active">
           <a class="nav-link" href="../logout.php">Salir <span class="sr-only">(current)</span></a>
         </li> 
@@ -189,6 +142,65 @@ if ($valido == false) {  header('location: ../logout.php'); }
           </div>
         </div>
 
+    <div id='chagePassword_DIV'> 
+      <div v-if="modalchagePassword" >  
+        <transition name="model" >
+          <div class="modal-mask" > 
+            <div class="modal-dialog modal-dialog-scrollable">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <p class="alert alert-warning"  v-if="isPass_default==true" 
+                  class="modal-title" >
+                    Es necesario que personalices tu Contraseña
+                  </p>
+                <div v-if="isPass_default==false">
+                  <button  type="button" class="close" @click="modalchagePassword=false">
+                  <span aria-hidden="true">&times;</span></button>
+                </div>
+                </div>  
+                  <div class="modal-body"> 
+                    <div class="card-body">   
+                        <div class="custom-control custom-checkbox">
+                          <h5 >Cambio de Contraseña.</h5> 
+                          <div class="form-group">
+                            <label>Contraseña Anterior</label>
+                            <input :type="typeControl" class="form-control" v-model="pass_old" />
+                          </div> 
+                          <div class="md-form md-outline input-with-post-icon datepicker">
+                            <label for="example">Nueva Contraseña</label>
+                            <input :type="typeControl" id="password_old" class="form-control" v-model="pass_new"  />
+                          </div> 
+                          <div class="md-form md-outline input-with-post-icon datepicker">
+                            <label for="example">Comprueba Contraseña</label>
+                            <input :type="typeControl" id="copy_validUntil" class="form-control" v-model="pass_new_repeat" />
+                          </div> 
+                          <br/>
+
+                          <div class="md-form md-outline input-with-post-icon datepicker">
+                            <label for="example">
+                                <input type='checkbox' class='custom-control-input' 
+                                id='show_pass' @change="show_pass()" 
+                                  v-model='show_pass_v'
+                                    false-value=false true-value=true >
+                              <label class='custom-control-label' for='show_pass'  >
+                                <img src="../../img/ojo.png" width="7%" />
+                              </label>
+                            </label>
+                          </div> 
+
+                          <br/>
+                          <div align="center"> 
+                            <input type="button" class="btn btn-success btn-xs" value="Guardar" :disabled="disables_bte_save"  @click="managePassword()" />
+                          </div>
+                        </div>  
+                    </div>
+                  </div>
+              </div> 
+            </div>
+          </div>
+        </transition>
+      </div>
+    </div>  
 <script>
   async function hover() {
     httpGet( '../../models/auth/check_session.php', 
