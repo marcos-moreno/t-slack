@@ -80,8 +80,7 @@ var app_chagePassword = new Vue({
     async mounted() {},
     created(){
         let reset = document.getElementById("resetPassword").value;
-        if(reset === "reset"){
-            console.log("YEa");
+        if(reset === "reset"){ 
             this.modalchagePassword = true;
             this.isPass_default = true;
         }

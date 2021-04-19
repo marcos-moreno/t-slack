@@ -38,7 +38,7 @@ var sinconizador = new Vue({
                 for (let index = 0; index < this.incidenciasCollection.length; index++) {
                     const element = this.incidenciasCollection[index];
                     if (element.sincronizar == true) { 
-                        this.enviar_sancion(element);
+                       await this.enviar_sancion(element);
                     }
                 } 
                 this.show_sincronizado = true;
@@ -83,14 +83,14 @@ var sinconizador = new Vue({
                             fecha: this.fechaProceso
                         }
                 })
-            .then(function(response){ return response.data.recordset;})
+            .then(function(response){ return response.data;})
             .catch(function(response){ return response;});
-            // console.log(response[0]);
-            if (response[0].respuesta.includes('Éxito')) {
+             console.log(response);
+            if (response.data[0].respuesta.includes('Éxito')) {
                 const response_inicdencia = await this.request('../../models/bd/bd_poll.php',
                                                     {action:'updateIncidencia',
                                                     id_incidencias_creadas:sancion.id_incidencias_creadas
-                                                    ,descripcion_cerberus:response[0].respuesta});
+                                                    ,descripcion_cerberus:response.data[0].respuesta});
                 if (response_inicdencia.message == 'Data Updated') {
                     return true;
                 } else { 
@@ -98,8 +98,8 @@ var sinconizador = new Vue({
                     return false;
                 }     
             } 
-            if (response[0].respuesta.includes('Error')) { 
-                this.show_message(this.msg + ' || ' + response[0].respuesta , 'error');
+            if (response.data[0].respuesta.includes('Error')) { 
+                this.show_message(this.msg + ' || ' + response.data[0].respuesta , 'error');
             }
         },
     }, 

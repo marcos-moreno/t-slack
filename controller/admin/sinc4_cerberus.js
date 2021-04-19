@@ -47,6 +47,17 @@ var sinconizador = new Vue({
                     employee.idsucursal_cerberus = element.idSucursal; 
                     employee.id_compac = element.idConpaq;
                     let user_duplicate = false;
+
+                    try {
+                        if (employee.correo.length > 8 && employee.celular.length == 10) {
+                            employee.correo_verificado = 'true';
+                        } else {
+                            employee.correo_verificado = 'false';
+                        }
+                    } catch (error) {
+                        employee.correo_verificado = 'false';
+                    }
+
                     if (this.validaUser(usuario)) {
                         employee.usuario =  usuario;
                     }else{

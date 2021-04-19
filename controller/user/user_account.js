@@ -198,15 +198,18 @@ var account = new Vue({
         } 
     }, 
     async created(){
-        this.FechaI = this.fechaActual();
-        this.FechaF = this.fechaActual(); 
-        await this.fetchData(); 
-        if (this.account.correo_verificado) { 
-        } else {
-            this.isHello = true;
-            this.msg =  "Tenemos un problema con tu correo electrónico por favor actualizalo.";
-            $('#ModalMsg').modal('show'); 
-        }
-        this.findRegister(); 
+        let reset = document.getElementById("resetPassword").value;
+        if(reset != "reset"){ 
+            this.FechaI = this.fechaActual();
+            this.FechaF = this.fechaActual(); 
+            await this.fetchData(); 
+            if (this.account.correo_verificado) { 
+            } else {
+                this.isHello = true;
+                this.msg =  "Tenemos un problema con tu correo electrónico por favor actualizalo.";
+                $('#ModalMsg').modal('show'); 
+            }
+            this.findRegister(); 
+        } 
     } 
  });
