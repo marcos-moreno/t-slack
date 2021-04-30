@@ -142,7 +142,15 @@ var application = new Vue({
     },
     async mounted() {    
     },
-    created:function(){
-        this.getPoll();
+    created: async function(){
+        const account_response = await axios.post('../../models/user/bd_account.php', 
+        {  action:'validaDatos' }).then(function(response){ return  response.data });
+        console.log(account_response);
+
+        if (account_response[0].valido=="false"||account_response[0].valido==false) {
+            location.href ="account.php";
+        }else{
+            this.getPoll();
+        } 
     }
    }); 

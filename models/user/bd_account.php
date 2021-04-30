@@ -25,6 +25,19 @@ if (check_session()) {
         }
         echo json_encode($data);
     } 
+    if ($received_data->action == 'validaDatos') {
+        $query = " SELECT CASE WHEN (id_talla_playera IS NULL OR id_numero_zapato IS NULL) THEN false ELSE true END valido
+                    FROM refividrio.empleado e
+                    INNER JOIN refividrio.segmento s ON s.id_segmento = e.id_segmento
+                    INNER JOIN refividrio.empresa empresa ON empresa.id_empresa = s.id_empresa 
+                    WHERE  id_empleado =".$_SESSION['id_empleado'];
+        $statement = $connect->prepare($query);
+        $statement->execute();
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $data[] = $row;
+        }
+        echo json_encode($data);
+    } 
     if ($received_data->action == 'update') {
         $data = array(
             ':fecha_nacimiento' => $received_data->data->fecha_nacimiento,

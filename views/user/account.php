@@ -98,18 +98,21 @@
       <div class='form-group'>
           <div class="row">
               <div class="col-sm">
-                  <label>talla</label> 
+                  <label>Playera</label> 
                   <select class='form-control' size='1'  v-model='account.id_talla_playera' >
-                      <option value='null' >Talla No seleccionada</option>
+                      <option value='null' >-</option>
                       <option v-for='rows in tallaCollection' v-bind:value='rows.id_talla'>{{ rows.valor }}</option>
                   </select>
+                  <div style="color:red;" id="error_playera" ></div>
+
               </div>  
               <div class="col-sm">
                   <label>Número Zapato</label> 
                   <select class='form-control' size='1'  v-model='account.id_numero_zapato' >
-                      <option value='null' >Número Zapato No seleccionado</option>
+                      <option value='null' >-</option>
                       <option v-for='rows in numsZapatoCollection' v-bind:value='rows.id_talla'> {{ rows.valor }}</option>
                   </select>
+                  <div style="color:red;" id="error_zapato" ></div>
               </div>  
           </div>  
       </div> 
@@ -171,4 +174,4 @@
       </div>  
     </div> 
 </div>
-<script type="text/javascript" src="../../controller/user/user_account.js"></script>
+<script type="text/javascript" src="../../controller/user/user_account1.js"></script>

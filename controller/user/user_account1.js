@@ -51,22 +51,24 @@ var account = new Vue({
         },
         async save(){
             if (this.validForm()) {
-                let actualizar = false;
-                if (this.emailNOmodificado === this.account.correo && this.account.correo_verificado == true) {
-                    actualizar = true;
-                } else { 
-                    let email_valido = await this.validEmail(this.account.correo);
-                    if (email_valido) {
-                        actualizar = true;
-                        this.account.correo_verificado = true;
-                    } else {
-                        this.account.correo_verificado = false;
-                        this.msg = "El correo Ingresado no es correcto, recuerda ingresar tu correo personal";
-                        this.isError = true;
-                        this.isHello = false;
-                        $('#ModalMsg').modal('show');  
-                    } 
-                }
+                let actualizar = true;
+                // let actualizar = false;
+                // if (this.emailNOmodificado === this.account.correo && this.account.correo_verificado == true) {
+                //     actualizar = true;
+                // } else { 
+                //     let email_valido = await this.validEmail(this.account.correo);
+                //     if (email_valido) {
+                //         actualizar = true;
+                //         this.account.correo_verificado = true;
+                //     } else {
+                //         this.account.correo_verificado = false;
+                //         document.getElementById("error_correo").innerHTML = "Este correo no esta permitido, por favor verificalo."
+                //         this.msg = "El correo Ingresado no es correcto, recuerda ingresar tu correo personal";
+                //         this.isError = true;
+                //         this.isHello = false;
+                //         $('#ModalMsg').modal('show');  
+                //     } 
+                // }
                 if (actualizar) {
                     const update_response = await axios.post('../../models/user/bd_account.php', {  action:'update',data:this.account })
                                             .then(function(response){ return  response.data });
@@ -139,6 +141,21 @@ var account = new Vue({
            }
         },validForm(){ 
             let valido = true;
+
+            if ( this.account.id_numero_zapato == 'null' || this.account.id_numero_zapato == null ){
+                document.getElementById("error_zapato").innerHTML = "Ingresa el No. correcto."
+                valido = false;
+            }else{
+                document.getElementById("error_zapato").innerHTML = "";
+            }  
+
+            if ( this.account.id_talla_playera == 'null' || this.account.id_talla_playera == null ){
+                document.getElementById("error_playera").innerHTML = "Ingresa el talla correcta."
+                valido = false;
+            }else{
+                document.getElementById("error_playera").innerHTML = "";
+            }  
+
             if ( this.validarFormatoFecha(this.account.fecha_nacimiento) == false ){
                 document.getElementById("error_fecha_naci").innerHTML = "Tu fecha de Nacimiento es Incorrecta."
                 valido = false;
@@ -209,6 +226,12 @@ var account = new Vue({
                 this.msg =  "Tenemos un problema con tu correo electrónico por favor actualizalo.";
                 $('#ModalMsg').modal('show'); 
             }
+            if (!this.validForm()) {
+                this.msg = "Algunos datos de tu cuenta no son correctos.";
+                this.isError = true;
+                this.isHello = false;
+                $('#ModalMsg').modal('show');  
+            } 
             this.findRegister(); 
         } 
     } 

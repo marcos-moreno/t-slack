@@ -150,4 +150,4 @@
             </div> 
     </div> 
 </div>
-<script type="text/javascript" src="../../controller/user/ctl_vista_encuest_e.js"></script>
+<script type="text/javascript" src="../../controller/user/ctl_vista_encuest_1.js"></script>
