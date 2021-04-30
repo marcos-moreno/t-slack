@@ -38,7 +38,7 @@
       </div> 
       <div class="form-group">
         <label>¿Mostrar al Iniciar Sesión?</label> 
-        <input type='checkbox' v-model="notificationSelected.display_start"  /> 
+        <input type='checkbox' v-model="notificationSelected.display_start"  false-value='false' true-value='true' /> 
       </div>  
       <div class="form-group">
         <label>Mensaje</label>

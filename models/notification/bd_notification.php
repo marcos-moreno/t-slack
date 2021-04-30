@@ -82,23 +82,30 @@ if (check_session()) {
     }
 
     if ($received_data->action == 'insertData') {
-        $data = array(
-            ':msg' => $received_data->data->msg ,
-            ':description' => $received_data->data->description,  
-            ':display_start' => $received_data->data->display_start,  
-        ); 
-        $query = "INSERT INTO refividrio.notification(msg, description,display_start)  VALUES (:msg, :description,:display_start) RETURNING id_notification;"; 
-        $statement = $connect->prepare($query); 
-        $statement->execute($data); 
-        $id = 0;
-        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $id = $row['id_notification']; 
+        try {
+            $data = array(
+                ':msg' => $received_data->data->msg ,
+                ':description' => $received_data->data->description,  
+                ':display_start' => $received_data->data->display_start,  
+            ); 
+            $query = "INSERT INTO refividrio.notification(msg, description,display_start)  VALUES (:msg, :description,:display_start) RETURNING id_notification;"; 
+            $statement = $connect->prepare($query); 
+            $statement->execute($data); 
+            $id = 0;
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $id = $row['id_notification']; 
+            }
+            $output = array(
+                'message' => 'Data Inserted',
+                'id' =>  $id
+            ); 
+            echo json_encode($output);
+        } catch (PDOException $exc) {
+            $output = array('message' => $exc->getMessage()); 
+            echo json_encode($output); 
+            return false;
         }
-        $output = array(
-            'message' => 'Data Inserted',
-            'id' =>  $id
-        ); 
-        echo json_encode($output);
+       
     } 
 
     if ($received_data->action == 'deleteData') { 

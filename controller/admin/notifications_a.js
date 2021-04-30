@@ -88,20 +88,24 @@ var notification = new Vue({
         });
         this.isCrud=true;
     },  
-    async save(){ 
+    async save(){
+        this.notificationSelected.display_start == true || this.notificationSelected.display_start == 'true' ?
+          this.notificationSelected.display_start = 'true' : this.notificationSelected.display_start = 'false';
         if (this.notificationSelected.id_notification > 0) {
             await this.updateData();
-        } else {
-           await this.createData();
+        } else { 
+            await this.createData();
         }
         this.data_to_filter = [];
         this.to_notify = [];
         this.search_by = 'all';
         this.filter_value = '';
     } ,
-    async createData(){  
-        const responce_nt =  await axios.post('../../models/notification/bd_notification.php', {  action:'insertData', data: this.notificationSelected })
-                            .then(function(response){  return response.data;});   
+    async createData(){   
+        const responce_nt =  await axios.post('../../models/notification/bd_notification.php', 
+        {  action:'insertData', data: this.notificationSelected })
+                            .then(function(response){  console.log(response);    return response.data;}); 
+           
         if (responce_nt.message == "Data Inserted") { 
             const responces_nt_detalil = await axios.post('../../models/notification/bd_notification.php', { action:'insertNotification',  id_notification: responce_nt.id 
                                         ,filter: this.to_notify ,type: this.search_by })
