@@ -174,17 +174,17 @@ var account = new Vue({
                 document.getElementById("error_correo").innerHTML = "";
             }  
             
-            if (this.ValidateNumber(this.account.celular) == false) {
-                valido = false;
-                document.getElementById("error_celular").innerHTML = "Tu Número celular es Incorrecto, Evita ingresar Paréntesis, espacios o cualquier Carácter que no sea un Número."
-            }else{ 
-                if(this.account.celular.length == 10){
-                    document.getElementById("error_celular").innerHTML = ""
-                }else{
-                    document.getElementById("error_celular").innerHTML = "Tu Número celular es Incorrecto, Ingresar 10 Digitos sin espacios ni otro caracter."; 
-                    valido = false;
-                }
-            }
+         //   if (this.ValidateNumber(this.account.celular) == false) {
+          //      valido = false;
+          //      document.getElementById("error_celular").innerHTML = "Tu Número celular es Incorrecto, Evita ingresar Paréntesis, espacios o cualquier Carácter que no sea un Número."
+         //   }else{ 
+          ///      if(this.account.celular.length == 10){
+          //          document.getElementById("error_celular").innerHTML = ""
+          //      }else{
+          ///          document.getElementById("error_celular").innerHTML = "Tu Número celular es Incorrecto, Ingresar 10 Digitos sin espacios ni otro caracter."; 
+           //         valido = false;
+          //      }
+          //  }
             return valido;
         },async fetchData(){
             await this.gettallas();
