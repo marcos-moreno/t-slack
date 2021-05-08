@@ -67,6 +67,7 @@ var account = new Vue({
                 //         $('#ModalMsg').modal('show');  
                 //     } 
                 // }
+                this.account.correo_verificado = true;
                 if (actualizar) {
                     const update_response = await axios.post('../../models/user/bd_account.php', {  action:'update',data:this.account })
                                             .then(function(response){ return  response.data });
