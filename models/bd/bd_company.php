@@ -119,6 +119,28 @@ if (check_session()) {
             } catch (\Throwable $th) {
                 echo $th;
             } 
+
+            try {
+                $data = file_get_contents( '../../img/edc2.png' );  
+                $escaped = bin2hex( $data );   
+                $datas = array(  ); 
+                // $query = "INSERT INTO refividrio.file(file, name, type, id_table) VALUES 
+                // ( decode('{$escaped}' , 'hex'), 'hoolman', 'png' , 4); "; 
+                $query = "UPDATE refividrio.file 
+                            SET 
+                            file = decode('{$escaped}' , 'hex')
+                            ,name = 'hoolman'
+                            ,type='png'
+                            WHERE id_file = 21;"; 
+                $statement = $connect->prepare($query); 
+                $statement->execute($datas); 
+                $output = array(
+                    'message' => 'Imagen Guardada'
+                ); 
+                echo json_encode($output);
+            } catch (\Throwable $th) {
+                echo $th;
+            }
     }
 }else{
     $output = array('message' => 'Not authorized'); 
