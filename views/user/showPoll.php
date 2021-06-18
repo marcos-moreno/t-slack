@@ -94,6 +94,126 @@
 
 
 
+        <div id="modalPDFs" v-if="modalPDFv2" >  
+        <transition name="model" >
+            <div class="modal-mask" > 
+                    <div class="modal-dialog modal-dialog-scrollable">
+                                <div class="modal-content">
+
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Actualiza tu Direcci&oacute;n</h4>
+                                        <!-- <button type="button" class="close" @click="modalPDFv2=false"><span>&times;</span></button> -->
+                                    </div>  
+
+                                    <div class="modal-body">
+                                    <strong>Estimado Colaborador</strong>
+                                    <p>Solicitamos de tu apoyo para actualizar, en caso de que hayan cambiado al día de hoy, los siguientes datos.
+                                        Nota: Al ingresar el código postal, da ENTER para que accedas a los demás campos. Dudas o aclaraciones envíanos un whatsapp al 55 7610 6686.</p>
+
+                                            <div class="card-body">
+
+                                            <div class="form-group">
+                                                <label>Tel&eacute;fono Celular: </label><label style="color: #FF0000;">(Obligatorio)</label>
+                                                <input type="text" class="form-control" v-model="celular" onkeypress="return isNumberKey(event);" />
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Tel&eacute;fono de Casa</label>
+                                                <input type="text" class="form-control" v-model="casa" onkeypress="return isNumberKey(event);" />
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Correo Electr&oacute;nico: </label><label style="color: #FF0000;">(Obligatorio)</label>
+                                                <input type="email" class="form-control" v-model="correo" />
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                <label>Estado Civil: </label><label style="color: #FF0000;">(Obligatorio)</label>
+                                                <select class='form-control'  v-model="estadocivil">
+                                                <option v-for="elemento in elementos2" v-bind:value="elemento.value">{{ elemento.text }}</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Escolaridad: </label><label style="color: #FF0000;">(Obligatorio)</label>
+                                                <select class='form-control'  v-model="escolaridad" >
+                                                <option v-for="elemento in elementos" v-bind:value="elemento.value">{{ elemento.text }}</option>
+                                                </select>
+                                                
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Calle:</label><label style="color: #FF0000;">(Obligatorio)</label>
+                                                <input type="text" class="form-control" v-model="calle" />
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>No. Interior: </label><label style="color: #FF0000;">(Obligatorio)</label>
+                                                <input type="text" class="form-control" v-model="no_interior" />
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>No. Exterior: </label><label style="color: #FF0000;">(Obligatorio)</label>
+                                                <input type="text" class="form-control" v-model="no_exterior" />
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label>C&oacute;digo Postal: </label><label style="color: #FF0000;">(Obligatorio)</label>
+                                                <input type="text" id="cp" class="form-control" v-model="codigo_postal" maxlength="5" v-on:keyup="clean()" v-on:onkeypress="buscarEstado(),buscarCiudad(),buscarMunicipio(),buscarAsentamiento(),seachaddress5()" onkeypress="return isNumberKey(event);"/>
+                                                <h6></h6>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Selecciona Estado:</label><label style="color: #FF0000;">(Obligatorio)</label>
+                                                <select class='form-control'  v-model="estado">
+                                                <option v-for="rows in comboEstado" v-bind:value='rows.estado'>{{ rows.estado }}</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Selecciona Municipio:</label><label style="color: #FF0000;">(Obligatorio)</label>
+                                                <select class='form-control'  v-model="municipio">
+                                                <option v-for="rows in comboMunicipio" v-bind:value='rows.municipio'>{{ rows.municipio }}</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Selecciona Ciudad:</label><label style="color: #FF0000;">(Obligatorio)</label>
+                                                <select class='form-control' v-model="ciudad">
+                                                <option v-for="rows in comboCuidad" v-bind:value='rows.cuidad'>{{ rows.cuidad }}</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Selecciona Tipo Asentamiento:</label><label style="color: #FF0000;">(Obligatorio)</label>
+                                                <select class='form-control'  v-model="tipo_asentamiento" @change='seachaddress5()' >
+                                                <option v-for="rows in comboTipoAsentamiento" v-bind:value='rows.tipo_asentamiento'>{{ rows.tipo_asentamiento }}</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Selecciona Asentamiento:</label><label style="color: #FF0000;">(Obligatorio)</label>
+                                                <select class='form-control'  v-model="asentamiento">
+                                                <option v-for="rows in comboAsentamiento" v-bind:value='rows.id_codigo_postal'>{{ rows.asentamiento }}</option>
+
+                                                </select><span>Seleccionado: {{ asentamiento }}</span>
+                                            </div>
+
+                                            </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-success" @click="editarE">Guardar</button>
+
+                                    </div>
+                            </div> 
+                    </div>
+             </div>
+        </transition>
+        </div>
+
+
 
             <div v-if="modalLeccion" class="container">  <!-- Modal Lecciones -->
                     <div v-if="leccion.id_enc_leccion > 0"> 

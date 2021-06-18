@@ -12,13 +12,116 @@ var application = new Vue({
         // ,encuesta_seleccionada:{} 
         ,force_view_leccion : false
         ,origen_leccion : ''
+
+
+        //VIC
+        ,modalPDFv2: false
+        ,calle:''
+        ,no_interior:''
+        ,no_exterior:''
+        ,estado:''
+        ,ciudad:''
+        ,codigo_postal:null
+        ,municipio:''
+        ,tipo_asentamiento:''
+        ,asentamiento:''
+
+        ,comboEstado:''
+        ,comboMunicipio:''
+        ,comboCuidad:''
+        ,comboTipoAsentamiento:''
+        ,comboAsentamiento:''
+        
+        ,obtenerempresa: []
+        ,direccionEmpleado: []
+
+        ,empresa:null
+        ,modificado:''
+
+        ,celular:''
+        ,casa:''
+        ,correo:''
+        ,id_cp:''
+
+        ,estadocivil:''
+        ,elementos2: [
+            { value: 'Soltero(a)', text: 'Soltero(a)' },
+            { value: 'Casado(a)', text: 'Casado(a)' },
+            { value: 'Unión Libre', text: 'Unión Libre' },
+            { value: 'Divorciado', text: 'Divorciado' },
+            { value: 'Viudo', text: 'Viudo' },
+          ]
+
+
+        ,escolaridad:''
+        ,elementos: [
+            { value: 'Sin Estudios', text: 'Sin Estudios' },
+            { value: 'Primaria', text: 'Primaria' },
+            { value: 'Secundaria', text: 'Secundaria' },
+            { value: 'Bachillerato', text: 'Bachillerato' },
+            { value: 'Preparatoria', text: 'Preparatoria' },
+            { value: 'Licenciatura / Ingenieria', text: 'Licenciatura / Ingenieria' },
+            { value: 'Maestría', text: 'Maestría' },
+            { value: 'Doctorado', text: 'Doctorado' },
+
+          ]
+
+
+
+
+
     },
     methods:{
-        async getPoll(){  
+
+
+        async getPoll(){ 
+
             const response = await this.seachPoll();
             this.poll = response; 
             const response2 = await this.seachPollComplete();
-            this.pollComplete = response2; 
+            this.pollComplete = response2;
+            const response3 = await this.buscaEmpleado();
+            this.obtenerempresa = response3;
+            //console.log(response3);
+            
+            this.empresa = response3[0].id_empresa;
+            this.modificado =  response3[0].modificado;
+
+            if(this.empresa == "1" && this.modificado == false ){
+                this.modalPDFv2 = true
+
+                const response4 = await this.buscarDireccion();
+                this.direccionEmpleado = response4;
+
+                console.log(response4);
+                this.calle = response4[0].calle;
+                this.no_interior = response4[0].no_interior;
+                this.no_exterior = response4[0].no_exterior;
+                this.estado  = response4[0].estado;
+                this.ciudad  = response4[0].cuidad;
+                this.codigo_postal  = response4[0].codigo_postal;
+                this.municipio  = response4[0].municipio;
+                this.tipo_asentamiento  = response4[0].tipo_asentamiento;
+                this.asentamiento  = response4[0].id_codigo_postal;
+                this.celular = response4[0].celular;
+                this.casa = response4[0].telefono_casa;
+                this.correo = response4[0].correo_electronico;
+                this.estadocivil = response4[0].estado_civil;
+                this.escolaridad = response4[0].escolaridad;
+                this.id_cp = response4[0].id_codigo_postal;
+
+                this.buscarEstado();
+                this.buscarMunicipio();
+                this.buscarCiudad();
+                this.buscarAsentamiento();
+                this.seachaddress5();
+                //this.seachaddress5v2(this.id_cp);
+
+            }else{
+                this.modalPDFv2 = false
+
+            }
+
         },  
         openPoll(encuesta){
             console.log(encuesta);
@@ -139,6 +242,264 @@ var application = new Vue({
         }, 
         // Lecciones <-
 
+        //VIC
+
+        buscaEmpleado:async function(){
+            return axios.post("../../models/user/bd_address.php", { 
+                action:'empleado'
+                //,filter: 'pending' 
+            })
+            .then(function (response) {  
+                //console.log(response.data[0].id_empresa);
+                return response.data; 
+            })
+            .catch(function (response) {  
+            return [];
+            })   
+        },
+
+        buscarDireccion:async function(){
+            return axios.post("../../models/user/bd_address.php", { 
+                action:'empleadoDireccion'
+                //,filter: 'pending' 
+            })
+            .then(function (response) {  
+                //console.log(response.data);
+                return response.data; 
+            })
+            .catch(function (response) {  
+            return [];
+            })   
+        },        
+
+        buscarEstado:async function(){
+
+            let l = this;
+
+            return axios.post("../../models/user/bd_address.php", { 
+                action:'getAddress1'
+                ,codigo_postal: this.codigo_postal 
+            })
+            .then(function (response) {
+                //console.log(response.data);
+                l.comboEstado=response.data;
+                return response.data; 
+            })
+            .catch(function (response) {  
+            return [];
+            })   
+        },  
+
+
+        buscarMunicipio:async function(){
+            let l = this;
+
+            return axios.post("../../models/user/bd_address.php", { 
+                action:'getAddress2'
+                ,codigo_postal: this.codigo_postal 
+            })
+            .then(function (response) {
+                //console.log(response.data);
+                l.comboMunicipio=response.data;
+                return response.data; 
+            })
+            .catch(function (response) {  
+            return [];
+            })   
+        },  
+
+
+        buscarCiudad:async function(){
+            let l = this;
+
+            return axios.post("../../models/user/bd_address.php", { 
+                action:'getAddress3'
+                ,codigo_postal: this.codigo_postal 
+            })
+            .then(function (response) {
+                //console.log(response.data);
+                l.comboCuidad=response.data ;
+                return response.data; 
+            })
+            .catch(function (response) {  
+            return [];
+            })   
+        },  
+
+        buscarAsentamiento:async function(){
+            let l = this;
+
+            return axios.post("../../models/user/bd_address.php", { 
+                action:'getAddress4'
+                ,codigo_postal: this.codigo_postal 
+            })
+            .then(function (response) {
+                //console.log(response.data);
+                l.comboTipoAsentamiento=response.data ;
+                return response.data; 
+            })
+            .catch(function (response) {  
+            return [];
+            })   
+        },  
+
+
+        seachaddress5v2:async function(id){
+            let l = this;
+
+            return axios.post("../../models/user/bd_address.php", { 
+                action:'getAddress5v2'
+                ,codigo_postal: this.codigo_postal
+                ,id_cp : id
+                ,tipo_asentamiento: this.tipo_asentamiento
+            })
+            .then(function (response) {
+                //console.log(response.data);
+                l.comboAsentamiento=response.data ;
+                return response.data; 
+            })
+            .catch(function (response) {  
+            return [];
+            })   
+        }, 
+
+        seachaddress5:async function(){
+            let l = this;
+
+            return axios.post("../../models/user/bd_address.php", { 
+                action:'getAddress5'
+                ,codigo_postal: this.codigo_postal
+                //,id_cp : this.id_cp
+                ,tipo_asentamiento: this.tipo_asentamiento
+            })
+            .then(function (response) {
+                console.log(response.data);
+
+                //console.log(response.data[0].id_codigo_postal);
+                //id_codigo_postal = response.data[0].id_codigo_postal
+                l.comboAsentamiento=response.data ;
+                return response.data; 
+            })
+            .catch(function (response) {  
+            return [];
+            })   
+        }, 
+
+
+		editarE(){
+
+
+            if(this.celular == "" || this.celular == null){
+
+                alert("Favor de Completar el Campo Teléfono Celular");
+
+            }else if(this.casa == "" || this.casa == null){
+
+                alert("Favor de Completar el Campo Teléfono de Casa");
+    
+            }else if(this.correo == "" || this.correo == null){
+
+                alert("Favor de Completar el Campo Correo Electrónico");
+    
+            }else if(this.estadocivil == "" || this.estadocivil == null){
+
+                alert("Favor de Completar el Campo Estado Civil");
+
+            }else if(this.escolaridad == "" || this.escolaridad == null){
+
+                alert("Favor de Completar el Campo Escolaridad");
+    
+            }else if(this.calle == "" || this.calle == null){
+
+                alert("Favor de Completar el Campo Calle");
+    
+            }else if(this.no_interior == "" || this.no_interior == null){
+
+                alert("Favor de Completar el Campo No. Interior");
+   
+            }else if(this.no_exterior == "" || this.no_exterior == null){
+
+                alert("Favor de Completar el Campo No. Exterior");
+
+            }else if(this.estado == "" || this.estado == null){
+
+                alert("Favor de Completar el Campo Selecciona Estado");
+                
+            }else if(this.municipio == "" || this.municipio == null){
+
+                alert("Favor de Completar el Campo Municipio");                
+
+            }else if(this.tipo_asentamiento == "" || this.tipo_asentamiento == null){
+
+                alert("Favor de Completar el Campo Tipo Asentamiento");
+
+            }else if(this.asentamiento == "" || this.asentamiento == null){
+
+                alert("Favor de Completar el Campo Asentamiento");
+
+            }else{
+
+                params = {
+
+                    celular: this.celular
+                    ,casa: this.casa
+                    ,correo: this.correo
+                    ,estadocivil: this.estadocivil
+                    ,escolaridad: this.escolaridad
+                    ,calle: this.calle
+                    ,no_interior : this.no_interior
+                    ,no_exterior : this.no_exterior
+                    ,asentamiento : this.asentamiento
+                    //checked : this.checked,
+                    ,action:'editarDireccion'
+                };
+                
+                axios.post('../../models/user/bd_address.php',params)
+                .then((response)=>{
+                console.log(response.data);
+    
+                alert(response.data.message);
+    
+                this.getPoll();
+    
+    
+                });	
+
+
+            }
+
+		},
+
+
+
+/*         editarE(){
+            
+            axios.post('../../models/user/bd_address.php', {
+             action:'editarDireccion',
+             calle: "asdas",
+             no_interior : this.no_interior,
+             no_exterior : this.no_exterior,
+             codigo_postal : this.codigo_postal
+
+            }).then(function(response){
+
+             alert(response.data.message);
+            });
+           
+
+       },
+ */
+
+
+        clean(){
+            this.comboCuidad ='';
+            this.comboMunicipio ='';
+            this.comboEstado ='';
+            this.comboTipoAsentamiento = '';
+            this.comboAsentamiento = '';
+            },
+
+        
     },
     async mounted() {    
     },
@@ -154,3 +515,21 @@ var application = new Vue({
         } 
     }
    }); 
+
+   function validarNum(e)
+{
+    tecla = (document.all) ? e.keyCode : e.which;
+    if (tecla == 8) return true;
+    patron = /\d/;
+    te = String.fromCharCode(tecla);
+    return patron.test(te);
+}
+
+function isNumberKey(evt) {
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode != 46) {
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+    }
+    return true;
+  }
