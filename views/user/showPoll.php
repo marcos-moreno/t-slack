@@ -121,7 +121,8 @@
                                 <p><strong>{{leccion.descipcion}}</strong></p>  
                                     <div >     
                                             <div v-if="leccion.tipo == 'text'" >
-                                            <span v-once v-html="leccion.valor"></span> 
+                                            <!-- <span v-once v-html="leccion.valor"></span>  -->
+                                            <div v-html="leccion.valor"></div>
                                             </div>
 
                                             <div v-if="leccion.tipo == 'link'"> 
