@@ -41,13 +41,15 @@
         <div class="card-header"> 
         </div>
         <div class="card-block">
-            <p class="card-title">
-                Recibo de Nomina Ejercicio: {{file_nomina.ejercicio}} Semana: {{file_nomina.semana}}
-            </p>
+            <center>
+                <p class="card-title">
+                    Recibo nómina Semana: {{file_nomina.semana}} - {{file_nomina.ejercicio}} 
+                </p>
+            </center>
             <p class="card-text"></p>
             <table style="width:100%">
                 <tr style="width:100%">
-                    <td style="width:50%" v-for="iterator in file_nomina.files" >
+                    <td  v-for="iterator in file_nomina.files" >
                         <center>
                             <button @click="get_file(iterator)" class="btn btn-info" v-if="iterator.type_file=='application/pdf'">
                                 <img  src="../../img/pdf.png" width="50px" />
