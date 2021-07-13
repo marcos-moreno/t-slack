@@ -125,7 +125,7 @@
             </div>
          
             <div class='form-group'>
-                <label>Fecha</label>{{ev_reporte.fecha}}
+                <label>Fecha</label>
                 <input type='date' class='form-control' v-model='ev_reporte.fecha' />
             </div>    
             <div class='form-group'>
