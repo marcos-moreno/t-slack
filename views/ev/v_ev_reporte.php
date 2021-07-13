@@ -111,15 +111,17 @@
             </div>
         </div>  
             
-        <div v-if="isFormCrud" >   
-            <button  type="button" class="close" @click="adjunto_dialog=true">
-                <img src="../../img/adjuntar.svg" width="7%" />
-                Adjuntar Evidencia
-            </button>
-            <button  type="button" class="close" @click="getfiles_adjuntos()">
-                <img src="../../img/evidencias.svg" width="7%" />
-                Evidencias
-            </button>
+        <div v-if="isFormCrud" > 
+            <div  class="form-group" v-if="ev_reporte.ev_reporte_id > 0"> 
+                <button  type="button" class="close" @click="adjunto_dialog=true">
+                    <img src="../../img/adjuntar.svg" width="7%" />
+                    Adjuntar Evidencia
+                </button>
+                <button  type="button" class="close" @click="getfiles_adjuntos()">
+                    <img src="../../img/evidencias.svg" width="7%" />
+                    Evidencias
+                </button>
+            </div>
             <div class="form-group">
                 <label>ID: {{ ev_reporte.ev_reporte_id }}</label>  
             </div>
