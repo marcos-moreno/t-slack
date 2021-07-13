@@ -102,7 +102,7 @@ class Ev_reporte
                 ':id_empleado' => $this->received_data->model->id_empleado,
                 ':creadopor' => $_SESSION['id_empleado'],
                 ); 
-            $query = "SELECT rep.ev_reporte_id,rep.descripcion,TO_CHAR(rep.fecha, 'DD/MM/YYYY') as fecha
+            $query = "SELECT rep.ev_reporte_id,rep.descripcion,TO_CHAR(rep.fecha, 'YYYY-MM-DD') as fecha
                     ,rep.id_empleado,rep.ev_indicador_puesto_id,
                     rep.creado,rep.creadopor,rep.actualizado,rep.actualizadopor,ig.nombre As nombre_indicador
                     FROM ev_reporte rep

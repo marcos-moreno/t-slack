@@ -2,6 +2,12 @@
 var application = new Vue({
     el:'#app_ev_reporte',
     data:{ 
+        adjunto_dialog : false,
+        view_adjunto_dialog : false,
+        evidencia_dialog : false,
+        load_dialog : false,
+        files_adjuntos : [],
+        file_adjunto : {},
         ev_reporte : null,
         ev_reporteCollection : [],
         isFormCrud: false,
@@ -28,6 +34,86 @@ var application = new Vue({
         depas:[]
     },
     methods:{
+        search_file_ByID(id_file){
+            for (let index = 0; index < this.files_adjuntos.length; index++) {
+                const element = this.files_adjuntos[index]; 
+                if (id_file == element.id_file_adjunto) { 
+                    return element;
+                }
+            }  
+        },
+        async delete_file(id_file){  
+            this.file_adjunto = this.search_file_ByID(id_file);
+            if(this.file_adjunto.id_file_adjunto > 0){
+                const response = await this.request('../../models/generales/bd_file_adjunto.php'
+                ,{model:this.file_adjunto,'action' : 'delete'});
+                if(response.message == 'Data Deleted'){
+                    await this.getfiles_adjuntos();
+                    this.show_message('Registro Eliminado','success');
+                }else{
+                    this.show_message(response.message,'error');
+                }
+            }else{ 
+                this.show_message('ID 0 No es posible Eliminar.','info');
+            } 
+        }, 
+        async get_file(file){ 
+            window.open(`../../models/generales/bd_file_adjunto.php?type_getFile_admin=1&id_file=${file.id_file_adjunto}`
+            ,'_blank');
+        }, 
+        async getfiles_adjuntos(){
+            this.view_adjunto_dialog = true;
+            this.files_adjuntos  = []; 
+            const response = await this.request('../../models/generales/bd_file_adjunto.php',
+                {
+                    'action' : 'select_preview'
+                    ,'tabla': 'ev_reporte'
+                    ,'id_tabla' : this.ev_reporte.ev_reporte_id
+                });
+            try{   
+                this.files_adjuntos = response; 
+            }catch(error){
+                console.log(error);
+                this.show_message('No hay datos Para Mostrar.','info');
+            }  
+        },
+        async save_file(){    
+            var files = document.getElementById("file").files;
+            if (files.length < 1) { 
+                alert("Por favor Selecciona los documentos a cargar.");
+                return;
+            }
+            this.adjunto_dialog = false;
+            this.load_dialog = true;  
+            for (let index = 0; index < files.length; index++) {
+                const element = files[index];
+                let formData = new FormData();
+                formData.append('file', element); 
+                formData.append('id_tabla', this.ev_reporte.ev_reporte_id);
+                formData.append('tabla', 'ev_reporte');
+                formData.append('action', 'insert'); 
+                formData.append('type', 'file');  
+                formData.append('name', element.name);   
+                const respuesta = await axios.post('../../models/generales/bd_file_adjunto.php',
+                formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }).then(function (response) {
+                    return response;
+                })
+                .catch(function (response) {
+                    return response;
+                });  
+                if (respuesta.data.status == "error") {
+                    alert("Aceptar para continuar.\nExiste un error con el archivo: " + element.name + "  Error: "+ respuesta.data.message);
+                }else{
+                    this.show_message('Se adjunto correctamente.','success');
+                    console.log(element.name + " : "+ respuesta.data.message);
+                }
+            }  
+            this.load_dialog = false; 
+        },
         async buscarValorEmpleado(){
             this.empleadoCollectionfiltro = [];
             let asignado = false;
