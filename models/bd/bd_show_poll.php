@@ -7,30 +7,73 @@ if (check_session()) {
     $data = array();
 
     if ($received_data->action == 'getPooll' && $received_data->filter == 'pending') {
-        $query ="SELECT 
-                    --e.*
+        // $query ="SELECT 
+        //             --e.*
+        //             e.id_encuesta, e.id_creadopor, e.fecha_creado, e.nombre, e.observaciones, 
+        //             e.activo, e.id_actualizado, e.fecha_actualizado, 
+        //             TO_CHAR(e.validohasta, 'DD/MM/YYYY HH12:MI:SS AM') As validohasta,
+        //             TO_CHAR(e.validodesde, 'DD/MM/YYYY HH12:MI:SS AM') As validodesde,
+        //             coalesce((SELECT COUNT(*) as total FROM refividrio.enc_leccion lec WHERE lec.id_encuesta = e.id_encuesta ),0) As totallecciones 
+        //             ,coalesce(esta_lecc.estado,'NO') As estado_leccion
+        //         FROM refividrio.encuesta e  
+        //         LEFT JOIN refividrio.empleado empl ON empl.id_empleado = " . $_SESSION['id_empleado'] ."
+        //         INNER JOIN refividrio.segmento seg ON empl.id_segmento = seg.id_segmento
+        //         LEFT JOIN refividrio.enc_encuesta_leccion_empleado esta_lecc ON esta_lecc.id_encuesta = e.id_encuesta AND esta_lecc.id_empleado = empl.id_empleado
+        //         WHERE 
+        //         e.id_encuesta NOT IN (SELECT id_encuesta FROM refividrio.empleado_encuesta WHERE id_empleado = empl.id_empleado )
+        //         AND seg.id_empresa IN (SELECT id_empresa FROM empresa_encuesta WHERE  e.id_encuesta = id_encuesta)
+        //         AND e.activo = true
+        //         AND
+        //         (	
+        //             ( now() >= e.validodesde AND now() <=  e.validohasta)
+        //          OR
+        //             ((SELECT COALESCE(COUNT(*),0)  FROM enc_intentos_encuesta ie   WHERE ie.id_Encuesta = e.id_encuesta
+        //                  AND now() >= ie.inicio  AND now() <= ie.fin  ) > 0 )
+        //         )
+        //     ORDER BY e.id_encuesta DESC";
+        $query = "SELECT  
                     e.id_encuesta, e.id_creadopor, e.fecha_creado, e.nombre, e.observaciones, 
                     e.activo, e.id_actualizado, e.fecha_actualizado, 
                     TO_CHAR(e.validohasta, 'DD/MM/YYYY HH12:MI:SS AM') As validohasta,
                     TO_CHAR(e.validodesde, 'DD/MM/YYYY HH12:MI:SS AM') As validodesde,
                     coalesce((SELECT COUNT(*) as total FROM refividrio.enc_leccion lec WHERE lec.id_encuesta = e.id_encuesta ),0) As totallecciones 
-                    ,coalesce(esta_lecc.estado,'NO') As estado_leccion
-                FROM refividrio.encuesta e  
-                LEFT JOIN refividrio.empleado empl ON empl.id_empleado = " . $_SESSION['id_empleado'] ."
+                    ,coalesce(esta_lecc.estado,'NO') As estado_leccion 
+            FROM refividrio.encuesta e 
+            LEFT JOIN refividrio.empleado empl ON empl.id_empleado =  " . $_SESSION['id_empleado'] ."
                 INNER JOIN refividrio.segmento seg ON empl.id_segmento = seg.id_segmento
                 LEFT JOIN refividrio.enc_encuesta_leccion_empleado esta_lecc ON esta_lecc.id_encuesta = e.id_encuesta AND esta_lecc.id_empleado = empl.id_empleado
                 WHERE 
-                e.id_encuesta NOT IN (SELECT id_encuesta FROM refividrio.empleado_encuesta WHERE id_empleado = empl.id_empleado )
-                AND seg.id_empresa IN (SELECT id_empresa FROM empresa_encuesta WHERE  e.id_encuesta = id_encuesta)
+                    --Valida que no se haya contestado
+                    e.id_encuesta NOT IN (SELECT id_encuesta FROM refividrio.empleado_encuesta WHERE id_empleado = empl.id_empleado ) 
+                AND (
+                    seg.id_empresa IN (SELECT id_empresa FROM empresa_encuesta WHERE  e.id_encuesta = id_encuesta)
+                    OR  
+                    (
+                        (
+                            SELECT  
+                                CASE WHEN COUNT(*) = 1 THEN true ELSE false END 
+                            FROM acceso_encuesta 
+                            WHERE entidad = 'empleado' AND id_entidad = empl.id_empleado AND id_encuesta = e.id_encuesta 
+                        ) = true   
+                        OR 
+                        (
+                            SELECT  
+                                CASE WHEN COUNT(*) = 1 THEN true ELSE false END 
+                            FROM acceso_encuesta 
+                            WHERE entidad = 'segmento' AND id_entidad = empl.id_segmento AND id_encuesta = e.id_encuesta
+                        )
+                    ) = true   
+                )
                 AND e.activo = true
-                AND
-                (	
-                    ( now() >= e.validodesde AND now() <=  e.validohasta)
-                 OR
+
+                AND(	
+                    (now() >= e.validodesde AND now() <=  e.validohasta)
+                    OR
                     ((SELECT COALESCE(COUNT(*),0)  FROM enc_intentos_encuesta ie   WHERE ie.id_Encuesta = e.id_encuesta
-                         AND now() >= ie.inicio  AND now() <= ie.fin  ) > 0 )
+                            AND now() >= ie.inicio  AND now() <= ie.fin  ) > 0 )  
                 )
             ORDER BY e.id_encuesta DESC";
+
         $statement = $connect->prepare($query);
         $statement->execute();
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
