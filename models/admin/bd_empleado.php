@@ -79,7 +79,7 @@ class Empleado
                 VALUES 
             (:id_segmento,:id_creadopor,now(),:nombre,:paterno,:materno,:activo,:celular,:correo,:genero,:id_actualizadopor,
             now(),:usuario,MD5(:password),:fecha_nacimiento,:nss,:rfc,:id_cerberus_empleado,:fecha_alta_cerberus,:perfilcalculo,
-            :correo_verificado,id_compac,:ev_puesto_nivel_id,:departamento_id) RETURNING id_empleado ;';
+            :correo_verificado,:id_compac,:ev_puesto_nivel_id,:departamento_id) RETURNING id_empleado ;';
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);   
