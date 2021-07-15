@@ -182,7 +182,7 @@ var application = new Vue({
         },
         async get_segmentos(){
             const response_segmento = await this.request('../../models/admin/bd_segmento.php',
-            {'order' : 'ORDER BY id_empresa,id_segmento ASC','action' : 'select','filter':'activo=true'});
+            {'order' : 'ORDER BY id_empresa,id_segmento ASC','action' : 'select'});
             try{  
                 if(response_segmento.length > 0){  
                     this.segmentoCollection = response_segmento; 
