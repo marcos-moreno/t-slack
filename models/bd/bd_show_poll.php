@@ -172,8 +172,41 @@ if (check_session()) {
         echo json_encode($data);
     }  
     if ($received_data->action == 'seachPollComplete') {
+        // $query = "
+        // SELECT 
+        //         coalesce(TO_CHAR(res.fecha_creado, 'DD/MM/YYYY HH12:MI:SS AM'),'--') As respuesta,
+        //     CASE 
+        //         WHEN res.fecha_creado BETWEEN enc.validodesde AND enc.validohasta THEN
+        //         'Correcto'
+        //         WHEN now() BETWEEN enc.validodesde AND enc.validohasta THEN
+        //         'En Captura'
+        //         WHEN now() < enc.validodesde THEN
+        //         'Aún No Disponible'
+        //         WHEN res.fecha_creado IS NULL THEN
+        //         'No se Respondió' 
+        //         ELSE 
+        //         'Contestada Fuera de Tiempo'
+        //     END AS estado
+        //     ,enc.id_encuesta, enc.id_creadopor, enc.fecha_creado, enc.nombre, enc.observaciones, 
+        //     enc.activo, enc.id_actualizado, enc.fecha_actualizado, 
+        //     TO_CHAR(enc.validohasta, 'DD/MM/YYYY HH12:MI:SS AM') As validohasta,
+        //     TO_CHAR(enc.validodesde, 'DD/MM/YYYY HH12:MI:SS AM') As validodesde,
+        //     row_number() over (partition by emp.id_empleado order by enc.id_encuesta ASC) As no_enc
+        //     ,coalesce((SELECT COUNT(*) as total FROM refividrio.enc_leccion lec WHERE lec.id_encuesta = ee.id_encuesta ),0) As totallecciones
+        //     ,coalesce(esta_lecc.estado,'NO') As estado_leccion 
+        // FROM refividrio.empleado emp
+        // INNER JOIN refividrio.segmento seg ON seg.id_segmento = emp.id_segmento
+        // INNER JOIN refividrio.empresa empres ON empres.id_empresa = seg.id_empresa
+        // INNER JOIN refividrio.empresa_encuesta ee ON ee.id_empresa = empres.id_empresa
+        // INNER JOIN refividrio.encuesta enc ON enc.id_encuesta = ee.id_encuesta
+        // LEFT JOIN refividrio.empleado_encuesta res ON res.id_encuesta = ee.id_encuesta AND res.id_empleado = emp.id_empleado
+        // LEFT JOIN refividrio.enc_encuesta_leccion_empleado esta_lecc ON esta_lecc.id_encuesta = enc.id_encuesta AND esta_lecc.id_empleado = emp.id_empleado
+        // WHERE 
+        //     emp.id_empleado = " . $_SESSION['id_empleado'] ."
+        //     AND  emp.fecha_alta_cerberus < enc.validodesde 
+        //     ORDER BY enc.id_encuesta DESC "; 
         $query = "
-        SELECT 
+                SELECT  
                 coalesce(TO_CHAR(res.fecha_creado, 'DD/MM/YYYY HH12:MI:SS AM'),'--') As respuesta,
             CASE 
                 WHEN res.fecha_creado BETWEEN enc.validodesde AND enc.validohasta THEN
@@ -192,19 +225,36 @@ if (check_session()) {
             TO_CHAR(enc.validohasta, 'DD/MM/YYYY HH12:MI:SS AM') As validohasta,
             TO_CHAR(enc.validodesde, 'DD/MM/YYYY HH12:MI:SS AM') As validodesde,
             row_number() over (partition by emp.id_empleado order by enc.id_encuesta ASC) As no_enc
-            ,coalesce((SELECT COUNT(*) as total FROM refividrio.enc_leccion lec WHERE lec.id_encuesta = ee.id_encuesta ),0) As totallecciones
+            ,coalesce((SELECT COUNT(*) as total FROM refividrio.enc_leccion lec WHERE lec.id_encuesta = enc.id_encuesta ),0) As totallecciones
             ,coalesce(esta_lecc.estado,'NO') As estado_leccion 
         FROM refividrio.empleado emp
         INNER JOIN refividrio.segmento seg ON seg.id_segmento = emp.id_segmento
         INNER JOIN refividrio.empresa empres ON empres.id_empresa = seg.id_empresa
-        INNER JOIN refividrio.empresa_encuesta ee ON ee.id_empresa = empres.id_empresa
-        INNER JOIN refividrio.encuesta enc ON enc.id_encuesta = ee.id_encuesta
-        LEFT JOIN refividrio.empleado_encuesta res ON res.id_encuesta = ee.id_encuesta AND res.id_empleado = emp.id_empleado
-        LEFT JOIN refividrio.enc_encuesta_leccion_empleado esta_lecc ON esta_lecc.id_encuesta = enc.id_encuesta AND esta_lecc.id_empleado = emp.id_empleado
+        INNER JOIN  refividrio.encuesta enc
+            ON enc.id_encuesta 
+            IN (
+                SELECT id_encuesta
+                FROM refividrio.empresa_encuesta ee
+                WHERE ee.id_empresa = seg.id_empresa 
+            ) 
+            OR 
+            enc.id_encuesta 
+            IN (
+                SELECT id_encuesta 
+                FROM refividrio.acceso_encuesta as aig_seg 
+                WHERE 
+                    (aig_seg.entidad = 'segmento' AND aig_seg.id_entidad = seg.id_segmento )
+                OR (aig_seg.entidad = 'empleado' AND aig_seg.id_entidad = emp.id_empleado)
+            )    
+        LEFT JOIN refividrio.empleado_encuesta res ON res.id_encuesta = enc.id_encuesta 
+            AND res.id_empleado = emp.id_empleado
+        LEFT JOIN refividrio.enc_encuesta_leccion_empleado esta_lecc ON esta_lecc.id_encuesta = enc.id_encuesta 
+            AND esta_lecc.id_empleado = emp.id_empleado 
         WHERE 
             emp.id_empleado = " . $_SESSION['id_empleado'] ."
             AND  emp.fecha_alta_cerberus < enc.validodesde 
-            ORDER BY enc.id_encuesta DESC "; 
+            ORDER BY enc.id_encuesta DESC
+        ";
         $statement = $connect->prepare($query);
         $statement->execute();
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
