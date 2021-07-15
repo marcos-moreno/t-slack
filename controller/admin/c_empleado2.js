@@ -182,7 +182,7 @@ var application = new Vue({
         },
         async get_segmentos(){
             const response_segmento = await this.request('../../models/admin/bd_segmento.php',
-            {'order' : 'ORDER BY id_empresa,id_segmento ASC','action' : 'select'});
+            {'order' : 'ORDER BY id_empresa,id_segmento ASC','action' : 'select','filter':'activo=true'});
             try{  
                 if(response_segmento.length > 0){  
                     this.segmentoCollection = response_segmento; 
@@ -194,7 +194,8 @@ var application = new Vue({
             }  
         }, 
         async get_segmentosFilter(){
-            const response_segmento = await this.request('../../models/admin/bd_segmento.php',{'order' : 'ORDER BY id_segmento ASC','action' : 'select',filter:" id_empresa = " + this.empresa_id_filter});
+            const response_segmento = await this.request('../../models/admin/bd_segmento.php',
+            {'order' : 'ORDER BY id_segmento ASC','action' : 'select',filter:" activo=true AND id_empresa = " + this.empresa_id_filter});
             try{  
                 if(response_segmento.length > 0){  
                     this.segmentoFilterCollection = response_segmento; 
