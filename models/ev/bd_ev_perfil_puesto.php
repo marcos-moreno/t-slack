@@ -70,7 +70,6 @@ class Ev_perfil_puesto
                         ':ev_puesto_id' => $this->received_data->model->ev_puesto_id,
                         ':creadopor' => $_SESSION['id_empleado'],
                         ':actualizadopor' => $_SESSION['id_empleado'],
-                        
                     ); 
         $query = 'INSERT INTO ev_perfil_puesto (genero_atributo,edad_minima,edad_maxima,estado_civil_atributo,grado_avance_atributo,areas_conocimiento,minimo_experiencia_anios,minimo_experiencia_meses,areas_experiencia,conocimientos_especificos,equipo_software_herramientas,ev_tabulador_id_minimo,ev_tabulador_id_maximo,sueldo_promedio,media_salarial_mes,media_salarial_zona,competencias,aptitudes,observaciones_adicionales,actitudes_puesto,nivel_estudios_atributo,idioma_atributo,ev_puesto_id,creado,actualizado,creadopor,actualizadopor) VALUES (:genero_atributo,:edad_minima,:edad_maxima,:estado_civil_atributo,:grado_avance_atributo,:areas_conocimiento,:minimo_experiencia_anios,:minimo_experiencia_meses,:areas_experiencia,:conocimientos_especificos,:equipo_software_herramientas,:ev_tabulador_id_minimo,:ev_tabulador_id_maximo,:sueldo_promedio,:media_salarial_mes,:media_salarial_zona,:competencias,:aptitudes,:observaciones_adicionales,:actitudes_puesto,:nivel_estudios_atributo,:idioma_atributo,:ev_puesto_id,Now(),Now(),:creadopor,:actualizadopor) ;';
 
@@ -132,35 +131,29 @@ class Ev_perfil_puesto
 
     public function select(){
         try {  
-             
-        $query = 'SELECT ev_perfil_puesto_id,genero_atributo,edad_minima,edad_maxima,estado_civil_atributo,grado_avance_atributo,areas_conocimiento,minimo_experiencia_anios,minimo_experiencia_meses,areas_experiencia,conocimientos_especificos,equipo_software_herramientas,ev_tabulador_id_minimo,ev_tabulador_id_maximo,sueldo_promedio,media_salarial_mes,media_salarial_zona,competencias,aptitudes,observaciones_adicionales,actitudes_puesto,nivel_estudios_atributo,idioma_atributo,ev_puesto_id,creado,actualizado,creadopor,actualizadopor 
+            $query = 'SELECT ev_perfil_puesto_id,genero_atributo,edad_minima,
+                        edad_maxima,estado_civil_atributo,grado_avance_atributo,
+                        areas_conocimiento,minimo_experiencia_anios,minimo_experiencia_meses
+                        ,areas_experiencia,conocimientos_especificos,equipo_software_herramientas
+                        ,ev_tabulador_id_minimo,ev_tabulador_id_maximo,sueldo_promedio,media_salarial_mes
+                        ,media_salarial_zona,competencias,aptitudes,observaciones_adicionales
+                        ,actitudes_puesto,nivel_estudios_atributo,idioma_atributo,ev_puesto_id
+                        ,creado,actualizado,creadopor,actualizadopor 
                     FROM ev_perfil_puesto  
-                    ' . (isset($this->received_data->filter) ? ' 
-                    WHERE ' . $this->received_data->filter:'') . 
-                    (isset($this->received_data->order) ? $this->received_data->order:'') ;
-                        
+                    ORDER BY ev_perfil_puesto_id DESC LIMIT 10' ;
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);   
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
                     $row['ev_puesto'] = $this->search_union($row,'ev_puesto','ev_puesto_id','ev_puesto_id');
-                  
-                    $row['tabulador'] = $this->search_union($row,'tabulador','id_tabulador','ev_tabulador_id_minimo');
-                  
-                    $row['tabulador'] = $this->search_union($row,'tabulador','id_tabulador','ev_tabulador_id_maximo');
-                  
-                    $row['ev_atributo'] = $this->search_union($row,'ev_atributo','id_atributo','genero_atributo');
-                  
-                    $row['ev_atributo'] = $this->search_union($row,'ev_atributo','id_atributo','estado_civil_atributo');
-                  
-                    $row['ev_atributo'] = $this->search_union($row,'ev_atributo','id_atributo','grado_avance_atributo');
-                  
-                    $row['ev_atributo'] = $this->search_union($row,'ev_atributo','id_atributo','nivel_estudios_atributo');
-                  
-                    $row['ev_atributo'] = $this->search_union($row,'ev_atributo','id_atributo','idioma_atributo');
+                    $row['tabulador_minimo'] = $this->search_union($row,'tabulador','id_tabulador','ev_tabulador_id_minimo');
+                    $row['tabulador_maximo'] = $this->search_union($row,'tabulador','id_tabulador','ev_tabulador_id_maximo');
+                    $row['genero'] = $this->search_union($row,'ev_atributo','id_atributo','genero_atributo');
+                    $row['estado_civil'] = $this->search_union($row,'ev_atributo','id_atributo','estado_civil_atributo');
+                    $row['grado_avance'] = $this->search_union($row,'ev_atributo','id_atributo','grado_avance_atributo');
+                    $row['nivel_estudios'] = $this->search_union($row,'ev_atributo','id_atributo','nivel_estudios_atributo');
+                    $row['idioma'] = $this->search_union($row,'ev_atributo','id_atributo','idioma_atributo');
                     $data[] = $row;
             }
-
-        
             echo json_encode($data); 
             return true;
         } catch (PDOException $exc) {
@@ -188,11 +181,9 @@ class Ev_perfil_puesto
     public function delete(){
         try {  
             $data = array(
-                   ':ev_perfil_puesto_id' => $this->received_data->model->ev_perfil_puesto_id,
-                            
+                        ':ev_perfil_puesto_id' => $this->received_data->model->ev_perfil_puesto_id,
                     ); 
-        $query = 'DELETE FROM ev_perfil_puesto WHERE ev_perfil_puesto_id = :ev_perfil_puesto_id ;'; 
-
+            $query = 'DELETE FROM ev_perfil_puesto WHERE ev_perfil_puesto_id = :ev_perfil_puesto_id ;'; 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  
             $output = array('message' => 'Data Deleted'); 

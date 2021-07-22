@@ -100,17 +100,20 @@ class generate_string
             $campos  .= "$field->column_name,";
         }   
         $cadena = " 
+        %parameters = array(
+                ':valor' => %this->received_data->filter,  
+            ); 
         %query = 'SELECT $campos *-
                     FROM $this->name_crud  
-                    ' . (isset(%this->received_data->filter) ? ' 
-                    WHERE ' . %this->received_data->filter:'') . 
-                    (isset(%this->received_data->order) ? %this->received_data->order:'') ;
-                    "; 
+                    WHERE 
+                    tabla ILIKE '%' || :valor || '%'
+                    ORDER BY 1 DESC ;
+                    ";
 
         $cadena = str_replace(", *-"," ",$cadena);     
         $cadena .= "    
             %statement = %this->connect->prepare(%query); 
-            %statement->execute(%data);   
+            %statement->execute(%parameters);   
             while (%row = %statement->fetch(PDO::FETCH_ASSOC)) {";
         if (count($this->data_forenings_keys)>0) {
             foreach ($this->data_forenings_keys as $key) {

@@ -52,15 +52,15 @@ class generator_js_controller{
        return $array;
     }
     
-    function getFieldSearch(){
-        $value = "$";
-        foreach ($this->field_json as $field) { 
-            if ($this->field_primary_key != $field->column_name && $field->data_type == 'character varying') {  
-                $value = $value . " OR ". $field->column_name ." ILIKE '%\" + this.filter + \"%' ";   
-            }
-        } 
-        return str_replace("$ OR", "", $value);
-    }
+    // function getFieldSearch(){
+    //     $value = "$";
+    //     foreach ($this->field_json as $field) { 
+    //         if ($this->field_primary_key != $field->column_name && $field->data_type == 'character varying') {  
+    //             $value = $value . " OR ". $field->column_name ." ILIKE '%\" + this.filter + \"%' ";   
+    //         }
+    //     } 
+    //     return str_replace("$ OR", "", $value);
+    // }
     function generator_content(){
         $array = $this->print_keys_metod(); 
         $methodo = $array["method."];
@@ -92,8 +92,8 @@ var application = new Vue({
         async get". $this->name_crud ."s(){  
             this.". $this->name_crud ."Collection  = [];
             this.paginaCollection = [];
-            let filtrarPor =  \"(". $this->getFieldSearch() ." )\";  
-           const response = await this.request(this.path,{'order' : 'ORDER BY ".$this->field_primary_key." DESC','action' : 'select','filter' : filtrarPor});
+            //let filtrarPor =  \"(". $this->getFieldSearch() ." )\";'order' : 'ORDER BY ".$this->field_primary_key." DESC',  
+            const response = await this.request(this.path,{'action' : 'select','filter' : this.filter});
             try{ 
                 this.show_message(response.length + ' Registros Encontrados.','success');
                 this.". $this->name_crud ."Collection = response;

@@ -24,10 +24,10 @@ var application = new Vue({
     methods:{
         async getev_atributos(){  
             this.ev_atributoCollection  = [];
-            this.paginaCollection = [];
-            let filtrarPor =  "( value ILIKE '%" + this.filter + "%'  OR descripcion ILIKE '%" + this.filter + "%'  OR tabla ILIKE '%" + this.filter + "%'  )";  
-           const response = await this.request(this.path,{'order' : 'ORDER BY id_atributo DESC','action' : 'select','filter' : filtrarPor});
-            try{ 
+            this.paginaCollection = []; 
+           const response = await this.request(this.path,{'action' : 'selectAll','valor' : this.filter});
+           console.log(response);
+           try{ 
                 this.show_message(response.length + ' Registros Encontrados.','success');
                 this.ev_atributoCollection = response;
                 this.paginaCollection = response;

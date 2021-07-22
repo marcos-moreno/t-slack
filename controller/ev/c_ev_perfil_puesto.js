@@ -31,9 +31,8 @@ var application = new Vue({
         async getev_perfil_puestos(){  
             this.ev_perfil_puestoCollection  = [];
             this.paginaCollection = [];
-            let filtrarPor =  "( areas_conocimiento ILIKE '%" + this.filter + "%'  OR areas_experiencia ILIKE '%" + this.filter + "%'  OR conocimientos_especificos ILIKE '%" + this.filter + "%'  OR equipo_software_herramientas ILIKE '%" + this.filter + "%'  OR competencias ILIKE '%" + this.filter + "%'  OR aptitudes ILIKE '%" + this.filter + "%'  OR observaciones_adicionales ILIKE '%" + this.filter + "%'  OR actitudes_puesto ILIKE '%" + this.filter + "%'  )";  
-           const response = await this.request(this.path,{'order' : 'ORDER BY ev_perfil_puesto_id DESC','action' : 'select','filter' : filtrarPor});
-            try{ 
+            const response = await this.request(this.path,{'action' : 'select','filter' : this.filter});
+            try{
                 this.show_message(response.length + ' Registros Encontrados.','success');
                 this.ev_perfil_puestoCollection = response;
                 this.paginaCollection = response;
@@ -42,7 +41,7 @@ var application = new Vue({
             }catch(error){
                 this.show_message('No hay datos Para Mostrar.','info');
                 this.isFormCrud=false;
-            } 
+            }
         }, 
         async delete_ev_perfil_puesto(ev_perfil_puesto_id){  
             this.ev_perfil_puesto = this.search_ev_perfil_puestoByID(ev_perfil_puesto_id);

@@ -23,6 +23,11 @@ if (check_session()) {
             $model = new Ev_atributo($data,$connect,$received_data);
             $model->select();
         break;
+        case 'selectAll': 
+            $model = new Ev_atributo($data,$connect,$received_data);
+            $model->selectAll();
+        break;
+        
     }
 }else{
     $output = array('message' => 'Not authorized'); 
@@ -97,6 +102,31 @@ class Ev_atributo
             $query = 'SELECT id_atributo,value,activo,descripcion,tabla 
                     FROM ev_atributo  
                     WHERE tabla = :valor';
+
+            $statement = $this->connect->prepare($query); 
+            $statement->execute($parameters);   
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {    
+                $data[] = $row;
+            }
+            echo json_encode($data); 
+            return true;
+        } catch (PDOException $exc) {
+            $output = array('message' => $exc->getMessage()); 
+            echo json_encode($output); 
+            return false;
+        }  
+    }
+
+    public function selectAll(){
+        try {   
+            $parameters = array(
+                ':valor' => $this->received_data->valor,  
+            ); 
+            $query = "SELECT id_atributo,value,activo,descripcion,tabla 
+                    FROM ev_atributo 
+                    WHERE tabla ILIKE '%' || :valor || '%'
+                    OR value ILIKE  '%' || :valor || '%'
+                    ORDER BY tabla,value";
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($parameters);   

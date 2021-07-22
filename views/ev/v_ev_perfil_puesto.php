@@ -31,7 +31,7 @@
         
         <br>
         <div class="panel-body"  v-if="isFormCrud==false">
-            <h4>ev_perfil_puesto</h4>
+            <h4>Perfil Puesto</h4>
             <br>
             <div class="table-responsive">
                 <nav aria-label="Page navigation example">
@@ -52,105 +52,31 @@
                 <td><button type="button" class="btn btn-info btn-xs edit" @click="add_ev_perfil_puesto()">Agregar</button></td>
                 <table class="table table-bordered table-striped">
                     <tr> 
-                        <th>ev_perfil_puesto_id</th>
-                                    
+                        <th>Id</th>
+                        <th>Código</th>
                         <th>genero</th>
-                                    
-                        <th>edad minima</th>
-                                    
-                        <th>edad maxima</th>
-                                    
-                        <th>estado civil</th>
-                                    
-                        <th>grado_avance</th>
-                                    
-                        <th>areas conocimiento</th>
-                                    
-                        <th>minimo experiencia años</th>
-                                    
-                        <th>minimo experiencia meses</th>
-                                    
-                        <th>areas experiencia</th>
-                                    
-                        <th>conocimientos especificos</th>
-                                    
-                        <th>equipo software herramientas</th>
-                                    
-                        <th>tabulador mínimo</th>
-                                    
-                        <th>tabulador máximo</th>
-                                    
-                        <th>sueldo promedio</th>
-                                    
-                        <th>media salarial mes</th>
-                                    
-                        <th>media salarial zona</th>
-                                    
-                        <th>competencias</th>
-                                    
-                        <th>aptitudes</th>
-
                         <th>puesto</th>
-                                    
-                        <th>observaciones adicionales</th>
-                                    
-                        <th>actitudes puesto</th>
-                                    
+                        <th>tabulador mínimo</th>
+                        <th>tabulador máximo</th> 
+                        <th>Sueldo Promedio</th>
+                        <th>media salarial mes</th>
+                        <th>media salarial zona</th>
                         <th>nivel estudios</th>
-                                    
                         <th>idioma</th>
-                                     
                         <th></th> 
                     </tr>
                     <tr v-for="ev_perfil_puesto in paginaCollection" >
-                        <td>{{ ev_perfil_puesto.ev_puesto_id}}</td>
-                        
                         <td>{{ ev_perfil_puesto.ev_perfil_puesto_id}}</td>
-            
-                        <td>{{ ev_perfil_puesto.genero_atributo}}</td>
-            
-                        <td>{{ ev_perfil_puesto.edad_minima}}</td>
-            
-                        <td>{{ ev_perfil_puesto.edad_maxima}}</td>
-            
-                        <td>{{ ev_perfil_puesto.estado_civil_atributo}}</td>
-            
-                        <td>{{ ev_perfil_puesto.grado_avance_atributo}}</td>
-            
-                        <td>{{ ev_perfil_puesto.areas_conocimiento}}</td>
-            
-                        <td>{{ ev_perfil_puesto.minimo_experiencia_anios}}</td>
-            
-                        <td>{{ ev_perfil_puesto.minimo_experiencia_meses}}</td>
-            
-                        <td>{{ ev_perfil_puesto.areas_experiencia}}</td>
-            
-                        <td>{{ ev_perfil_puesto.conocimientos_especificos}}</td>
-            
-                        <td>{{ ev_perfil_puesto.equipo_software_herramientas}}</td>
-            
-                        <td>{{ ev_perfil_puesto.ev_tabulador_id_minimo}}</td>
-            
-                        <td>{{ ev_perfil_puesto.ev_tabulador_id_maximo}}</td>
-            
+                        <td>{{ ev_perfil_puesto.ev_puesto[0].codigo}}</td>
+                        <td>{{ ev_perfil_puesto.genero[0].value}}</td>
+                        <td>{{ ev_perfil_puesto.ev_puesto[0].nombre_puesto}}</td>
+                        <td>{{ ev_perfil_puesto.tabulador_minimo[0].tabulador}} ${{ ev_perfil_puesto.tabulador_minimo[0].sueldo}}</td>
+                        <td>{{ ev_perfil_puesto.tabulador_maximo[0].tabulador}} ${{ ev_perfil_puesto.tabulador_maximo[0].sueldo}}</td>
                         <td>{{ ev_perfil_puesto.sueldo_promedio}}</td>
-            
                         <td>{{ ev_perfil_puesto.media_salarial_mes}}</td>
-            
                         <td>{{ ev_perfil_puesto.media_salarial_zona}}</td>
-            
-                        <td>{{ ev_perfil_puesto.competencias}}</td>
-            
-                        <td>{{ ev_perfil_puesto.aptitudes}}</td>
-            
-                        <td>{{ ev_perfil_puesto.observaciones_adicionales}}</td>
-            
-                        <td>{{ ev_perfil_puesto.actitudes_puesto}}</td>
-            
-                        <td>{{ ev_perfil_puesto.nivel_estudios_atributo}}</td>
-            
-                        <td>{{ ev_perfil_puesto.idioma_atributo}}</td>
-               
+                        <td>{{ ev_perfil_puesto.nivel_estudios[0].value}}</td>
+                        <td>{{ ev_perfil_puesto.idioma[0].value}}</td>
                         <td style="width:150px" >
                             <button type="button" class="btn btn" @click="update_ev_perfil_puesto(ev_perfil_puesto.ev_perfil_puesto_id)"><img src="../../img/lapiz.svg" width="25px" /></button>
                             <button type="button" class="btn btn" @click="delete_ev_perfil_puesto(ev_perfil_puesto.ev_perfil_puesto_id)"><img src="../../img/borrar.png" width="25px" /></button>
