@@ -70,8 +70,8 @@
                         <td>{{ ev_perfil_puesto.ev_puesto[0].codigo}}</td>
                         <td>{{ ev_perfil_puesto.genero[0].value}}</td>
                         <td>{{ ev_perfil_puesto.ev_puesto[0].nombre_puesto}}</td>
-                        <td>{{ ev_perfil_puesto.tabulador_minimo[0].tabulador}} ${{ ev_perfil_puesto.tabulador_minimo[0].sueldo}}</td>
-                        <td>{{ ev_perfil_puesto.tabulador_maximo[0].tabulador}} ${{ ev_perfil_puesto.tabulador_maximo[0].sueldo}}</td>
+                        <td>{{ ev_perfil_puesto.tabulador_minimo[0].tabulador}} ${{ formatMXN(ev_perfil_puesto.tabulador_minimo[0].sueldo)}}</td>
+                        <td>{{ ev_perfil_puesto.tabulador_maximo[0].tabulador}} ${{ formatMXN(ev_perfil_puesto.tabulador_maximo[0].sueldo)}}</td>
                         <td>{{ ev_perfil_puesto.sueldo_promedio}}</td>
                         <td>{{ ev_perfil_puesto.media_salarial_mes}}</td>
                         <td>{{ ev_perfil_puesto.media_salarial_zona}}</td>

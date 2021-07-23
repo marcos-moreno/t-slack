@@ -28,6 +28,10 @@ var application = new Vue({
 
     },
     methods:{
+        formatMXN(value) {
+            var formatter = new Intl.NumberFormat('en-ES', {style: 'currency', currency: 'USD',});
+            return formatter.format(value);
+        },
         async getev_perfil_puestos(){  
             this.ev_perfil_puestoCollection  = [];
             this.paginaCollection = [];
