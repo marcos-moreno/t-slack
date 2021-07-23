@@ -140,9 +140,9 @@
                             <div class="input-group-prepend">
                                 <label class="input-group-text" >Puesto</label>
                             </div>
-                            <input class="form-control" type="search"  v-model="filtroPuesto" 
+                            <!-- <input class="form-control" type="search"  v-model="filtroPuesto" 
                                 v-on:keyup ="buscarValorPuesto"
-                                placeholder="Buscar Puesto" aria-label="Search"> 
+                                placeholder="Buscar Puesto" aria-label="Search">  -->
                         </div>
                     </div>
                     <div class="col-7">
