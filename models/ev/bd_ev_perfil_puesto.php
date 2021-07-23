@@ -150,7 +150,7 @@ class Ev_perfil_puesto
                 $parameters = array(
                     ':id' => $this->received_data->id,  
                 );
-                $query .= ' WHERE ev_puesto_id = :id ';  
+                $query .= ' WHERE p.ev_puesto_id = :id ';  
             }
             if (isset($this->received_data->filter)) {
                 $parameters = array(

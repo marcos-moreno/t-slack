@@ -124,41 +124,30 @@
 <!-- </div>  -->
 
 
- 
-
+  
     <div class="row">
-            <div class="col-sm">
-                <label>estado civil</label> 
-                <select class='form-control' size='1'  v-model='ev_perfil_puesto.estado_civil_atributo' >
-                    <option value='0' >-</option>
-                    <option v-for='rows in ev_atr_estado_civilCollection' v-bind:value='rows.id_atributo'>{{ rows.value }}</option>
-                </select>
-            </div>  
-            <div class="col-sm">
-                <label>grado avance</label> 
-                <select class='form-control' size='1'  v-model='ev_perfil_puesto.grado_avance_atributo' >
-                    <option value='0' >-</option>
-                    <option v-for='rows in ev_atr_grado_avanceCollection' v-bind:value='rows.id_atributo'>{{ rows.value }}</option>
-                </select>
-            </div>
-    </div>
-
-    <div class="row">
-                <div class="col-sm">
-                    <label>tabulador mínimo</label> 
-                    <select class='form-control' size='1'  v-model='ev_perfil_puesto.ev_tabulador_id_minimo' >
-                        <option value='0' >-</option>
-                        <option v-for='rows in tabuladorCollection' v-bind:value='rows.id_tabulador'>{{ rows.tabulador }} - {{ rows.sueldo }}</option>
-                    </select>
-                </div>  
-                <div class="col-sm">
-                    <label>tabulador máximo</label> 
-                    <select class='form-control' size='1'  v-model='ev_perfil_puesto.ev_tabulador_id_maximo' >
-                        <option value='0' >-</option>
-                        <option v-for='rows in tabuladorCollection' v-bind:value='rows.id_tabulador'>{{ rows.tabulador }} - {{ rows.sueldo }}</option>
-                    </select>
-                </div>  
-            </div> 
+        <div class="col-sm">
+            <label>estado civil</label> 
+            <select class='form-control' size='1'  v-model='ev_perfil_puesto.estado_civil_atributo' >
+                <option value='0' >-</option>
+                <option v-for='rows in ev_atr_estado_civilCollection' v-bind:value='rows.id_atributo'>{{ rows.value }}</option>
+            </select>
+        </div>  
+        <div class="col-sm">
+            <label>tabulador mínimo</label> 
+            <select class='form-control' size='1'  v-model='ev_perfil_puesto.ev_tabulador_id_minimo' >
+                <option value='0' >-</option>
+                <option v-for='rows in tabuladorCollection' v-bind:value='rows.id_tabulador'>{{ rows.tabulador }} - {{ formatMXN(rows.sueldo) }}</option>
+            </select>
+        </div>  
+        <div class="col-sm">
+            <label>tabulador máximo</label> 
+            <select class='form-control' size='1'  v-model='ev_perfil_puesto.ev_tabulador_id_maximo' >
+                <option value='0' >-</option>
+                <option v-for='rows in tabuladorCollection' v-bind:value='rows.id_tabulador'>{{ rows.tabulador }} - {{ formatMXN(rows.sueldo) }}</option>
+            </select>
+        </div>  
+    </div> 
 
     <div class="row">
             <div class="col-sm">
@@ -241,6 +230,13 @@
                         <option v-for='rows in ev_atr_idiomaCollection' v-bind:value='rows.id_atributo'>{{ rows.value }}</option>
                     </select>
                 </div> 
+                <div class="col-sm">
+                    <label>grado avance</label> 
+                    <select class='form-control' size='1'  v-model='ev_perfil_puesto.grado_avance_atributo' >
+                        <option value='0' >-</option>
+                        <option v-for='rows in ev_atr_grado_avanceCollection' v-bind:value='rows.id_atributo'>{{ rows.value }}</option>
+                    </select>
+                </div>
             </div> 
               
             <br>

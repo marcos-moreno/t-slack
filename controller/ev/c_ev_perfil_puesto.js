@@ -40,7 +40,6 @@ var application = new Vue({
             this.ev_perfil_puestoCollection  = [];
             this.paginaCollection = [];
             const response = await this.request(this.path,{'action' : 'select','filter' : this.filter});
-            console.log(response);
             try{
                 this.show_message(response.length + ' Registros Encontrados.','success');
                 this.ev_perfil_puestoCollection = response;

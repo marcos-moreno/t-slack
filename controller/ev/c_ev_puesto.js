@@ -38,6 +38,7 @@ var application = new Vue({
             const response = await this.request('../../models/ev/bd_ev_perfil_puesto.php'
             ,{'action' : 'select','id' : puesto.ev_puesto_id});
             this.perfil = response[0];
+            console.log(response);
             this.modalPerfil = true;
         },
         async getev_puestos(){
