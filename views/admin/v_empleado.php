@@ -133,16 +133,16 @@
                 </select>
             </div>   
 
-            <div class='form-group'>
+            <!-- <div class='form-group'>
                 <div class="row">
                     <div class="col-5">
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <label class="input-group-text" >Puesto</label>
                             </div>
-                            <!-- <input class="form-control" type="search"  v-model="filtroPuesto" 
+                            <input class="form-control" type="search"  v-model="filtroPuesto" 
                                 v-on:keyup ="buscarValorPuesto"
-                                placeholder="Buscar Puesto" aria-label="Search">  -->
+                                placeholder="Buscar Puesto" aria-label="Search"> 
                         </div>
                     </div>
                     <div class="col-7">
@@ -152,7 +152,7 @@
                         </select>
                     </div>
                 </div>
-            </div>  
+            </div>   -->
  
             <div class='form-group'>
                 <div class="row">
