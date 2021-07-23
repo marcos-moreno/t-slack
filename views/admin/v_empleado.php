@@ -341,7 +341,7 @@
 
 
 </div>
-<script type="text/javascript" src="../../controller/admin/c_empleado2.js"></script>
+<script type="text/javascript" src="../../controller/admin/c_empleado3.js"></script>
 
   
 
