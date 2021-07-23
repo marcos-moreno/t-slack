@@ -28,9 +28,9 @@
                             <tr><td>EQUIPO, SOFTWARE<br> Y/O HERRAMIENTA:</td><td>{{perfil.equipo_software_herramientas}}</td></tr> 
                             <tr><td>SUELDO MÍNIMO:</td><td>{{perfil.tabulador_minimo[0].tabulador}} {{formatMXN(perfil.tabulador_minimo[0].sueldo)}}</td></tr> 
                             <tr><td>SUELDO MÁXIMO:</td><td>{{perfil.tabulador_maximo[0].tabulador}} {{formatMXN(perfil.tabulador_maximo[0].sueldo)}}</td></tr> 
-                            <tr><td>SUELDO PROMEDIO:</td><td>{{perfil.sueldo_promedio}}</td></tr> 
-                            <tr><td>MEDIA SALARIAL (MES):</td><td>{{perfil.media_salarial_mes}}</td></tr> 
-                            <tr><td>MEDIA SALARIAL (ZONA):</td><td>{{perfil.media_salarial_zona}}</td></tr> 
+                            <tr><td>SUELDO PROMEDIO:</td><td>{{formatMXN(perfil.sueldo_promedio)}}</td></tr> 
+                            <tr><td>MEDIA SALARIAL (MES):</td><td>{{formatMXN(perfil.media_salarial_mes)}}</td></tr> 
+                            <tr><td>MEDIA SALARIAL (ZONA):</td><td>{{formatMXN(perfil.media_salarial_zona)}}</td></tr> 
                             <tr><td>COMPETENCIAS:</td><td>{{perfil.competencias}}</td></tr> 
                             <tr><td>APTITUDES:</td><td>{{perfil.aptitudes}}</td></tr> 
                             <tr><td>OBSERVACIONES ADICIONALES:</td><td>{{perfil.observaciones_adicionales}}</td></tr> 
