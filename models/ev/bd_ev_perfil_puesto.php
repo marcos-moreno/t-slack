@@ -132,20 +132,31 @@ class Ev_perfil_puesto
     public function select(){
         try {  
             $parameters = array(); 
-            $query = 'SELECT ev_perfil_puesto_id,genero_atributo,edad_minima,
-                        edad_maxima,estado_civil_atributo,grado_avance_atributo,
-                        areas_conocimiento,minimo_experiencia_anios,minimo_experiencia_meses
-                        ,areas_experiencia,conocimientos_especificos,equipo_software_herramientas
-                        ,ev_tabulador_id_minimo,ev_tabulador_id_maximo,sueldo_promedio,media_salarial_mes
-                        ,media_salarial_zona,competencias,aptitudes,observaciones_adicionales
-                        ,actitudes_puesto,nivel_estudios_atributo,idioma_atributo,ev_puesto_id
-                        ,creado,actualizado,creadopor,actualizadopor 
-                    FROM ev_perfil_puesto';
+            $query = '
+                SELECT 
+                    ev_perfil_puesto_id,genero_atributo,edad_minima,
+                    edad_maxima,estado_civil_atributo,grado_avance_atributo,
+                    areas_conocimiento,minimo_experiencia_anios,minimo_experiencia_meses
+                    ,areas_experiencia,conocimientos_especificos,equipo_software_herramientas
+                    ,ev_tabulador_id_minimo,ev_tabulador_id_maximo,sueldo_promedio,media_salarial_mes
+                    ,media_salarial_zona,competencias,aptitudes,observaciones_adicionales
+                    ,actitudes_puesto,nivel_estudios_atributo,idioma_atributo,p.ev_puesto_id
+                    ,p.creado,p.actualizado,p.creadopor,p.actualizadopor 
+                FROM refividrio.ev_perfil_puesto p
+                INNER JOIN refividrio.ev_puesto pues ON pues.ev_puesto_id = p.ev_puesto_id
+                
+            ';
             if ($this->received_data->id > 0) {
                 $parameters = array(
                     ':id' => $this->received_data->id,  
                 );
                 $query .= ' WHERE ev_puesto_id = :id ';  
+            }
+            if (isset($this->received_data->filter)) {
+                $parameters = array(
+                    ':filter' => $this->received_data->filter,  
+                );
+                $query .= " WHERE pues.codigo  ILIKE '%' || :filter || '%' OR pues.nombre_puesto ILIKE '%' || :filter || '%' ";  
             }
             $query .= ' ORDER BY ev_perfil_puesto_id DESC' ;
             $statement = $this->connect->prepare($query); 
