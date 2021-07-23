@@ -26,8 +26,12 @@ var application = new Vue({
     },
     methods:{ 
         formatMXN(value) {
-            var formatter = new Intl.NumberFormat('en-ES', {style: 'currency', currency: 'USD',});
-            return formatter.format(value);
+            if (value > 0) {
+                var formatter = new Intl.NumberFormat('en-ES', {style: 'currency', currency: 'USD',});
+                return formatter.format(value);
+            }else{
+                return '';
+            } 
         },
         async getperfil(puesto){ 
             this.titleModalPerfil = `Perfil del puesto ${puesto.nombre_puesto} ${puesto.tipo} (${puesto.ev_nivel_p[0].nombre_nivel_puesto})`;

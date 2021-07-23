@@ -29,8 +29,12 @@ var application = new Vue({
     },
     methods:{
         formatMXN(value) {
-            var formatter = new Intl.NumberFormat('en-ES', {style: 'currency', currency: 'USD',});
-            return formatter.format(value);
+            if (value > 0) {
+                var formatter = new Intl.NumberFormat('en-ES', {style: 'currency', currency: 'USD',});
+                return formatter.format(value);
+            }else{
+                return '';
+            } 
         },
         async getev_perfil_puestos(){  
             this.ev_perfil_puestoCollection  = [];
