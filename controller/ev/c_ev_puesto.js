@@ -8,26 +8,39 @@ var application = new Vue({
         path : '../../models/ev/bd_ev_puesto.php',
         typeMessage : '',
         msg:'',
-        
+        ev_nivel_pCollection:[],
+            
 
         //paginador
-        numByPag : 5, 
+        numByPag : 15, 
         paginas : [],
         paginaCollection : [],
         paginaActual : 1,
         ////paginador
 
         filter : '',
-
+        perfil : {},
+        modalPerfil:false,
+        titleModalPerfil : ""
 
     },
-    methods:{
-        async getev_puestos(){  
+    methods:{ 
+        formatMXN(value) {
+            var formatter = new Intl.NumberFormat('en-ES', {style: 'currency', currency: 'USD',});
+            return formatter.format(value);
+        },
+        async getperfil(puesto){ 
+            this.titleModalPerfil = `Perfil del puesto ${puesto.nombre_puesto} ${puesto.tipo} (${puesto.ev_nivel_p[0].nombre_nivel_puesto})`;
+            const response = await this.request('../../models/ev/bd_ev_perfil_puesto.php'
+            ,{'action' : 'select','id' : puesto.ev_puesto_id});
+            this.perfil = response[0];
+            this.modalPerfil = true;
+        },
+        async getev_puestos(){
             this.ev_puestoCollection  = [];
             this.paginaCollection = [];
-            let filtrarPor =  "( nombre_puesto ILIKE '%" + this.filter + "%'  OR decripcion_puesto ILIKE '%" + this.filter + "%'  )";  
-            const response = await this.request(this.path,{'order' : 'ORDER BY ev_puesto_id DESC','action' : 'select','filter' : filtrarPor});
-           try{ 
+            const response = await this.request(this.path,{'action' : 'select','filter' : this.filter});
+            try{ 
                 this.show_message(response.length + ' Registros Encontrados.','success');
                 this.ev_puestoCollection = response;
                 this.paginaCollection = response;
@@ -108,7 +121,7 @@ var application = new Vue({
             this.typeMessage = typeMessage;
             setTimeout(function() { application.typeMessage='' ;application.msg =''; }, 5000);
         },model_empty(){
-            this.ev_puesto = {ev_puesto_id:0,nombre_puesto:'',decripcion_puesto:'',creado:'',creadopor:'',actualizado:'',actualizadopor:''};
+            this.ev_puesto = {ev_puesto_id:0,nombre_puesto:'',decripcion_puesto:'',creado:'',creadopor:'',actualizado:'',actualizadopor:'',codigo:'',tipo:'',ev_nivel_p_id:''};
         },
         async request(path,jsonParameters){
             const response = await axios.post(path, jsonParameters).then(function (response) {   
@@ -119,7 +132,15 @@ var application = new Vue({
             return response; 
         },
         async fill_f_keys(){
-            
+             
+            const response_ev_nivel_p = await this.request('../../models/ev/bd_ev_nivel_p.php',{'order' : 'ORDER BY ev_nivel_p_id DESC','action' : 'select'});
+            try{  
+                if(response_ev_nivel_p.length > 0){  
+                    this.ev_nivel_pCollection = response_ev_nivel_p; 
+                }  
+            }catch(error){
+                this.show_message('No hay ev_nivel_ps.','info');
+            } 
         },paginator(i){ 
             let cantidad_pages = Math.ceil(this.ev_puestoCollection.length / this.numByPag);
             this.paginas = []; 

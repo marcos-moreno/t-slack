@@ -99,16 +99,16 @@ class generate_string
         foreach ($this->field_json as $field) {  
             $campos  .= "$field->column_name,";
         }   
-        $cadena = " 
+        $cadena = `
         %parameters = array(
                 ':valor' => %this->received_data->filter,  
             ); 
-        %query = 'SELECT $campos *-
+        %query = "SELECT $campos *-
                     FROM $this->name_crud  
                     WHERE 
-                    tabla ILIKE '%' || :valor || '%'
-                    ORDER BY 1 DESC ;
-                    ";
+                        field  ILIKE '%' || :valor || '%'
+                    ORDER BY 1 DESC" ;
+                    `;
 
         $cadena = str_replace(", *-"," ",$cadena);     
         $cadena .= "    

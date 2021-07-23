@@ -92,7 +92,6 @@ var application = new Vue({
         async get". $this->name_crud ."s(){  
             this.". $this->name_crud ."Collection  = [];
             this.paginaCollection = [];
-            //let filtrarPor =  \"(". $this->getFieldSearch() ." )\";'order' : 'ORDER BY ".$this->field_primary_key." DESC',  
             const response = await this.request(this.path,{'action' : 'select','filter' : this.filter});
             try{ 
                 this.show_message(response.length + ' Registros Encontrados.','success');

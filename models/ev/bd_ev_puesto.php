@@ -49,9 +49,12 @@ class Ev_puesto
                         ':decripcion_puesto' => $this->received_data->model->decripcion_puesto,
                         ':creadopor' => $_SESSION['id_empleado'],
                         ':actualizadopor' => $_SESSION['id_empleado'],
+                        ':codigo' => $this->received_data->model->codigo,
+                        ':tipo' => $this->received_data->model->tipo,
+                        ':ev_nivel_p_id' => $this->received_data->model->ev_nivel_p_id,
                         
                     ); 
-        $query = 'INSERT INTO ev_puesto (nombre_puesto,decripcion_puesto,creado,creadopor,actualizado,actualizadopor) VALUES (:nombre_puesto,:decripcion_puesto,Now(),:creadopor,Now(),:actualizadopor) ;';
+        $query = 'INSERT INTO ev_puesto (nombre_puesto,decripcion_puesto,creado,creadopor,actualizado,actualizadopor,codigo,tipo,ev_nivel_p_id) VALUES (:nombre_puesto,:decripcion_puesto,Now(),:creadopor,Now(),:actualizadopor,:codigo,:tipo,:ev_nivel_p_id) ;';
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  
@@ -72,9 +75,12 @@ class Ev_puesto
                         ':nombre_puesto' => $this->received_data->model->nombre_puesto, 
                         ':decripcion_puesto' => $this->received_data->model->decripcion_puesto, 
                         ':actualizadopor' => $_SESSION['id_empleado'],
+                        ':codigo' => $this->received_data->model->codigo, 
+                        ':tipo' => $this->received_data->model->tipo, 
+                        ':ev_nivel_p_id' => $this->received_data->model->ev_nivel_p_id, 
                          
                     ); 
-            $query = 'UPDATE ev_puesto SET nombre_puesto=:nombre_puesto,decripcion_puesto=:decripcion_puesto,actualizado=Now(),actualizadopor=:actualizadopor WHERE  ev_puesto_id = :ev_puesto_id ;';
+            $query = 'UPDATE ev_puesto SET nombre_puesto=:nombre_puesto,decripcion_puesto=:decripcion_puesto,actualizado=Now(),actualizadopor=:actualizadopor,codigo=:codigo,tipo=:tipo,ev_nivel_p_id=:ev_nivel_p_id WHERE  ev_puesto_id = :ev_puesto_id ;';
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  
@@ -89,20 +95,26 @@ class Ev_puesto
     } 
 
     public function select(){
-        try {  
-             
-        $query = 'SELECT ev_puesto_id,nombre_puesto,decripcion_puesto,creado,creadopor,actualizado,actualizadopor 
-                    FROM ev_puesto  
-                    ' . (isset($this->received_data->filter) ? ' 
-                    WHERE ' . $this->received_data->filter:'') . 
-                    (isset($this->received_data->order) ? $this->received_data->order:'') ;
-                        
-            $statement = $this->connect->prepare($query); 
-            $statement->execute($data);   
-            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {    $data[] = $row;
-            }
-
-        
+        try {   
+        $where = '';
+        $parameters = array(); 
+        if ($this->received_data->filter != '') { 
+            $parameters = array(':valor' => $this->received_data->filter,  ); 
+            $where = "WHERE  nombre_puesto  ILIKE '%' || :valor || '%'";
+        }
+        $query = "
+                SELECT ev_puesto_id,nombre_puesto,decripcion_puesto,creado,creadopor
+                        ,actualizado,actualizadopor,codigo,COALESCE(tipo,'') As tipo,ev_nivel_p_id 
+                FROM ev_puesto  
+                $where
+                ORDER BY nombre_puesto DESC LIMIT 5
+                "; 
+            $statement = $this->connect->prepare($query);  
+            $statement->execute($parameters);   
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {   
+                $row['ev_nivel_p'] = $this->search_union($row,'ev_nivel_p','ev_nivel_p_id','ev_nivel_p_id');
+                $data[] = $row;
+            } 
             echo json_encode($data); 
             return true;
         } catch (PDOException $exc) {
@@ -124,8 +136,7 @@ class Ev_puesto
             return $data; 
         } catch (PDOException $exc) {
             $output = array('message' => $exc->getMessage()); 
-            echo json_encode($output); 
-            return false;
+            return json_encode($output);  
         }  
     }
     public function delete(){

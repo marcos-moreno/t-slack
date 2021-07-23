@@ -131,6 +131,7 @@ class Ev_perfil_puesto
 
     public function select(){
         try {  
+            $parameters = array(); 
             $query = 'SELECT ev_perfil_puesto_id,genero_atributo,edad_minima,
                         edad_maxima,estado_civil_atributo,grado_avance_atributo,
                         areas_conocimiento,minimo_experiencia_anios,minimo_experiencia_meses
@@ -139,10 +140,16 @@ class Ev_perfil_puesto
                         ,media_salarial_zona,competencias,aptitudes,observaciones_adicionales
                         ,actitudes_puesto,nivel_estudios_atributo,idioma_atributo,ev_puesto_id
                         ,creado,actualizado,creadopor,actualizadopor 
-                    FROM ev_perfil_puesto  
-                    ORDER BY ev_perfil_puesto_id DESC LIMIT 10' ;
+                    FROM ev_perfil_puesto';
+            if ($this->received_data->id > 0) {
+                $parameters = array(
+                    ':id' => $this->received_data->id,  
+                );
+                $query .= ' WHERE ev_puesto_id = :id ';  
+            }
+            $query .= ' ORDER BY ev_perfil_puesto_id DESC LIMIT 10' ;
             $statement = $this->connect->prepare($query); 
-            $statement->execute($data);   
+            $statement->execute($parameters);   
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
                     $row['ev_puesto'] = $this->search_union($row,'ev_puesto','ev_puesto_id','ev_puesto_id');
                     $row['tabulador_minimo'] = $this->search_union($row,'tabulador','id_tabulador','ev_tabulador_id_minimo');
@@ -162,6 +169,8 @@ class Ev_perfil_puesto
             return false;
         }  
     }
+
+    
     
     public function search_union($row,$table_origen,$fk_table_origen,$fk_table_usage){
         $data = array(); 
