@@ -28,27 +28,27 @@ var application = new Vue({
         rols:[],
         isDisabledSC:true,
         ev_puesto_nivelCollection:[],
-        ev_puesto_nivelCollectionFiltro:[],
+        // ev_puesto_nivelCollectionFiltro:[],
         filtroPuesto:"",
         departamentoCollection:[], 
     },
     methods:{
         
-        async buscarValorPuesto(){
-            this.ev_puesto_nivelCollectionFiltro = [];
-            let asignado = false;
-            for (let index = 0; index < this.ev_puesto_nivelCollection.length; index++) {
-                const element = this.ev_puesto_nivelCollection[index];
-                let nomCompuesto = element.ev_puesto[0].nombre_puesto + ' (' + element.ev_nivel_p[0].nombre_nivel_puesto + ")";
-                if (nomCompuesto.toUpperCase().includes(this.filtroPuesto.toUpperCase())) {
-                    this.ev_puesto_nivelCollectionFiltro.push(element);
-                    if (asignado==false) {
-                        this.empleado.ev_puesto_nivel_id = element.ev_puesto_nivel_id;
-                        asignado = true;
-                    }
-                }
-            }
-        },
+        // async buscarValorPuesto(){
+        //     this.ev_puesto_nivelCollectionFiltro = [];
+        //     let asignado = false;
+        //     for (let index = 0; index < this.ev_puesto_nivelCollection.length; index++) {
+        //         const element = this.ev_puesto_nivelCollection[index];
+        //         let nomCompuesto = element.ev_puesto[0].nombre_puesto + ' (' + element.ev_nivel_p[0].nombre_nivel_puesto + ")";
+        //         if (nomCompuesto.toUpperCase().includes(this.filtroPuesto.toUpperCase())) {
+        //             this.ev_puesto_nivelCollectionFiltro.push(element);
+        //             if (asignado==false) {
+        //                 this.empleado.ev_puesto_nivel_id = element.ev_puesto_nivel_id;
+        //                 asignado = true;
+        //             }
+        //         }
+        //     }
+        // },
         async resetPassword(id_empleado){ 
             if(confirm("¿Estas seguro de Restablecer la Contraseña?"))
             {
@@ -218,12 +218,11 @@ var application = new Vue({
             }catch(error){
                 this.show_message('No se encontrarón Empresas.','info');
             } 
-            const response_ev_puesto_nivel = await this.request('../../models/ev/bd_ev_puesto_nivel.php',{'type':"ilike",'action' : 'select','filter' : ''});
+            const response_ev_puesto_nivel = await this.request('../../models/ev/bd_ev_puesto.php',{'action' : 'select','filter' : ''});
             try{  
                 if(response_ev_puesto_nivel.length > 0){  
                     this.ev_puesto_nivelCollection = response_ev_puesto_nivel; 
                     this.ev_puesto_nivelCollectionFiltro = this.ev_puesto_nivelCollection;
-
                 }  
             }catch(error){
                 this.show_message('No se encontrarón Empresas.','info');
