@@ -93,6 +93,7 @@
                     </ul>  
                 </nav>
                 <td><button type="button" class="btn btn-info btn-xs edit" @click="add_ev_puesto()">Agregar</button></td>
+                <td><a type="button" class="btn btn-secondary btn-xs edit" href="v_ev_nivel_p.php">Niveles</a></td>
                 <table class="table table-bordered table-striped">
                     <tr> 
                         <th>ev_puesto_id</th>

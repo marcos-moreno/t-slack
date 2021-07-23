@@ -34,7 +34,7 @@ var application = new Vue({
             } 
         },
         async getperfil(puesto){ 
-            this.titleModalPerfil = `Perfil del puesto ${puesto.nombre_puesto} ${puesto.tipo} (${puesto.ev_nivel_p[0].nombre_nivel_puesto})`;
+            this.titleModalPerfil = `PERFIL DEL PUESTO: ${puesto.nombre_puesto} ${puesto.tipo} (${puesto.ev_nivel_p[0].nombre_nivel_puesto})`;
             const response = await this.request('../../models/ev/bd_ev_perfil_puesto.php'
             ,{'action' : 'select','id' : puesto.ev_puesto_id});
             this.perfil = response[0];
