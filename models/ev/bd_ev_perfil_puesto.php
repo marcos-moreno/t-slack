@@ -147,7 +147,7 @@ class Ev_perfil_puesto
                 );
                 $query .= ' WHERE ev_puesto_id = :id ';  
             }
-            $query .= ' ORDER BY ev_perfil_puesto_id DESC LIMIT 10' ;
+            $query .= ' ORDER BY ev_perfil_puesto_id DESC' ;
             $statement = $this->connect->prepare($query); 
             $statement->execute($parameters);   
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  

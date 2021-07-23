@@ -107,7 +107,7 @@ class Ev_puesto
                         ,actualizado,actualizadopor,codigo,COALESCE(tipo,'') As tipo,ev_nivel_p_id 
                 FROM ev_puesto  
                 $where
-                ORDER BY nombre_puesto DESC LIMIT 5
+                ORDER BY nombre_puesto DESC
                 "; 
             $statement = $this->connect->prepare($query);  
             $statement->execute($parameters);   
