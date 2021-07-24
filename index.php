@@ -44,4 +44,4 @@ style="background-image: url('img/walper.jpg');"
 	</div>     
 </body>
 
-<script src="controller/generales/c_login2.js"></script> 
+<script src="controller/generales/c_login.js"></script> 

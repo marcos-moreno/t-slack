@@ -113,4 +113,4 @@
 
   <div id="viewReport"> </div>   
   
-<script type="text/javascript" src="../../controllers/admin/reportes1.js" ></script>
+<script type="text/javascript" src="../../controllers/admin/reportes.js" ></script>

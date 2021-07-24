@@ -343,7 +343,7 @@
 
 
 </div>
-<script type="text/javascript" src="../../controllers/admin/c_empleado3.js"></script>
+<script type="text/javascript" src="../../controllers/admin/c_empleado.js"></script>
 
   
 

@@ -147,4 +147,4 @@
         </div> 
       </div>
 </div> 
-<script type="text/javascript" src="../../controllers/admin/sinc4_cerberus.js"></script>  
+<script type="text/javascript" src="../../controllers/admin/sinc_cerberus.js"></script>  
