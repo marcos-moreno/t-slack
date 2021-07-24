@@ -68,4 +68,4 @@
     </div>
     <canvas id="the-canvas"></canvas>
 </div>
-<script type="text/javascript" src="../../controller/user/c_display_files_nomina.js"></script>
+<script type="text/javascript" src="../../controllers/user/c_display_files_nomina.js"></script>

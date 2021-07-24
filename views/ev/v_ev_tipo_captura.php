@@ -140,4 +140,4 @@
         </div>  
     </div>
 </div>
-<script type="text/javascript" src="../../controller/ev/c_ev_tipo_captura.js"></script>
+<script type="text/javascript" src="../../controllers/ev/c_ev_tipo_captura.js"></script>

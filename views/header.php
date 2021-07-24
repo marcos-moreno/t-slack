@@ -231,6 +231,6 @@ if ($valido == false) {  header('location: ../logout.php'); }
 </script>
 
 <body  onclick="hover()" style="background-color: <?php session_start();   echo $_SESSION['color_back'] ?>" >
-<script type="text/javascript" src="../../controller/user/c_leccion.js"></script>
-<script type="text/javascript" src="../../controller/user/notifications_u.js"></script>
-<script type="text/javascript" src="../../controller/admin/changePasword3.js"></script>  
+<script type="text/javascript" src="../../controllers/user/c_leccion.js"></script>
+<script type="text/javascript" src="../../controllers/user/notifications_u.js"></script>
+<script type="text/javascript" src="../../controllers/admin/changePasword3.js"></script>  

@@ -115,4 +115,4 @@
         </div>  
     </div>
 </div>
-<script type="text/javascript" src="../../controller/generales/c_elemento.js"></script>
+<script type="text/javascript" src="../../controllers/generales/c_elemento.js"></script>

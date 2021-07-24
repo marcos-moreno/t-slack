@@ -150,4 +150,4 @@
         </div>  
     </div>
 </div>
-<script type="text/javascript" src="../../controller/un/c_paquete_detalle.js"></script>
+<script type="text/javascript" src="../../controllers/un/c_paquete_detalle.js"></script>

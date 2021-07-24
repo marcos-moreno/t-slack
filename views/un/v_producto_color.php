@@ -105,4 +105,4 @@
         </div>  
     </div>
 </div>
-<script type="text/javascript" src="../../controller/un/c_producto_color.js"></script>
+<script type="text/javascript" src="../../controllers/un/c_producto_color.js"></script>

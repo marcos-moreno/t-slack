@@ -229,13 +229,11 @@ class Empleado
         }  
     }
     public function delete(){
-        try {  
+        try {
             $data = array(
                    ':id_empleado' => $this->received_data->model->id_empleado,
-                            
                     ); 
-        $query = 'DELETE FROM empleado WHERE id_empleado = :id_empleado ;'; 
-
+            $query = 'DELETE FROM empleado WHERE id_empleado = :id_empleado ;'; 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  
             $output = array('message' => 'Data Deleted'); 
@@ -243,7 +241,7 @@ class Empleado
             return true;
         } catch (PDOException $exc) {
             $output = array('message' => $exc->getMessage()); 
-            return array(); 
+            echo json_encode($output); 
         }  
     }
 

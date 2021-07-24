@@ -77,4 +77,4 @@
       <br/> 
     </div> 
 </div> 
-<script type="text/javascript" src="../../controller/admin/incidencia_nce1.js"></script>  
+<script type="text/javascript" src="../../controllers/admin/incidencia_nce1.js"></script>  

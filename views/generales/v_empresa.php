@@ -118,4 +118,4 @@
         </div>  
     </div>
 </div>
-<script type="text/javascript" src="../../controller/generales/c_empresa.js"></script>
+<script type="text/javascript" src="../../controllers/generales/c_empresa.js"></script>

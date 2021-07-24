@@ -182,5 +182,5 @@
   
 
 
-<script type="text/javascript" src="../../controller/admin/c_enc_lecc.js"></script>
+<script type="text/javascript" src="../../controllers/admin/c_enc_lecc.js"></script>
 <script type="text/javascript" src="../../lib/ckeditor/ckeditor.js"></script>

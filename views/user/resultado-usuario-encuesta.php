@@ -65,4 +65,4 @@
         </div> 
     </div> 
 </div>
-<script type="text/javascript" src="../../controller/user/ctl_answer_survey_show.js"></script>
+<script type="text/javascript" src="../../controllers/user/ctl_answer_survey_show.js"></script>

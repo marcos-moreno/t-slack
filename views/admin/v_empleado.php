@@ -283,20 +283,22 @@
                 </div>   
             </div> 
             </div>  
-                                    <!-- <div class='form-group'>
-                                        <label>talla playera</label> 
-                                        <select class='form-control' size='1'  v-model='empleado.id_talla_playera' >
-                                            <option value='0' >-</option>
-                                            <option v-for='rows in un_tallaCollection' v-bind:value='rows.id_talla'>{{ rows }}</option>
-                                        </select>
-                                    </div>  
-                                    <div class='form-group'>
-                                        <label>numero zapato</label> 
-                                        <select class='form-control' size='1'  v-model='empleado.id_numero_zapato' >
-                                            <option value='0' >-</option>
-                                            <option v-for='rows in un_tallaCollection' v-bind:value='rows.id_talla'>{{ rows }}</option>
-                                        </select>
-                                    </div>  -->
+            <div class="row">
+                <div class='col-sm'>  
+                    <label>talla playera</label> 
+                    <select disabled class='form-control' size='1'  v-model='empleado.id_talla_playera' >
+                        <option value='0' >-</option>
+                        <option v-for='row in un_tallaCollection' v-bind:value='row.id_talla'>{{ row.valor }}</option>
+                    </select>
+                </div>   
+                <div class='col-sm'>
+                    <label>número zapato</label> 
+                    <select disabled class='form-control' size='1'  v-model='empleado.id_numero_zapato' >
+                        <option value='0' >-</option>
+                        <option v-for='row in un_tallaCollection' v-bind:value='row.id_talla'>{{ row.valor }}</option>
+                    </select>
+                </div>    
+            </div>  
             <br>
             <div class="form-group">
                 <td><button type="button" class="btn btn btn-xs" @click="cancel_empleado()"><img src="../../img/regresar.png" width="28px" /> Regresar</button></td> 
@@ -341,7 +343,7 @@
 
 
 </div>
-<script type="text/javascript" src="../../controller/admin/c_empleado3.js"></script>
+<script type="text/javascript" src="../../controllers/admin/c_empleado3.js"></script>
 
   
 

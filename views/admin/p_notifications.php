@@ -105,6 +105,6 @@
   </div>
 </div>
 
-<script type="text/javascript" src="../../controller/admin/notifications_a.js"></script>
+<script type="text/javascript" src="../../controllers/admin/notifications_a.js"></script>
 
 

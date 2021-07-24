@@ -214,4 +214,4 @@ require '../header.php';
     </div>
     <!-- End of Content Wrapper -->
 
-<script type="text/javascript" src="../../controller/admin/employe.js"></script>
+<script type="text/javascript" src="../../controllers/admin/employe.js"></script>

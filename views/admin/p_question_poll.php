@@ -262,4 +262,4 @@
           </div>  
     </div> 
   </div>  
-<script type="text/javascript" src="../../controller/admin/question_encuesta.js"></script> 
+<script type="text/javascript" src="../../controllers/admin/question_encuesta.js"></script> 

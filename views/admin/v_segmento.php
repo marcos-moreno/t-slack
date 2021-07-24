@@ -163,4 +163,4 @@
         </div>  
     </div>
 </div>
-<script type="text/javascript" src="../../controller/admin/c_segmento.js"></script>
+<script type="text/javascript" src="../../controllers/admin/c_segmento.js"></script>

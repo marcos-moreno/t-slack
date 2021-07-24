@@ -137,4 +137,4 @@
 
     </div>
 </div>
-<script type="text/javascript" src="../../controller/sp/c_marca.js"></script>
+<script type="text/javascript" src="../../controllers/sp/c_marca.js"></script>

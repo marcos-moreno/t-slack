@@ -160,7 +160,7 @@ class Data
         echo "<p style='color:blue;  font-weight: bold;'>Fin---------------------------------------HTML Template</p><br/>";
 
         echo "<br/><p style='color:blue;  font-weight: bold;'>Inicio---------------------------------------JS javaScript</p>";
-        $estructura = '../../controller/'.$this->nombreCRPETACLASS.'/';  
+        $estructura = '../../controllers/'.$this->nombreCRPETACLASS.'/';  
         if (file_exists($estructura)) {
             echo "Los ficheros se Remplazarán.<br/>";
             $this->generate_controller_js();
@@ -209,7 +209,7 @@ class Data
             $generator = new generator_js_controller($this->field_json,$this->name_crud,$this->field_primary_key,
                                                         $this->data_forenings_keys,$this->connect,$this->nombreCRPETACLASS); 
             $contenido = $generator->generator_content(); 
-            $archivo = fopen('../../controller/'.$this->nombreCRPETACLASS.'/c_'.$this->name_crud.'.js','w+');
+            $archivo = fopen('../../controllers/'.$this->nombreCRPETACLASS.'/c_'.$this->name_crud.'.js','w+');
             fputs($archivo,$contenido);
             fclose($archivo);
             echo "<p style='color:green;  font-weight: bold;'>** SUCCESS CREATING JS CONTROLLER  <p/>";

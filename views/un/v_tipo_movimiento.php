@@ -107,4 +107,4 @@
         </div>  
     </div>
 </div>
-<script type="text/javascript" src="../../controller/un/c_tipo_movimiento.js"></script>
+<script type="text/javascript" src="../../controllers/un/c_tipo_movimiento.js"></script>

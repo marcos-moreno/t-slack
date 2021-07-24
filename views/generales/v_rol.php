@@ -67,4 +67,4 @@
         </div>  
     </div>
 </div>
-<script type="text/javascript" src="../../controller/generales/c_rol.js"></script>
+<script type="text/javascript" src="../../controllers/generales/c_rol.js"></script>

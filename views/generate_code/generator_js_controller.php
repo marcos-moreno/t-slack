@@ -104,11 +104,9 @@ var application = new Vue({
                 this.isFormCrud=false;
             } 
         }, 
-        async delete_". $this->name_crud ."(".$this->field_primary_key."){  
-            this.". $this->name_crud ." = this.search_". $this->name_crud ."ByID(".$this->field_primary_key.");
-            if(this.". $this->name_crud.".".$this->field_primary_key." > 0){
-                const response = await this.request(this.path,{model:this.". $this->name_crud .",'action' : 'delete'});
-                this.". $this->name_crud ."Collection = response; 
+        async delete_". $this->name_crud ."(".$this->field_primary_key."){   
+            if(".$this->field_primary_key." > 0){
+                const response = await this.request(this.path,{model:{'".$this->field_primary_key."':".$this->field_primary_key."},'action' : 'delete'});
                 if(response.message == 'Data Deleted'){
                     await this.get". $this->name_crud ."s();
                     this.show_message('Registro Eliminado','success');

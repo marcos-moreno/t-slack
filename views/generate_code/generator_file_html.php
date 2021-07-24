@@ -216,7 +216,7 @@ class generator_file_html{
             '.$this->print_form().'  
     </div>
 </div>
-<script type="text/javascript" src="../../controller/' . $this->nombreCRPETACLASS . '/c_' . $this->name_crud . '.js"></script>
+<script type="text/javascript" src="../../controllers/' . $this->nombreCRPETACLASS . '/c_' . $this->name_crud . '.js"></script>
 ';
 
         // $contenido = str_replace("%","$",$contenido); 

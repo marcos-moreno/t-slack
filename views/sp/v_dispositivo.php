@@ -159,4 +159,4 @@
         </div>  
     </div>
 </div>
-<script type="text/javascript" src="../../controller/sp/c_dispositivo.js"></script>
+<script type="text/javascript" src="../../controllers/sp/c_dispositivo.js"></script>

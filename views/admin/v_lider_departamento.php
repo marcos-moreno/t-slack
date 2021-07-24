@@ -139,4 +139,4 @@
         </div>  
     </div>
 </div>
-<script type="text/javascript" src="../../controller/admin/c_lider_departamento.js"></script>
+<script type="text/javascript" src="../../controllers/admin/c_lider_departamento.js"></script>

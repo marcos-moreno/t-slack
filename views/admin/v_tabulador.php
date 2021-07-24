@@ -148,4 +148,4 @@
         </div>  
     </div>
 </div>
-<script type="text/javascript" src="../../controller/admin/c_tabulador.js"></script>
+<script type="text/javascript" src="../../controllers/admin/c_tabulador.js"></script>

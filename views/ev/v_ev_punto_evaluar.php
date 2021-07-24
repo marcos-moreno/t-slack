@@ -237,4 +237,4 @@
         </div>  
     </div>
 </div>
-<script type="text/javascript" src="../../controller/ev/c_ev_punto_evaluar.js"></script>
+<script type="text/javascript" src="../../controllers/ev/c_ev_punto_evaluar.js"></script>

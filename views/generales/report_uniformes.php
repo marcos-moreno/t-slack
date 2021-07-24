@@ -84,4 +84,4 @@
 
   <div id="viewReport"> </div>   
   
-<script type="text/javascript" src="../../controller/admin/report_uniforme.js" ></script>
+<script type="text/javascript" src="../../controllers/admin/report_uniforme.js" ></script>

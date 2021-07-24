@@ -298,4 +298,4 @@
         </div>  
     </div>
 </div> 
-<script type="text/javascript" src="../../controller/un/c_solicitud_uniforme_admin.js"></script>
+<script type="text/javascript" src="../../controllers/un/c_solicitud_uniforme_admin.js"></script>

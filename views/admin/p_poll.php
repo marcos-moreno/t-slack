@@ -249,4 +249,4 @@
 
 
 
-<script type="text/javascript" src="../../controller/admin/polls.js"></script>  
+<script type="text/javascript" src="../../controllers/admin/polls.js"></script>  

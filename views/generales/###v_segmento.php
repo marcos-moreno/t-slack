@@ -142,4 +142,4 @@
         </div>  
     </div>
 </div>
-<script type="text/javascript" src="../../controller/generales/c_segmento.js"></script>
+<script type="text/javascript" src="../../controllers/generales/c_segmento.js"></script>

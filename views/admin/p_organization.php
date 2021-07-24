@@ -110,7 +110,7 @@ require '../header.php';
  
  
 </body>
-<script type="text/javascript" src="../../controller/admin/organization.js"></script>
+<script type="text/javascript" src="../../controllers/admin/organization.js"></script>
  
  
  
