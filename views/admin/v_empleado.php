@@ -284,20 +284,24 @@
             </div> 
             </div>  
             <div class="row">
-                <div class='col-sm'>  
-                    <label>talla playera</label> 
-                    <select disabled class='form-control' size='1'  v-model='empleado.id_talla_playera' >
-                        <option value='0' >-</option>
-                        <option v-for='row in un_tallaCollection' v-bind:value='row.id_talla'>{{ row.valor }}</option>
-                    </select>
-                </div>   
                 <div class='col-sm'>
-                    <label>número zapato</label> 
-                    <select disabled class='form-control' size='1'  v-model='empleado.id_numero_zapato' >
-                        <option value='0' >-</option>
-                        <option v-for='row in un_tallaCollection' v-bind:value='row.id_talla'>{{ row.valor }}</option>
-                    </select>
-                </div>    
+                    <div class="input-group mb-3">
+                        <label  class="input-group-text">Número zapato</label>
+                        <select disabled class='form-control' size='1'  v-model='empleado.id_numero_zapato' >
+                            <option value='0' >-</option>
+                            <option v-for='row in un_tallaCollection' v-bind:value='row.id_talla'>{{ row.valor }}</option>
+                        </select>
+                    </div>  
+                </div>  
+                <div class='col-sm'>
+                    <div class="input-group mb-3">
+                        <label  class="input-group-text">Talla playera</label>
+                        <select disabled class='form-control' size='1'  v-model='empleado.id_talla_playera' >
+                            <option value='0' >-</option>
+                            <option v-for='row in un_tallaCollection' v-bind:value='row.id_talla'>{{ row.valor }}</option>
+                        </select>
+                    </div>
+                </div>      
             </div>  
             <br>
             <div class="form-group">

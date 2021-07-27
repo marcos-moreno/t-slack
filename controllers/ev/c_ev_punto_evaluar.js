@@ -12,7 +12,7 @@ var application = new Vue({
         ev_tipo_capturaCollection:[],
             
         //paginador
-        numByPag : 5, 
+        numByPag : 15, 
         paginas : [],
         paginaCollection : [],
         paginaActual : 1,

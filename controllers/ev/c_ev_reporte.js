@@ -17,7 +17,7 @@ var application = new Vue({
         empleadoCollection:[],
         ev_indicador_puestoCollection:[],
         //paginador
-        numByPag : 5, 
+        numByPag : 15, 
         paginas : [],
         paginaCollection : [],
         paginaActual : 1,

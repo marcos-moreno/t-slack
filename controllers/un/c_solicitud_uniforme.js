@@ -9,7 +9,7 @@ var application = new Vue({
         typeMessage : '',
         msg:'',
         empleadoCollection:[], 
-        numByPag : 5, 
+        numByPag : 15, 
         paginas : [],
         paginaActual : 1, 
         cargando : false,

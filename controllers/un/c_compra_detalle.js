@@ -15,7 +15,7 @@ var application = new Vue({
             
 
         //paginador
-        numByPag : 5, 
+        numByPag : 15, 
         paginas : [],
         paginaCollection : [],
         paginaActual : 1,
