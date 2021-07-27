@@ -159,8 +159,8 @@ var application = new Vue({
 
             const resp_tabulador = await this.request(
                 '../../models/admin/bd_tabulador.php',
-                {'order' : 'ORDER BY id_tabulador DESC','action' : 'select'}
-            );
+                {'action' : 'select',filter:''}
+            ); 
             try{  
                 if(resp_tabulador.length > 0){  
                     this.tabuladorCollection = resp_tabulador; 

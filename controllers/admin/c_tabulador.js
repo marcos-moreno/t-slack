@@ -8,10 +8,11 @@ var application = new Vue({
         path : '../../models/admin/bd_tabulador.php',
         typeMessage : '',
         msg:'',
-        
+        ev_nivel_pCollection:[],
+            
 
         //paginador
-        numByPag : 20, 
+        numByPag : 15, 
         paginas : [],
         paginaCollection : [],
         paginaActual : 1,
@@ -25,8 +26,7 @@ var application = new Vue({
         async gettabuladors(){  
             this.tabuladorCollection  = [];
             this.paginaCollection = [];
-            let filtrarPor =  "( tabulador ILIKE '%" + this.filter + "%'  OR orden ILIKE '%" + this.filter + "%'  )";  
-           const response = await this.request(this.path,{'order' : 'ORDER BY id_tabulador DESC','action' : 'select','filter' : filtrarPor});
+            const response = await this.request(this.path,{'action' : 'select','filter' : this.filter});
             try{ 
                 this.show_message(response.length + ' Registros Encontrados.','success');
                 this.tabuladorCollection = response;
@@ -106,7 +106,7 @@ var application = new Vue({
             this.typeMessage = typeMessage;
             setTimeout(function() { application.typeMessage='' ;application.msg =''; }, 5000);
         },model_empty(){
-            this.tabulador = {id_tabulador:0,tabulador:'',id_empresa:'',activo:'',sueldo:'',costo_hora:'',septimo_dia:'',costo_hora_extra:'',orden:''};
+            this.tabulador = {id_tabulador:0,tabulador:'',id_empresa:'',activo:'',sueldo:'',costo_hora:'',septimo_dia:'',costo_hora_extra:'',orden:'',ev_nivel_p_id:''};
         },
         async request(path,jsonParameters){
             const response = await axios.post(path, jsonParameters).then(function (response) {   
@@ -117,7 +117,16 @@ var application = new Vue({
             return response; 
         },
         async fill_f_keys(){
-            
+             
+            const response_ev_nivel_p = await this.request('../../models/ev/bd_ev_nivel_p.php'
+            ,{'order' : 'ORDER BY ev_nivel_p_id DESC','action' : 'select'});
+            try{  
+                if(response_ev_nivel_p.length > 0){  
+                    this.ev_nivel_pCollection = response_ev_nivel_p; 
+                }  
+            }catch(error){
+                this.show_message('No hay ev_nivel_ps.','info');
+            } 
         },paginator(i){ 
             let cantidad_pages = Math.ceil(this.tabuladorCollection.length / this.numByPag);
             this.paginas = []; 

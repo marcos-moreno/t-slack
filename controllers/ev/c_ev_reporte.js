@@ -15,7 +15,7 @@ var application = new Vue({
         typeMessage : '',
         msg:'',
         empleadoCollection:[],
-        ev_indicador_puestoCollection:[],
+        ev_indicador_Collection:[],
         //paginador
         numByPag : 15, 
         paginas : [],
@@ -34,6 +34,7 @@ var application = new Vue({
         depas:[]
     },
     methods:{
+    //::::::::::::: Adjunto Inicio 
         search_file_ByID(id_file){
             for (let index = 0; index < this.files_adjuntos.length; index++) {
                 const element = this.files_adjuntos[index]; 
@@ -107,12 +108,13 @@ var application = new Vue({
                 if (respuesta.data.status == "error") {
                     alert("Aceptar para continuar.\nExiste un error con el archivo: " + element.name + "  Error: "+ respuesta.data.message);
                 }else{
-                    this.show_message('Se adjunto correctamente.','success');
-                    console.log(element.name + " : "+ respuesta.data.message);
+                    this.show_message('Se adjunto correctamente.','success'); 
                 }
             }  
             this.load_dialog = false; 
         },
+    //::::::::::::: Adjunto fin
+        
         async buscarValorEmpleado(){
             this.empleadoCollectionfiltro = [];
             let asignado = false;
@@ -152,7 +154,7 @@ var application = new Vue({
             ,'model':{"id_empleado":this.empleadoSelected_id}});
             try{  
                 if(response_ev_indicador_puesto.length > 0){  
-                    this.ev_indicador_puestoCollection = response_ev_indicador_puesto; 
+                    this.ev_indicador_Collection = response_ev_indicador_puesto; 
                 }  
             }catch(error){
                 this.show_message('No hay indicadores.','info');
@@ -207,7 +209,7 @@ var application = new Vue({
                 this.ev_reporte.id_empleado = this.empleadoSelected_id;
                 const response = await this.request(this.path,{model:this.ev_reporte,'action' : 'update'});
                 if(response.message == 'Data Updated'){
-                    await this.getev_reportes();
+                    await this.getev_reportes(); 
                     this.show_message('Registro Actualizado','success');
                     this.model_empty();
                     this.isFormCrud = false;
@@ -219,15 +221,14 @@ var application = new Vue({
                 const response = await this.request(this.path,{model:this.ev_reporte,'action' : 'insert'}); 
                  if(response.message == 'Data Inserted'){
                     await this.getev_reportes();
+                    this.update_ev_reporte(response.ev_reporte_id);
                     this.show_message('Registro Guardado.','success');
-                    this.model_empty();
-                    this.isFormCrud = false;
                 }else{
                     this.show_message(response.message,'error');
                 }  
             }
         },
-        async update_ev_reporte(ev_reporte_id){ 
+        async update_ev_reporte(ev_reporte_id){
             if(ev_reporte_id > 0){
                 this.ev_reporte = this.search_ev_reporteByID(ev_reporte_id);
                 if(this.ev_reporte.ev_reporte_id > 0){

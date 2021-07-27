@@ -1,7 +1,7 @@
 <?php   
     require "../header.php";
-    if(isset($_GET['ev_puesto_nivel_id'])){
-        echo '<input id="ev_puesto_nivel_id" value="'.$_GET['ev_puesto_nivel_id'].'" style="display:none" >';
+    if(isset($_GET['ev_puesto_id'])){
+        echo '<input id="ev_puesto_id" value="'.$_GET['ev_puesto_id'].'" style="display:none" >';
     }else{ 
 ?>  
 <script> location.href="v_ev_puesto_nivel.php";</script>  
@@ -9,7 +9,10 @@
 
 <div  class="container-fluid" style="width:90%;">  
     <div id="app_ev_indicador" style="margin-top:15px;"> 
-        <div >
+        <div > 
+            <h5 v-if="ev_puesto.ev_nivel_p.length > 0">
+            {{ev_puesto.codigo}} {{ev_puesto.nombre_puesto}} {{ev_puesto.tipo}} ({{ev_puesto.ev_nivel_p[0].nombre_nivel_puesto}})
+            </h5> 
             <table class="table table-bordered table-striped">
                 <tr>
                     <td style="width: 20%;word-wrap: break-word;"  v-if="isFormCrud==false" >
@@ -30,8 +33,8 @@
                             <div class="alert alert-primary" v-if="typeMessage == 'info'" role="alert">{{msg}}</div>
                             <div class="alert alert-danger"  v-if="typeMessage == 'error'" role="alert">{{msg}}</div>
                             <div class="alert alert-success" v-if="typeMessage == 'success'" role="alert">{{msg}}</div>
-                        </div> 
-                        <a type="button" class="btn btn btn-xs" href="./v_ev_puesto_nivel.php"><img src="../../img/regresar.png" width="28px" /> Ir a Puestos</a>
+                        </div>
+                        <a type="button" class="btn btn btn-xs" href="./v_ev_puesto.php"><img src="../../img/regresar.png" width="28px" /> Ir a Puestos</a>
                     </td> 
                 </tr>
             </table> 
@@ -69,11 +72,11 @@
                             <div class="alert alert-danger" v-if="totalPorcentaje > 100">
                                 Existe un error, La suma de los indicadores es <strong>{{totalPorcentaje}}%</strong>, por favor indica unicamente el <strong>100%</strong>.
                             </div>
-                            <div class="alert alert-info" v-if="totalPorcentaje < 100">
-                                Este Puesto cuenta con un porcentaje sumado de <strong>{{totalPorcentaje}}%</strong> por favor ACOMPLETA el 100%
+                            <div class="alert alert-warning" v-if="totalPorcentaje < 100">
+                                Este Puesto cuenta con un porcentaje sumado de <strong>{{totalPorcentaje}}%</strong> por favor COMPLETA el 100%
                             </div>
                             <div class="alert alert-success" v-if="totalPorcentaje == 100">
-                                Excelente, el puesto esta Listo para ser evaluado, suma de los Indicadores <strong>{{totalPorcentaje}}%</strong>
+                                Excelente, el puesto esta listo para ser evaluado, suma de los Indicadores <strong>{{totalPorcentaje}}%</strong>
                             </div>
                         </div>
                     </div>
@@ -90,16 +93,16 @@
                         <th></th> 
                     </tr>
                     <tr v-for="ev_indicador in paginaCollection" >
-                        <td>{{ ev_indicador.ev_indicador_id}}</td>
+                        <td>{{ ev_indicador.ev_indicador_puesto_id}}</td>
                         <td>{{ ev_indicador.ev_indicador_general[0].nombre}}</td>
                         <td>{{ ev_indicador.ev_indicador_general[0].tendencia}}</td>
                         <td>{{ ev_indicador.porcentaje}}%</td>
                         <td>{{ ev_indicador.ev_indicador_general[0].origen}}</td> 
-                        <td><a :href="'./v_ev_punto_evaluar.php?ev_indicador_id=' + ev_indicador.ev_indicador_id" >Puntos a Evaluar</a></td> 
+                        <td><a :href="'./v_ev_punto_evaluar.php?ev_indicador_puesto_id=' + ev_indicador.ev_indicador_puesto_id" >Puntos a Evaluar</a></td> 
                         <td style="width:150px" >
                             <button type="button" class="btn btn" @click="update_ev_indicador(ev_indicador)"><img src="../../img/lapiz.svg" width="25px" /></button>
-                            <button type="button" class="btn btn" @click="delete_ev_indicador(ev_indicador.ev_indicador_id)"><img src="../../img/borrar.png" width="25px" /></button>
-                        </td> 
+                            <button type="button" class="btn btn" @click="delete_ev_indicador(ev_indicador.ev_indicador_puesto_id)"><img src="../../img/borrar.png" width="25px" /></button>
+                        </td>
                     </tr>
                 </table>
                 <br>
@@ -109,17 +112,17 @@
             
         <div v-if="isFormCrud" >   
             <div class="form-group">
-                <label>ID: {{ ev_indicador.ev_indicador_id }}</label>  
+                <label>ID: {{ ev_indicador.ev_indicador_puesto_id }}</label>  
             </div> 
             <div class="form-group">
                 <label>Selecciona Indicador:</label>
                 <select class='form-control' v-model="ev_indicador.ev_indicador_general_id" @change="changeIndicador()" >
                   <option value='0' >Selecciona Indicador</option>
-                  <option v-for="row in indicadores_generales" v-bind:value='row.ev_indicador_general_id'>{{ row.nombre }}</option>
+                  <option v-for="row in indicadores_generales" v-bind:value='row.ev_indicador_general_id'>({{row.ev_indicador_general_id}}) {{ row.nombre }}</option>
                 </select>
             </div> 
             <div class='form-group'>
-                <label>descripcion</label>
+                <label>Descripción</label>
                 <input type='text' class='form-control' v-model='ev_indicador.ev_indicador_general[0].descripcion' disabled />
             </div>  
             <div class='form-group'>
@@ -127,11 +130,11 @@
                 <input type='text' class='form-control' v-model='ev_indicador.ev_indicador_general[0].tendencia' disabled /> 
             </div>  
             <div class='form-group'>
-                <label>origen</label>
+                <label>Origen</label>
                 <input type='text' class='form-control' v-model='ev_indicador.ev_indicador_general[0].origen' disabled /> 
             </div>
             <div class='form-group'>
-                <label>porcentaje %</label>
+                <label>Porcentaje %</label>
                 <input type='number' class='form-control' v-model='ev_indicador.porcentaje' />
             </div>  
             <br>

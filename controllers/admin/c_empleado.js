@@ -26,28 +26,28 @@ var application = new Vue({
         dynamicTitle: "",
         rols:[],
         isDisabledSC:true,
-        ev_puesto_nivelCollection:[],
-        // ev_puesto_nivelCollectionFiltro:[],
+        ev_puestoCollection:[],
+        ev_puestoCollectionFiltro:[],
         filtroPuesto:"",
         departamentoCollection:[], 
     },
     methods:{
         
-        // async buscarValorPuesto(){
-        //     this.ev_puesto_nivelCollectionFiltro = [];
-        //     let asignado = false;
-        //     for (let index = 0; index < this.ev_puesto_nivelCollection.length; index++) {
-        //         const element = this.ev_puesto_nivelCollection[index];
-        //         let nomCompuesto = element.ev_puesto[0].nombre_puesto + ' (' + element.ev_nivel_p[0].nombre_nivel_puesto + ")";
-        //         if (nomCompuesto.toUpperCase().includes(this.filtroPuesto.toUpperCase())) {
-        //             this.ev_puesto_nivelCollectionFiltro.push(element);
-        //             if (asignado==false) {
-        //                 this.empleado.ev_puesto_nivel_id = element.ev_puesto_nivel_id;
-        //                 asignado = true;
-        //             }
-        //         }
-        //     }
-        // },
+        async buscarValorPuesto(){
+            this.ev_puestoCollectionFiltro = [];
+            let asignado = false;
+            for (let index = 0; index < this.ev_puestoCollection.length; index++) {
+                const element = this.ev_puestoCollection[index];  
+                let nomCompuesto = `${element.nombre_puesto} ${element.tipo} (${element.ev_nivel_p[0].nombre_nivel_puesto})`;
+                if (nomCompuesto.toUpperCase().includes(this.filtroPuesto.toUpperCase())) {
+                    this.ev_puestoCollectionFiltro.push(element);
+                    if (asignado==false) {
+                        this.empleado.ev_puesto_id = element.ev_puesto_id;
+                        asignado = true;
+                    }
+                }
+            }
+        },
         async resetPassword(id_empleado){ 
             if(confirm("¿Estas seguro de Restablecer la Contraseña?"))
             {
@@ -132,8 +132,7 @@ var application = new Vue({
         },
         async update_empleado(id_empleado){ 
             if(id_empleado > 0){
-                this.empleado = this.search_empleadoByID(id_empleado);
-                console.log(this.empleado);
+                this.empleado = this.search_empleadoByID(id_empleado); 
                 if(this.empleado.id_empleado > 0){
                     this.isFormCrud = true;
                 }else{
@@ -217,11 +216,11 @@ var application = new Vue({
             }catch(error){
                 this.show_message('No se encontrarón Empresas.','info');
             } 
-            const response_ev_puesto_nivel = await this.request('../../models/ev/bd_ev_puesto.php',{'action' : 'select','filter' : ''});
+            const response_ev_puesto = await this.request('../../models/ev/bd_ev_puesto.php',{'action' : 'select','filter' : ''});
             try{  
-                if(response_ev_puesto_nivel.length > 0){  
-                    this.ev_puesto_nivelCollection = response_ev_puesto_nivel; 
-                    this.ev_puesto_nivelCollectionFiltro = this.ev_puesto_nivelCollection;
+                if(response_ev_puesto.length > 0){  
+                    this.ev_puestoCollection = response_ev_puesto; 
+                    this.ev_puestoCollectionFiltro = this.ev_puestoCollection; 
                 }  
             }catch(error){
                 this.show_message('No se encontrarón Empresas.','info');

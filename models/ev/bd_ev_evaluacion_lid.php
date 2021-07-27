@@ -48,13 +48,13 @@ class Ev_reporte
                     ':descripcion' => $this->received_data->model->descripcion,
                         ':fecha' => $this->received_data->model->fecha,
                         ':id_empleado' => $this->received_data->model->id_empleado,
-                        ':ev_indicador_puesto_id' => $this->received_data->model->ev_indicador_puesto_id,
+                        ':ev_puesto_id' => $this->received_data->model->ev_puesto_id,
                         ':creadopor' => $_SESSION['id_empleado'],
                         ':actualizadopor' => $_SESSION['id_empleado'],
                         
                     ); 
-        $query = 'INSERT INTO ev_reporte (descripcion,fecha,id_empleado,ev_indicador_puesto_id,creado,creadopor,actualizado,actualizadopor) 
-                    VALUES (:descripcion,:fecha,:id_empleado,:ev_indicador_puesto_id,Now(),:creadopor,Now(),:actualizadopor) ;';
+        $query = 'INSERT INTO ev_reporte (descripcion,fecha,id_empleado,ev_puesto_id,creado,creadopor,actualizado,actualizadopor) 
+                    VALUES (:descripcion,:fecha,:id_empleado,:ev_puesto_id,Now(),:creadopor,Now(),:actualizadopor) ;';
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  
@@ -75,12 +75,12 @@ class Ev_reporte
                         ':descripcion' => $this->received_data->model->descripcion, 
                         ':fecha' => $this->received_data->model->fecha, 
                         ':id_empleado' => $this->received_data->model->id_empleado, 
-                        ':ev_indicador_puesto_id' => $this->received_data->model->ev_indicador_puesto_id, 
+                        ':ev_puesto_id' => $this->received_data->model->ev_puesto_id, 
                         ':actualizadopor' => $_SESSION['id_empleado'],
                          
                     ); 
             $query = 'UPDATE ev_reporte SET descripcion=:descripcion,fecha=:fecha
-                        ,id_empleado=:id_empleado,ev_indicador_puesto_id=:ev_indicador_puesto_id
+                        ,id_empleado=:id_empleado,ev_puesto_id=:ev_puesto_id
                         ,actualizado=Now(),actualizadopor=:actualizadopor 
                         WHERE  ev_reporte_id = :ev_reporte_id ;';
 
@@ -103,10 +103,10 @@ class Ev_reporte
                 ':creadopor' => $_SESSION['id_empleado'],
                 ); 
             $query = "SELECT rep.ev_reporte_id,rep.descripcion,TO_CHAR(rep.fecha, 'DD/MM/YYYY') as fecha
-                    ,rep.id_empleado,rep.ev_indicador_puesto_id,
+                    ,rep.id_empleado,rep.ev_puesto_id,
                     rep.creado,rep.creadopor,rep.actualizado,rep.actualizadopor,ig.nombre As nombre_indicador
                     FROM ev_reporte rep
-                    INNER JOIN ev_indicador_puesto ip ON ip.ev_indicador_id=rep.ev_indicador_puesto_id
+                    INNER JOIN ev_indicador_puesto ip ON ip.ev_indicador_id=rep.ev_puesto_id
                     INNER JOIN ev_indicador_general ig ON ip.ev_indicador_general_id=ig.ev_indicador_general_id
                     WHERE rep.creadopor = :creadopor AND rep.id_empleado = :id_empleado
                     ".
@@ -116,7 +116,7 @@ class Ev_reporte
             $statement->execute($data);   
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
                     $row['empleado'] = $this->search_union($row,'empleado','id_empleado','id_empleado');
-                    $row['ev_indicador_puesto'] = $this->search_union($row,'ev_indicador_puesto','ev_indicador_id','ev_indicador_puesto_id');
+                    $row['ev_indicador_puesto'] = $this->search_union($row,'ev_indicador_puesto','ev_indicador_id','ev_puesto_id');
                     $dataResult[] = $row;
             }
             echo json_encode($dataResult); 

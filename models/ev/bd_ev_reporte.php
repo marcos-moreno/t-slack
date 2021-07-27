@@ -44,21 +44,25 @@ class Ev_reporte
 
     public function insert(){
         try {
-            $data = array(
-                    ':descripcion' => $this->received_data->model->descripcion,
+            $parameters = array(
+                        ':descripcion' => $this->received_data->model->descripcion,
                         ':fecha' => $this->received_data->model->fecha,
                         ':id_empleado' => $this->received_data->model->id_empleado,
                         ':ev_indicador_puesto_id' => $this->received_data->model->ev_indicador_puesto_id,
                         ':creadopor' => $_SESSION['id_empleado'],
                         ':actualizadopor' => $_SESSION['id_empleado'],
-                        
                     ); 
-        $query = 'INSERT INTO ev_reporte (descripcion,fecha,id_empleado,ev_indicador_puesto_id,creado,creadopor,actualizado,actualizadopor) 
-                    VALUES (:descripcion,:fecha,:id_empleado,:ev_indicador_puesto_id,Now(),:creadopor,Now(),:actualizadopor) ;';
+            $query = 'INSERT INTO ev_reporte (descripcion,fecha,id_empleado,ev_indicador_puesto_id,creado,creadopor,actualizado,actualizadopor) 
+                    VALUES (:descripcion,:fecha,:id_empleado,:ev_indicador_puesto_id,Now(),:creadopor,Now(),:actualizadopor)    RETURNING ev_reporte_id;';
 
             $statement = $this->connect->prepare($query); 
-            $statement->execute($data);  
-            $output = array('message' => 'Data Inserted'); 
+            $statement->execute($parameters);  
+            $result = $statement->fetchAll();
+            $ev_reporte_id = 0;
+            foreach ($result as $row) {
+                $ev_reporte_id = $row['ev_reporte_id'];
+            } 
+            $output = array('message' => 'Data Inserted','ev_reporte_id' => $ev_reporte_id); 
             echo json_encode($output); 
             return true;
         } catch (PDOException $exc) {
@@ -77,7 +81,6 @@ class Ev_reporte
                         ':id_empleado' => $this->received_data->model->id_empleado, 
                         ':ev_indicador_puesto_id' => $this->received_data->model->ev_indicador_puesto_id, 
                         ':actualizadopor' => $_SESSION['id_empleado'],
-                         
                     ); 
             $query = 'UPDATE ev_reporte SET descripcion=:descripcion,fecha=:fecha
                         ,id_empleado=:id_empleado,ev_indicador_puesto_id=:ev_indicador_puesto_id
@@ -102,15 +105,17 @@ class Ev_reporte
                 ':id_empleado' => $this->received_data->model->id_empleado,
                 ':creadopor' => $_SESSION['id_empleado'],
                 ); 
-            $query = "SELECT rep.ev_reporte_id,rep.descripcion,TO_CHAR(rep.fecha, 'YYYY-MM-DD') as fecha
+            $query = "
+                SELECT 
+                    rep.ev_reporte_id,rep.descripcion,TO_CHAR(rep.fecha, 'YYYY-MM-DD') as fecha
                     ,rep.id_empleado,rep.ev_indicador_puesto_id,
                     rep.creado,rep.creadopor,rep.actualizado,rep.actualizadopor,ig.nombre As nombre_indicador
-                    FROM ev_reporte rep
-                    INNER JOIN ev_indicador_puesto ip ON ip.ev_indicador_id=rep.ev_indicador_puesto_id
-                    INNER JOIN ev_indicador_general ig ON ip.ev_indicador_general_id=ig.ev_indicador_general_id
-                    WHERE rep.creadopor = :creadopor AND rep.id_empleado = :id_empleado
-                    ".
-                    (isset($this->received_data->order) ? $this->received_data->order:'') ;
+                FROM ev_reporte rep
+                INNER JOIN ev_indicador_puesto ip ON ip.ev_indicador_puesto_id=rep.ev_indicador_puesto_id
+                INNER JOIN ev_indicador_general ig ON ip.ev_indicador_general_id=ig.ev_indicador_general_id
+                WHERE rep.creadopor = :creadopor AND rep.id_empleado = :id_empleado
+                ORDER BY rep.fecha DESC;
+                ";
             $dataResult=[];       
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);   

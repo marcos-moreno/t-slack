@@ -99,16 +99,18 @@ class generate_string
         foreach ($this->field_json as $field) {  
             $campos  .= "$field->column_name,";
         }   
-        $cadena = `
-        %parameters = array(
+        $cadena = "
+            %parameters = array(
                 ':valor' => %this->received_data->filter,  
-            ); 
-        %query = "SELECT $campos *-
-                    FROM $this->name_crud  
+            );
+            ";  
+        $temps = "'###' || :valor || '###'";    
+        $cadena .= '%query = "SELECT '. $campos.' *-
+                    FROM '. $this->name_crud  .' 
                     WHERE 
-                        field  ILIKE '%' || :valor || '%'
+                        field  ILIKE '.  $temps .' 
                     ORDER BY 1 DESC" ;
-                    `;
+                    ';
 
         $cadena = str_replace(", *-"," ",$cadena);     
         $cadena .= "    
@@ -272,7 +274,8 @@ class ".ucwords($this->name_crud)."
     
 
 } ";   
-           $contenido = str_replace("%","$",$contenido); 
+           $contenido = str_replace("%","$",$contenido);
+           $contenido = str_replace("###","%",$contenido);
            return $contenido;
         } 
 

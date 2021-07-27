@@ -59,8 +59,8 @@
                         <th>tabulador mínimo</th>
                         <th>tabulador máximo</th> 
                         <th>Sueldo Promedio</th>
-                        <th>media salarial mes</th>
-                        <th>media salarial zona</th>
+                        <!-- <th>media salarial mes</th> -->
+                        <!-- <th>media salarial zona</th> -->
                         <th>nivel estudios</th>
                         <th>idioma</th>
                         <th></th> 
@@ -72,9 +72,9 @@
                         <td>{{ ev_perfil_puesto.ev_puesto[0].nombre_puesto}}</td>
                         <td>{{ ev_perfil_puesto.tabulador_minimo[0].tabulador}} {{ formatMXN(ev_perfil_puesto.tabulador_minimo[0].sueldo)}}</td>
                         <td>{{ ev_perfil_puesto.tabulador_maximo[0].tabulador}} {{ formatMXN(ev_perfil_puesto.tabulador_maximo[0].sueldo)}}</td>
-                        <td>{{ ev_perfil_puesto.sueldo_promedio}}</td>
-                        <td>{{ ev_perfil_puesto.media_salarial_mes}}</td>
-                        <td>{{ ev_perfil_puesto.media_salarial_zona}}</td>
+                        <td>{{ formatMXN(ev_perfil_puesto.sueldo_promedio)}}</td>
+                        <!-- <td>{{ formatMXN(ev_perfil_puesto.media_salarial_mes)}}</td> -->
+                        <!-- <td>{{ formatMXN(ev_perfil_puesto.media_salarial_zona)}}</td> -->
                         <td>{{ ev_perfil_puesto.nivel_estudios[0].value}}</td>
                         <td>{{ ev_perfil_puesto.idioma[0].value}}</td>
                         <td style="width:150px" >
@@ -95,13 +95,12 @@
                                   
 
                                     <!-- <div class="container"> -->
-  <div class="row">
-
+  <div class="row"> 
     <div class="col-sm">
         <label>puesto</label> 
-        <select class='form-control' size='1'  v-model='ev_perfil_puesto.ev_puesto_id' >
+        <select class='form-control'  size='1'  v-model='ev_perfil_puesto.ev_puesto_id' >
             <option value='0' >-</option>
-            <option v-for='rows in ev_puestoCollection' v-bind:value='rows.ev_puesto_id'>{{ rows.nombre_puesto }}</option>
+            <option v-for='rows in ev_puestoCollection' v-bind:value='rows.ev_puesto_id'>{{ rows.nombre_puesto }} ({{ rows.ev_nivel_p[0].nombre_nivel_puesto }})</option>
         </select>
     </div>   
 
@@ -137,14 +136,16 @@
             <label>tabulador mínimo</label> 
             <select class='form-control' size='1'  v-model='ev_perfil_puesto.ev_tabulador_id_minimo' >
                 <option value='0' >-</option>
-                <option v-for='rows in tabuladorCollection' v-bind:value='rows.id_tabulador'>{{ rows.tabulador }} - {{ formatMXN(rows.sueldo) }}</option>
+                <option v-for='rows in tabuladorCollection' v-bind:value='rows.id_tabulador'>{{ rows.tabulador }} - {{ formatMXN(rows.sueldo) }} ({{ rows.ev_nivel_p[0].nombre_nivel_puesto }})</option>
             </select>
         </div>  
         <div class="col-sm">
             <label>tabulador máximo</label> 
             <select class='form-control' size='1'  v-model='ev_perfil_puesto.ev_tabulador_id_maximo' >
                 <option value='0' >-</option>
-                <option v-for='rows in tabuladorCollection' v-bind:value='rows.id_tabulador'>{{ rows.tabulador }} - {{ formatMXN(rows.sueldo) }}</option>
+                <option v-for='rows in tabuladorCollection' v-bind:value='rows.id_tabulador'>
+                    {{ rows.tabulador }} - {{ formatMXN(rows.sueldo) }} ({{ rows.ev_nivel_p[0].nombre_nivel_puesto }})
+                </option>
             </select>
         </div>  
     </div> 

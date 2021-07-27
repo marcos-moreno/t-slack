@@ -53,9 +53,10 @@ class Tabulador
                         ':septimo_dia' => $this->received_data->model->septimo_dia,
                         ':costo_hora_extra' => $this->received_data->model->costo_hora_extra,
                         ':orden' => $this->received_data->model->orden,
+                        ':ev_nivel_p_id' => $this->received_data->model->ev_nivel_p_id,
                         
                     ); 
-        $query = 'INSERT INTO tabulador (tabulador,id_empresa,activo,sueldo,costo_hora,septimo_dia,costo_hora_extra,orden) VALUES (:tabulador,:id_empresa,:activo,:sueldo,:costo_hora,:septimo_dia,:costo_hora_extra,:orden) ;';
+        $query = 'INSERT INTO tabulador (tabulador,id_empresa,activo,sueldo,costo_hora,septimo_dia,costo_hora_extra,orden,ev_nivel_p_id) VALUES (:tabulador,:id_empresa,:activo,:sueldo,:costo_hora,:septimo_dia,:costo_hora_extra,:orden,:ev_nivel_p_id) ;';
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  
@@ -81,9 +82,10 @@ class Tabulador
                         ':septimo_dia' => $this->received_data->model->septimo_dia, 
                         ':costo_hora_extra' => $this->received_data->model->costo_hora_extra, 
                         ':orden' => $this->received_data->model->orden, 
+                        ':ev_nivel_p_id' => $this->received_data->model->ev_nivel_p_id, 
                          
                     ); 
-            $query = 'UPDATE tabulador SET tabulador=:tabulador,id_empresa=:id_empresa,activo=:activo,sueldo=:sueldo,costo_hora=:costo_hora,septimo_dia=:septimo_dia,costo_hora_extra=:costo_hora_extra,orden=:orden WHERE  id_tabulador = :id_tabulador ;';
+            $query = 'UPDATE tabulador SET tabulador=:tabulador,id_empresa=:id_empresa,activo=:activo,sueldo=:sueldo,costo_hora=:costo_hora,septimo_dia=:septimo_dia,costo_hora_extra=:costo_hora_extra,orden=:orden,ev_nivel_p_id=:ev_nivel_p_id WHERE  id_tabulador = :id_tabulador ;';
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  
@@ -98,20 +100,24 @@ class Tabulador
     } 
 
     public function select(){
-        try {  
-             
-        $query = 'SELECT id_tabulador,tabulador,id_empresa,activo,sueldo,costo_hora,septimo_dia,costo_hora_extra,orden 
-                    FROM tabulador  
-                    ' . (isset($this->received_data->filter) ? ' 
-                    WHERE ' . $this->received_data->filter:'') . 
-                    (isset($this->received_data->order) ? $this->received_data->order:'') ;
-                        
+        try {   
+            $parameters = array(
+                ':valor' => $this->received_data->filter,  
+            );
+            $query = "
+                    SELECT 
+                        id_tabulador,tabulador,id_empresa,activo,sueldo,costo_hora
+                        ,septimo_dia,costo_hora_extra,orden,ev_nivel_p_id 
+                    FROM tabulador 
+                    WHERE 
+                        tabulador  ILIKE '%' || :valor || '%' 
+                    ORDER BY ev_nivel_p_id,tabulador,orden DESC";
             $statement = $this->connect->prepare($query); 
-            $statement->execute($data);   
-            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {    $data[] = $row;
+            $statement->execute($parameters);   
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
+                    $row['ev_nivel_p'] = $this->search_union($row,'ev_nivel_p','ev_nivel_p_id','ev_nivel_p_id');
+                    $data[] = $row;
             }
-
-        
             echo json_encode($data); 
             return true;
         } catch (PDOException $exc) {

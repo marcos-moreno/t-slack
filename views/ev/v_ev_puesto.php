@@ -103,6 +103,7 @@
                         <th>nivel</th>
                         <th></th> 
                         <th></th> 
+                        <th></th> 
                     </tr>
                     <tr v-for="ev_puesto in paginaCollection" >
                         
@@ -112,6 +113,7 @@
                         <td>{{ ev_puesto.tipo}}</td>
                         <td>{{ ev_puesto.ev_nivel_p[0].nombre_nivel_puesto}}</td>
                         <td><button type="button" class="btn btn-link" @click="getperfil(ev_puesto)">Perfil</button></td>
+                        <td><a :href="'./v_ev_indicador_puesto.php?ev_puesto_id=' + ev_puesto.ev_puesto_id" >Indicadores</a></td> 
                         <td style="width:150px" >
                             <button type="button" class="btn btn" @click="update_ev_puesto(ev_puesto.ev_puesto_id)"><img src="../../img/lapiz.svg" width="25px" /></button>
                             <button type="button" class="btn btn" @click="delete_ev_puesto(ev_puesto.ev_puesto_id)"><img src="../../img/borrar.png" width="25px" /></button>
@@ -132,11 +134,11 @@
                 <input type='text' class='form-control' v-model='ev_puesto.nombre_puesto' />
             </div>  
             <div class='form-group'>
-                <label>decripcion puesto</label>
+                <label>decripción puesto</label>
                 <input type='text' class='form-control' v-model='ev_puesto.decripcion_puesto' />
             </div>  
             <div class='form-group'>
-                <label>codigo</label>
+                <label>código</label>
                 <input type='text' class='form-control' v-model='ev_puesto.codigo' />
             </div>  
             <div class='form-group'>

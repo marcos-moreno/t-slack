@@ -165,11 +165,16 @@ class Empleado
     }
     public function select(){
         try {  
-        $query = 'SELECT id_empleado,id_segmento,id_creadopor,fecha_creado,nombre,paterno,materno,activo,celular,correo,enviar_encuesta
-                ,genero,id_actualizadopor,fecha_actualizado,usuario,password,fecha_nacimiento,nss,rfc,id_cerberus_empleado
-                ,id_talla_playera,id_numero_zapato,fecha_alta_cerberus,perfilcalculo,correo_verificado,
-                id_empresa,desc_mail_v ,id_compac,ev_puesto_id,departamento_id
-                    FROM empleado  
+        $query = '
+                SELECT 
+                    id_empleado,id_segmento,id_creadopor,fecha_creado,nombre
+                    ,paterno,materno,activo,celular
+                    ,correo,enviar_encuesta
+                    ,genero,id_actualizadopor,fecha_actualizado,usuario,password
+                    ,fecha_nacimiento,nss,rfc,id_cerberus_empleado
+                    ,id_talla_playera,id_numero_zapato,fecha_alta_cerberus,perfilcalculo,correo_verificado,
+                    id_empresa,desc_mail_v ,id_compac,ev_puesto_id,departamento_id
+                FROM empleado  
                     ' . (isset($this->received_data->filter) ? ' 
                     WHERE ' . $this->received_data->filter:'') . 
                     (isset($this->received_data->order) ? $this->received_data->order:'') ;

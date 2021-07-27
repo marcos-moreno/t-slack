@@ -102,7 +102,7 @@ class Ev_puesto_nivel
                 $keyword = "%".$this->received_data->filter."%";
             }elseif ($this->received_data->type == "byIDpn") {
                 $keyword = $this->received_data->filter;
-                $query .= " ev_puesto_nivel_id = :filter";
+                $query .= " pn.ev_puesto_id = :filter";
             }
             $query .= " ORDER BY p.nombre_puesto";
             $statement = $this->connect->prepare($query); 

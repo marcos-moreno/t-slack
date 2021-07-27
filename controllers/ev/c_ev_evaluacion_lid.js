@@ -174,7 +174,7 @@ var application = new Vue({
             this.typeMessage = typeMessage;
             setTimeout(function() { application.typeMessage='' ;application.msg =''; }, 5000);
         },model_empty(){
-            this.ev_reporte = {ev_reporte_id:0,descripcion:'',fecha:'',id_empleado:'',ev_indicador_puesto_id:'',id_lider:'',creado:'',creadopor:'',actualizado:'',actualizadopor:''};
+            this.ev_reporte = {ev_reporte_id:0,descripcion:'',fecha:'',id_empleado:'',ev_puesto_id:'',id_lider:'',creado:'',creadopor:'',actualizado:'',actualizadopor:''};
         },
         async request(path,jsonParameters){
             const response = await axios.post(path, jsonParameters).then(function (response) {   

@@ -99,8 +99,12 @@ class Ev_puesto
         $where = '';
         $parameters = array(); 
         if ($this->received_data->filter != '') { 
-            $parameters = array(':valor' => $this->received_data->filter,  ); 
+            $parameters = array(':valor' => $this->received_data->filter); 
             $where = "WHERE  nombre_puesto  ILIKE '%' || :valor || '%'";
+        }
+        if (isset($this->received_data->searchID)) { 
+            $parameters = array(':valor' => $this->received_data->filter); 
+            $where = "WHERE  ev_puesto_id = :valor";
         }
         $query = "
                 SELECT ev_puesto_id,nombre_puesto,decripcion_puesto,creado,creadopor

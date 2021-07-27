@@ -133,7 +133,7 @@
                 </select>
             </div>   
 
-            <!-- <div class='form-group'>
+            <div class='form-group'>
                 <div class="row">
                     <div class="col-5">
                         <div class="input-group mb-3">
@@ -145,14 +145,16 @@
                                 placeholder="Buscar Puesto" aria-label="Search"> 
                         </div>
                     </div>
-                    <div class="col-7">
-                        <select class='form-control' size='1'  v-model='empleado.ev_puesto_nivel_id' >    
+                    <div class="col-7"> 
+                        <select class='form-control' size='1'  v-model='empleado.ev_puesto_id' >    
                             <option value='null' >No asignado</option>
-                            <option v-for='rows in ev_puesto_nivelCollectionFiltro' v-bind:value='rows.ev_puesto_nivel_id'>{{ rows.ev_puesto[0].nombre_puesto }} ({{ rows.ev_nivel_p[0].nombre_nivel_puesto }})</option>
+                            <option v-for='rows in ev_puestoCollectionFiltro' v-bind:value='rows.ev_puesto_id'>
+                                {{ rows.nombre_puesto }} {{ rows.tipo }} ({{ rows.ev_nivel_p[0].nombre_nivel_puesto }})
+                            </option>
                         </select>
                     </div>
                 </div>
-            </div>   -->
+            </div>  
  
             <div class='form-group'>
                 <div class="row">
@@ -199,12 +201,7 @@
                     </div>
                 </div>
             </div>   
-
-            <!-- <div class='form-group'>
-                <label>password</label>
-                <input type='text' class='form-control' v-model='empleado.password' />
-            </div>   -->
-
+ 
             <div class='form-group'>
                 <div class="row">
                     <div class="col-sm">

@@ -134,7 +134,7 @@
                 <label>Indicador</label> 
                 <select class='form-control' size='1'  v-model='ev_reporte.ev_indicador_puesto_id' >
                     <option value='0' >-</option>
-                    <option v-for='rows in ev_indicador_puestoCollection' v-bind:value='rows.ev_indicador_id'>
+                    <option v-for='rows in ev_indicador_Collection' v-bind:value='rows.ev_indicador_puesto_id'>
                         {{ rows.ev_indicador_general[0].nombre }}
                     </option>
                 </select>

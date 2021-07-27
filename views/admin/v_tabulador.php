@@ -52,23 +52,25 @@
                 <td><button type="button" class="btn btn-info btn-xs edit" @click="add_tabulador()">Agregar</button></td>
                 <table class="table table-bordered table-striped">
                     <tr> 
-                        <th>id_tabulador</th>
+                        <th>Id.</th>
                                     
-                        <th>tabulador</th>
+                        <th>Tabulador</th>
                                     
-                        <th>id_empresa</th>
+                        <th>Empresa</th>
                                     
-                        <th>activo</th>
+                        <th>Activo</th>
                                     
-                        <th>sueldo</th>
+                        <th>Sueldo</th>
                                     
-                        <th>costo_hora</th>
+                        <th>Costo Hora</th>
                                     
-                        <th>septimo_dia</th>
+                        <th>Séptimo Día</th>
                                     
-                        <th>costo_hora_extra</th>
+                        <th>Costo Hora Extra</th>
                                     
-                        <th>orden</th>
+                        <th>Orden</th>
+                                    
+                        <th>Nivel</th>
                                      
                         <th></th> 
                     </tr>
@@ -91,6 +93,8 @@
                         <td>{{ tabulador.costo_hora_extra}}</td>
             
                         <td>{{ tabulador.orden}}</td>
+            
+                        <td>{{ tabulador.ev_nivel_p[0].nombre_nivel_puesto}}</td>
                
                         <td style="width:150px" >
                             <button type="button" class="btn btn" @click="update_tabulador(tabulador.id_tabulador)"><img src="../../img/lapiz.svg" width="25px" /></button>
@@ -138,7 +142,14 @@
             <div class='form-group'>
                 <label>orden</label>
                 <input type='text' class='form-control' v-model='tabulador.orden' />
-            </div>    
+            </div>   
+                                    <div class='form-group'>
+                                        <label>Nivel</label> 
+                                        <select class='form-control' size='1'  v-model='tabulador.ev_nivel_p_id' >
+                                            <option value='0' >-</option>
+                                            <option v-for='rows in ev_nivel_pCollection' v-bind:value='rows.ev_nivel_p_id'>{{ rows.nombre_nivel_puesto }}</option>
+                                        </select>
+                                    </div>   
             <br>
             <br>
             <div class="form-group">

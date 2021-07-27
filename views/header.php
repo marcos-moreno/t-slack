@@ -228,9 +228,19 @@ if ($valido == false) {  header('location: ../logout.php'); }
       xmlHttp.open("GET", theUrl, true); 
       xmlHttp.send(null);
   }
-</script>
-
-<body  onclick="hover()" style="background-color: <?php session_start();   echo $_SESSION['color_back'] ?>" >
+</script> 
+<style> 
+  table{
+    font-size: 10pt;
+  }
+  .form-control{
+    font-size: 10pt; 
+  }
+  .btn{
+    font-size: 10pt; 
+  }
+</style>
+<body  onclick="hover()" style="font-size: 10pt;background-color: <?php session_start();   echo $_SESSION['color_back'] ?>" >
 <script type="text/javascript" src="../../controllers/user/c_leccion.js"></script>
 <script type="text/javascript" src="../../controllers/user/notifications_u.js"></script>
 <script type="text/javascript" src="../../controllers/admin/changePasword.js"></script>  
