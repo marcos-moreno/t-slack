@@ -1,7 +1,7 @@
 <?php   
     require "../header.php";
-    if(isset($_GET['ev_indicador_id'])){
-        echo '<input id="ev_indicador_id" value="'.$_GET['ev_indicador_id'].'" style="display:none" >';
+    if(isset($_GET['ev_indicador_general_id'])){
+        echo '<input id="ev_indicador_general_id" value="'.$_GET['ev_indicador_general_id'].'" style="display:none" >';
     }else{ 
 ?>  
 <script> location.href="v_ev_indicador_puesto.php";</script>  
@@ -118,7 +118,7 @@
                             <div class="alert alert-danger"  v-if="typeMessage == 'error'" role="alert">{{msg}}</div>
                             <div class="alert alert-success" v-if="typeMessage == 'success'" role="alert">{{msg}}</div>
                         </div> 
-                        <a type="button" class="btn btn btn-xs" :href="'./v_ev_indicador_puesto.php?ev_puesto_nivel_id='+ev_indicador.ev_puesto_nivel_id">
+                        <a type="button" class="btn btn btn-xs" href="./v_ev_indicador_general.php">
                         <img src="../../img/regresar.png" width="28px" /> Ir a los Indicadores</a>
 
                     </td> 
@@ -130,8 +130,9 @@
         <br>
         <div class="panel-body"  v-if="isFormCrud==false">  
             <div class="col-md-auto" style="color:#858C8A">
-                <a href="v_ev_puesto_nivel.php" >{{ev_indicador.puesto}}</a> > 
-                <a :href="'v_ev_indicador_puesto.php?ev_puesto_nivel_id='+ev_indicador.ev_puesto_nivel_id">{{ev_indicador.ev_indicador_general[0].nombre}}</a> 
+                <a href="v_ev_indicador_general.php">
+                    {{ev_indicador_general.nombre}}
+                </a> 
                  > PUNTOS A EVALUAR
             </div>   
             <br>
@@ -186,7 +187,7 @@
         <div v-if="isFormCrud" >   
 
             <div class="col-md-auto" >
-                <h4>Punto para Evaluar: <font style="color:#858C8A">{{ev_indicador.nombre}}</font></h4>
+                <h4>Punto para Evaluar: <font style="color:#858C8A">{{ev_indicador_general.nombre}}</font></h4>
             </div> 
 
             <div class="form-group">

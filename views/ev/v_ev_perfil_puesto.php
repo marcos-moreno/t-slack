@@ -17,7 +17,7 @@
                             </tr>
                         </table>
                     </td>
-                    <td >
+                    <td>
                         <div class="pre-scrollable" >
                             <div class="alert alert-primary" v-if="typeMessage == 'info'" role="alert">{{msg}}</div>
                             <div class="alert alert-danger"  v-if="typeMessage == 'error'" role="alert">{{msg}}</div>
@@ -27,8 +27,6 @@
                 </tr>
             </table> 
         </div> 
-
-        
         <br>
         <div class="panel-body"  v-if="isFormCrud==false">
             <h4>Perfil Puesto</h4>
@@ -72,7 +70,7 @@
                         <td>{{ ev_perfil_puesto.ev_puesto[0].nombre_puesto}}</td>
                         <td>{{ ev_perfil_puesto.tabulador_minimo[0].tabulador}} {{ formatMXN(ev_perfil_puesto.tabulador_minimo[0].sueldo)}}</td>
                         <td>{{ ev_perfil_puesto.tabulador_maximo[0].tabulador}} {{ formatMXN(ev_perfil_puesto.tabulador_maximo[0].sueldo)}}</td>
-                        <td>{{ formatMXN(ev_perfil_puesto.sueldo_promedio)}}</td>
+                        <td>{{ ev_perfil_puesto.sueldo_promedio}}</td>
                         <!-- <td>{{ formatMXN(ev_perfil_puesto.media_salarial_mes)}}</td> -->
                         <!-- <td>{{ formatMXN(ev_perfil_puesto.media_salarial_zona)}}</td> -->
                         <td>{{ ev_perfil_puesto.nivel_estudios[0].value}}</td>
@@ -92,154 +90,143 @@
             <div class="form-group">
                 <label>ID: {{ ev_perfil_puesto.ev_perfil_puesto_id }}</label>  
             </div> 
-                                  
+            <div class="row"> 
+                <div class="col-sm-8">
+                    <label>Puesto</label> 
+                    <select class='form-control'  size='1'  v-model='ev_perfil_puesto.ev_puesto_id' >
+                        <option value='0' >-</option>
+                        <option v-for='rows in ev_puestoCollection' v-bind:value='rows.ev_puesto_id'>{{ rows.codigo }}_{{ rows.nombre_puesto }} {{ rows.tipo }} ({{ rows.ev_nivel_p[0].nombre_nivel_puesto }})</option>
+                    </select>
+                </div>    
+                <div class="col-sm-2">
+                    <label>Edad mínima</label>
+                    <input type='number' class='form-control' v-model='ev_perfil_puesto.edad_minima' />
+                </div>
+                <div class="col-sm-2">
+                    <label>Edad máxima</label>
+                    <input type='number' class='form-control' v-model='ev_perfil_puesto.edad_maxima' />
+                </div> 
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-sm">
+                    <label>Genero</label> 
+                    <select class='form-control' size='1'  v-model='ev_perfil_puesto.genero_atributo' >
+                        <option value='0' >-</option>
+                        <option v-for='rows in ev_atr_genero_Collection' v-bind:value='rows.id_atributo'>{{ rows.value }}</option>
+                    </select>
+                </div>
+                <div class="col-sm">
+                    <label>Estado civil</label> 
+                    <select class='form-control' size='1'  v-model='ev_perfil_puesto.estado_civil_atributo' >
+                        <option value='0' >-</option>
+                        <option v-for='rows in ev_atr_estado_civilCollection' v-bind:value='rows.id_atributo'>{{ rows.value }}</option>
+                    </select>
+                </div>  
 
-                                    <!-- <div class="container"> -->
-  <div class="row"> 
-    <div class="col-sm">
-        <label>puesto</label> 
-        <select class='form-control'  size='1'  v-model='ev_perfil_puesto.ev_puesto_id' >
-            <option value='0' >-</option>
-            <option v-for='rows in ev_puestoCollection' v-bind:value='rows.ev_puesto_id'>{{ rows.nombre_puesto }} ({{ rows.ev_nivel_p[0].nombre_nivel_puesto }})</option>
-        </select>
-    </div>   
+                <div class="col-sm">
+                    <label>Mínimo experiencia años</label>
+                    <input type='number' class='form-control' v-model='ev_perfil_puesto.minimo_experiencia_anios' />
+                </div>  
+                <div class="col-sm">
+                    <label>Máximo experiencia meses</label>
+                    <input type='number' class='form-control' v-model='ev_perfil_puesto.minimo_experiencia_meses' />
+                </div>  
 
-    <div class="col-sm">
-        <label>genero</label> 
-        <select class='form-control' size='1'  v-model='ev_perfil_puesto.genero_atributo' >
-            <option value='0' >-</option>
-            <option v-for='rows in ev_atr_genero_Collection' v-bind:value='rows.id_atributo'>{{ rows.value }}</option>
-        </select>
-    </div>
-    <div class="col-sm">
-        <label>edad mínima</label>
-        <input type='number' class='form-control' v-model='ev_perfil_puesto.edad_minima' />
-    </div>
-    <div class="col-sm">
-        <label>edad máxima</label>
-        <input type='number' class='form-control' v-model='ev_perfil_puesto.edad_maxima' />
-    </div> 
-  </div>
-<!-- </div>  -->
-
-
-  
-    <div class="row">
-        <div class="col-sm">
-            <label>estado civil</label> 
-            <select class='form-control' size='1'  v-model='ev_perfil_puesto.estado_civil_atributo' >
-                <option value='0' >-</option>
-                <option v-for='rows in ev_atr_estado_civilCollection' v-bind:value='rows.id_atributo'>{{ rows.value }}</option>
-            </select>
-        </div>  
-        <div class="col-sm">
-            <label>tabulador mínimo</label> 
-            <select class='form-control' size='1'  v-model='ev_perfil_puesto.ev_tabulador_id_minimo' >
-                <option value='0' >-</option>
-                <option v-for='rows in tabuladorCollection' v-bind:value='rows.id_tabulador'>{{ rows.tabulador }} - {{ formatMXN(rows.sueldo) }} ({{ rows.ev_nivel_p[0].nombre_nivel_puesto }})</option>
-            </select>
-        </div>  
-        <div class="col-sm">
-            <label>tabulador máximo</label> 
-            <select class='form-control' size='1'  v-model='ev_perfil_puesto.ev_tabulador_id_maximo' >
-                <option value='0' >-</option>
-                <option v-for='rows in tabuladorCollection' v-bind:value='rows.id_tabulador'>
-                    {{ rows.tabulador }} - {{ formatMXN(rows.sueldo) }} ({{ rows.ev_nivel_p[0].nombre_nivel_puesto }})
-                </option>
-            </select>
-        </div>  
-    </div> 
-
-    <div class="row">
-            <div class="col-sm">
-                <label>mínimo experiencia años</label>
-                <input type='number' class='form-control' v-model='ev_perfil_puesto.minimo_experiencia_anios' />
             </div>  
-            <div class="col-sm">
-                <label>máximo experiencia meses</label>
-                <input type='number' class='form-control' v-model='ev_perfil_puesto.minimo_experiencia_meses' />
-            </div>  
-    </div>
-    
-            <div class='form-group'>
-                <label>areas conocimiento</label>
-                <input type='text' class='form-control' v-model='ev_perfil_puesto.areas_conocimiento' />
-            </div>  
-        
-            <div class='form-group'>
-                <label>areas experiencia</label>
-                <input type='text' class='form-control' v-model='ev_perfil_puesto.areas_experiencia' />
-            </div>  
-            <div class='form-group'>
-                <label>conocimientos especificos</label>
-                <input type='text' class='form-control' v-model='ev_perfil_puesto.conocimientos_especificos' />
-            </div>  
-            <div class='form-group'>
-                <label>equipo software herramientas</label>
-                <input type='text' class='form-control' v-model='ev_perfil_puesto.equipo_software_herramientas' />
-            </div>   
-            
-            
-
-
-       
-            
-        <div class="row">   
-            <div class="col-sm">
-                <label>sueldo promedio</label>
-                <input type='number' class='form-control' v-model='ev_perfil_puesto.sueldo_promedio' />
-            </div>  
-            <div class="col-sm">
-                <label>media salarial(mes)</label>
-                <input type='number' class='form-control' v-model='ev_perfil_puesto.media_salarial_mes' />
-            </div>  
-            <div class="col-sm">
-                <label>media salarial(zona)</label>
-                <input type='number' class='form-control' v-model='ev_perfil_puesto.media_salarial_zona' />
-            </div>  
-        </div>
-
-            <div class='form-group'>
-                <label>competencias</label>
-                <input type='text' class='form-control' v-model='ev_perfil_puesto.competencias' />
-            </div>  
-            <div class='form-group'>
-                <label>aptitudes</label>
-                <input type='text' class='form-control' v-model='ev_perfil_puesto.aptitudes' />
-            </div>  
-            <div class='form-group'>
-                <label>observaciones adicionales</label>
-                <input type='text' class='form-control' v-model='ev_perfil_puesto.observaciones_adicionales' />
-            </div>  
-            <div class='form-group'>
-                <label>actitudes puesto</label>
-                <input type='text' class='form-control' v-model='ev_perfil_puesto.actitudes_puesto' />
+            <br>
+            <div class="row"> 
+                <div class="col-sm">
+                    <label>Tabulador mínimo</label>  
+                    <select @change="calcularPromedios()" class='form-control' size='1'  v-model='ev_perfil_puesto.ev_tabulador_id_minimo' >
+                        <option value='0' >-</option>
+                        <option v-for='rows in tabuladorCollection' v-bind:value='rows.id_tabulador'>{{ rows.tabulador }} - {{ formatMXN(rows.sueldo) }} ({{ rows.ev_nivel_p[0].nombre_nivel_puesto }})</option>
+                    </select>
+                </div>  
+                <div class="col-sm">
+                    <label>Tabulador máximo</label> 
+                    <select @change="calcularPromedios()"  class='form-control' size='1'  v-model='ev_perfil_puesto.ev_tabulador_id_maximo' >
+                        <option value='0' >-</option>
+                        <option v-for='rows in tabuladorCollection' v-bind:value='rows.id_tabulador'>
+                            {{ rows.tabulador }} - {{ formatMXN(rows.sueldo) }} ({{ rows.ev_nivel_p[0].nombre_nivel_puesto }})
+                        </option>
+                    </select>
+                </div>   
             </div> 
-
+            <br>
             <div class="row">   
                 <div class="col-sm">
-                    <label>nivel estudios</label> 
+                    <label>Sueldo promedio</label>
+                    <input disabled type='text' class='form-control' v-model='ev_perfil_puesto.sueldo_promedio' />
+                </div>  
+                <div class="col-sm">
+                    <label>Media salarial(mes)</label>
+                    <input type='number' v-on:keyup ="calcularMediaSalarialZona()" class='form-control' v-model='ev_perfil_puesto.media_salarial_mes' />
+                </div>  
+                <div class="col-sm">
+                    <label>Media salarial(zona)</label>
+                    <input disabled type='text' class='form-control' v-model='ev_perfil_puesto.media_salarial_zona' />
+                </div>  
+            </div>
+            <br> 
+            <div class="row">   
+                <div class="col-sm">
+                    <label>Nivel estudios</label> 
                     <select class='form-control' size='1'  v-model='ev_perfil_puesto.nivel_estudios_atributo' >
                         <option value='0' >-</option>
                         <option v-for='rows in ev_atrnivel_estudioCollection' v-bind:value='rows.id_atributo'>{{ rows.value }}</option>
                     </select>
                 </div>  
                 <div class="col-sm">
-                    <label>idioma</label> 
+                    <label>Idioma</label> 
                     <select class='form-control' size='1'  v-model='ev_perfil_puesto.idioma_atributo' >
                         <option value='0' >-</option>
                         <option v-for='rows in ev_atr_idiomaCollection' v-bind:value='rows.id_atributo'>{{ rows.value }}</option>
                     </select>
                 </div> 
                 <div class="col-sm">
-                    <label>grado avance</label> 
+                    <label>Grado de avance</label> 
                     <select class='form-control' size='1'  v-model='ev_perfil_puesto.grado_avance_atributo' >
                         <option value='0' >-</option>
                         <option v-for='rows in ev_atr_grado_avanceCollection' v-bind:value='rows.id_atributo'>{{ rows.value }}</option>
                     </select>
                 </div>
             </div> 
-              
+            <br>
+            <div class='form-group'>
+                <label>Áreas de conocimiento</label>
+                <textarea type='text' class='form-control' v-model='ev_perfil_puesto.areas_conocimiento'></textarea>
+            </div>  
+            <div class='form-group'>
+                <label>Áreas de experiencia</label>
+                <textarea type='text' class='form-control' v-model='ev_perfil_puesto.areas_experiencia'></textarea>
+            </div>  
+            <div class='form-group'>
+                <label>Conocimientos específicos</label>
+                <textarea type='text' class='form-control' v-model='ev_perfil_puesto.conocimientos_especificos'></textarea>
+            </div>  
+            <div class='form-group'>
+                <label>Equipo,software y/o herramientas</label>
+                <textarea type='text' class='form-control' v-model='ev_perfil_puesto.equipo_software_herramientas'></textarea>
+            </div>    
+            
+            <div class='form-group'>
+                <label>Competencias</label>
+                <textarea type='text' class='form-control' v-model='ev_perfil_puesto.competencias'></textarea>
+            </div>  
+            <div class='form-group'>
+                <label>Aptitudes</label>
+                <textarea type='text' class='form-control' v-model='ev_perfil_puesto.aptitudes'></textarea>
+            </div>  
+            <div class='form-group'>
+                <label>Observaciones adicionales</label>
+                <textarea type='text' class='form-control' v-model='ev_perfil_puesto.observaciones_adicionales'></textarea>
+            </div>  
+            <div class='form-group'>
+                <label>Actividades del puesto</label>
+                <textarea type='text' class='form-control' v-model='ev_perfil_puesto.actitudes_puesto'></textarea>
+            </div> 
+           
             <br>
             <br>
             <div class="form-group">

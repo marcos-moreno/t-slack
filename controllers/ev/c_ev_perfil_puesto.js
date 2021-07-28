@@ -28,6 +28,32 @@ var application = new Vue({
 
     },
     methods:{
+        calcularPromedio(){
+            let tabuladorMaximo = parseFloat(this.buscarTabulador(this.ev_perfil_puesto.ev_tabulador_id_maximo).sueldo);
+            let tabuladorMinimo = parseFloat(this.buscarTabulador(this.ev_perfil_puesto.ev_tabulador_id_minimo).sueldo);
+            if (tabuladorMinimo < tabuladorMaximo && tabuladorMinimo > 0 && tabuladorMaximo > 0) {
+                this.ev_perfil_puesto.sueldo_promedio = this.formatMXN((tabuladorMaximo + tabuladorMinimo)/2);
+            }else{
+                this.ev_perfil_puesto.sueldo_promedio = this.formatMXN(0.0);
+            }
+        },
+        calcularMediaSalarialZona(){
+            let media_salarial_mes = parseFloat(this.ev_perfil_puesto.media_salarial_mes);
+            if (media_salarial_mes > 0) {
+                this.ev_perfil_puesto.media_salarial_zona = this.formatMXN((media_salarial_mes/30.4)*7);
+            }else{
+                this.ev_perfil_puesto.media_salarial_zona = this.formatMXN(0.0);
+            }
+        },
+        buscarTabulador(id){ 
+            for (let i = 0; i < this.tabuladorCollection.length; i++) {
+                const element = this.tabuladorCollection[i];
+                if (element.id_tabulador == id) {
+                    return element;
+                }
+            }
+            return {sueldo:0};
+        },
         formatMXN(value) {
             if (value > 0) {
                 var formatter = new Intl.NumberFormat('en-ES', {style: 'currency', currency: 'USD',});
@@ -84,7 +110,7 @@ var application = new Vue({
                     this.isFormCrud = false;
                 }else{
                     this.show_message(response.message,'error');
-                }  
+                }
             }
         },
         async update_ev_perfil_puesto(ev_perfil_puesto_id){ 
@@ -92,6 +118,8 @@ var application = new Vue({
                 this.ev_perfil_puesto = this.search_ev_perfil_puestoByID(ev_perfil_puesto_id);
                 if(this.ev_perfil_puesto.ev_perfil_puesto_id > 0){
                     this.isFormCrud = true;
+                    this.calcularPromedio();
+                    this.calcularMediaSalarialZona();
                 }else{
                     this.show_message('Hay un problema con este Registro.','info');
                 } 

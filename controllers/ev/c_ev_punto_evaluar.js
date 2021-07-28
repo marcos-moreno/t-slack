@@ -8,7 +8,7 @@ var application = new Vue({
         path : '../../models/ev/bd_ev_punto_evaluar.php',
         typeMessage : '',
         msg:'',
-        ev_indicador:{ev_indicador_general:[{}]},
+        ev_indicador_general:{},
         ev_tipo_capturaCollection:[],
             
         //paginador
@@ -111,10 +111,9 @@ var application = new Vue({
 // Rubros ENd
         async getev_punto_evaluars(){  
             this.ev_punto_evaluarCollection  = [];
-            this.paginaCollection = [];
-            let filtrarPor =  "( nombre ILIKE '%" + this.filter + "%'  OR descripcion ILIKE '%" + this.filter + "%'  )";  
-           const response = await this.request(this.path,{'order' : 'ORDER BY ev_punto_evaluar_id DESC','action' : 'select','filter' : filtrarPor});
-           try{ 
+            this.paginaCollection = []; 
+            const response = await this.request(this.path,{'action' : 'select','filter' : this.ev_indicador_general.ev_indicador_general_id});
+            try{ 
                 this.show_message(response.length + ' Registros Encontrados.','success');
                 this.ev_punto_evaluarCollection = response;
                 this.paginaCollection = response;
@@ -123,7 +122,7 @@ var application = new Vue({
             }catch(error){
                 this.show_message('No hay datos Para Mostrar.','info');
                 this.isFormCrud=false;
-            } 
+            }
         }, 
         async delete_ev_punto_evaluar(ev_punto_evaluar_id){   
             if(ev_punto_evaluar_id > 0){
@@ -140,7 +139,7 @@ var application = new Vue({
         },   
         async save_ev_punto_evaluar(){ 
             if(this.ev_punto_evaluar.ev_punto_evaluar_id > 0){
-                this.ev_punto_evaluar.ev_indicador_id = this.ev_indicador.ev_indicador_id;
+                this.ev_punto_evaluar.ev_indicador_general_id = this.ev_indicador_general.ev_indicador_general_id;
                 const response = await this.request(this.path,{model:this.ev_punto_evaluar,'action' : 'update'});
                 if(response.message == 'Data Updated'){
                     await this.getev_punto_evaluars();
@@ -151,7 +150,7 @@ var application = new Vue({
                     this.show_message(response.message,'error');
                 }
             }else if(this.ev_punto_evaluar.ev_punto_evaluar_id == 0){ 
-                this.ev_punto_evaluar.ev_indicador_id = this.ev_indicador.ev_indicador_id;
+                this.ev_punto_evaluar.ev_indicador_general_id = this.ev_indicador_general.ev_indicador_general_id;
                 const response = await this.request(this.path,{model:this.ev_punto_evaluar,'action' : 'insert'}); 
                  if(response.message == 'Data Inserted'){
                     await this.getev_punto_evaluars();
@@ -195,7 +194,8 @@ var application = new Vue({
             this.typeMessage = typeMessage;
             setTimeout(function() { application.typeMessage='' ;application.msg =''; }, 5000);
         },model_empty(){
-            this.ev_punto_evaluar = {ev_punto_evaluar_id:0,ev_indicador_id:this.ev_indicador.ev_indicador_id,ev_tipo_captura_id:''
+            this.ev_punto_evaluar = {
+                ev_punto_evaluar_id:0,ev_indicador_general_id:this.ev_indicador_general.ev_indicador_general_id,ev_tipo_captura_id:''
             ,nombre:'',descripcion:'',porcentaje_tl:'',creado:'',creadopor:'',actualizado:'',actualizadopor:'',min_escala:1,max_escala:10,incremento:1};
         },
         async request(path,jsonParameters){
@@ -244,23 +244,20 @@ var application = new Vue({
     async mounted() {    
     },
     async created(){
-        let ev_indicador_id = document.getElementById("ev_indicador_id").value;
-        if (!isNaN(ev_indicador_id) && ev_indicador_id > 0) {
-            const ev_indicador = await this.request('../../models/ev/bd_ev_indicador_puesto.php',{'action' : 'select','filter' : ' ev_indicador_id = ' + ev_indicador_id});
-            if (ev_indicador[0].ev_indicador_id > 0) {
-                this.ev_indicador = ev_indicador[0];
-                let puesto = await this.request('../../models/ev/bd_ev_puesto.php',{'action' : 'select','filter' : ' ev_puesto_id = ' + ev_indicador[0].ev_puesto_nivel[0].ev_puesto_id});
-                this.ev_indicador.puesto = puesto[0].nombre_puesto;
-            }else{
-                location.href="v_ev_puesto_nivel.php";
+        let ev_indicador_general_id = document.getElementById("ev_indicador_general_id").value;
+        if (!isNaN(ev_indicador_general_id) && ev_indicador_general_id > 0) {
+            const ev_indicador_general = await this.request('../../models/ev/bd_ev_indicador_general.php',
+            {'action' : 'select','filter' : ' ev_indicador_general_id = ' + ev_indicador_general_id});
+            if (ev_indicador_general[0].ev_indicador_general_id > 0) {
+                this.ev_indicador_general = ev_indicador_general[0]; 
             } 
         } else {
             location.href="v_ev_puesto_nivel.php";
         }
        await this.getev_punto_evaluars();
-    //    await this.model_empty();
-    //    await this.fill_f_keys();
-    //    this.paginator(1);
+       await this.model_empty();
+       await this.fill_f_keys();
+       this.paginator(1);
     }
 }); 
         

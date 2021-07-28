@@ -89,7 +89,7 @@
                         <th>Tendencia</th>
                         <th>porcentaje</th>
                         <th>origen</th> 
-                        <th></th> 
+                        <!-- <th></th>  -->
                         <th></th> 
                     </tr>
                     <tr v-for="ev_indicador in paginaCollection" >
@@ -98,7 +98,6 @@
                         <td>{{ ev_indicador.ev_indicador_general[0].tendencia}}</td>
                         <td>{{ ev_indicador.porcentaje}}%</td>
                         <td>{{ ev_indicador.ev_indicador_general[0].origen}}</td> 
-                        <td><a :href="'./v_ev_punto_evaluar.php?ev_indicador_puesto_id=' + ev_indicador.ev_indicador_puesto_id" >Puntos a Evaluar</a></td> 
                         <td style="width:150px" >
                             <button type="button" class="btn btn" @click="update_ev_indicador(ev_indicador)"><img src="../../img/lapiz.svg" width="25px" /></button>
                             <button type="button" class="btn btn" @click="delete_ev_indicador(ev_indicador.ev_indicador_puesto_id)"><img src="../../img/borrar.png" width="25px" /></button>

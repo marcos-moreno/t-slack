@@ -59,6 +59,7 @@
                         <th>activo</th> 
                         <th>origen</th>
                         <th></th> 
+                        <th></th> 
                     </tr>
                     <tr v-for="ev_indicador_general in paginaCollection" >
                         <td>{{ ev_indicador_general.ev_indicador_general_id}}</td>
@@ -67,6 +68,7 @@
                         <td>{{ ev_indicador_general.tendencia}}</td>
                         <td><div v-if="ev_indicador_general.activo" >Si</div><div v-else>No</div></td> 
                         <td>{{ ev_indicador_general.origen}}</td>
+                        <td><a :href="'./v_ev_punto_evaluar.php?ev_indicador_general_id=' + ev_indicador_general.ev_indicador_general_id" >Puntos a Evaluar</a></td> 
                         <td style="width:150px" >
                             <button type="button" class="btn btn" @click="update_ev_indicador_general(ev_indicador_general.ev_indicador_general_id)"><img src="../../img/lapiz.svg" width="25px" /></button>
                             <button type="button" class="btn btn" @click="delete_ev_indicador_general(ev_indicador_general.ev_indicador_general_id)"><img src="../../img/borrar.png" width="25px" /></button>

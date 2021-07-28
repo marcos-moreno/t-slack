@@ -26,7 +26,6 @@ var application = new Vue({
             this.ev_atributoCollection  = [];
             this.paginaCollection = []; 
            const response = await this.request(this.path,{'action' : 'selectAll','valor' : this.filter});
-           console.log(response);
            try{ 
                 this.show_message(response.length + ' Registros Encontrados.','success');
                 this.ev_atributoCollection = response;
