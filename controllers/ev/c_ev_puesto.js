@@ -9,7 +9,6 @@ var application = new Vue({
         typeMessage : '',
         msg:'',
         ev_nivel_pCollection:[],
-            
 
         //paginador
         numByPag : 15, 
@@ -21,7 +20,9 @@ var application = new Vue({
         filter : '',
         perfil : {},
         modalPerfil:false,
-        titleModalPerfil : ""
+        titleModalPerfil : "",
+        iframeValue : "",
+        dataPDF : null
 
     },
     methods:{ 
@@ -33,11 +34,11 @@ var application = new Vue({
                 return '';
             } 
         },
-        async getperfil(puesto){ 
-            this.titleModalPerfil = `PERFIL DEL PUESTO:<br>${puesto.nombre_puesto} ${puesto.tipo} (${puesto.ev_nivel_p[0].nombre_nivel_puesto})`;
-            const response = await this.request('../../models/ev/bd_ev_perfil_puesto.php'
-            ,{'action' : 'select','id' : puesto.ev_puesto_id});
-            this.perfil = response[0];
+        async getperfil(puesto){
+            const response = await this.request("../../models/generales/generate_report.php",
+            {params:{'ev_puesto_id' : puesto.ev_puesto_id},name_report : 'PerfilPuesto'});
+            this.dataPDF = response; 
+            this.titleModalPerfil = `PERFIL DEL PUESTO: ${puesto.nombre_puesto} ${puesto.tipo} (${puesto.ev_nivel_p[0].nombre_nivel_puesto})`;
             this.modalPerfil = true;
         },
         async getev_puestos(){
@@ -168,7 +169,6 @@ var application = new Vue({
             }  
             this.paginas.push({'element':'Sig'});
         }
-
     },
     async mounted() {    
     },

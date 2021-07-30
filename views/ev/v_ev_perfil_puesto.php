@@ -224,7 +224,7 @@
             </div>  
             <div class='form-group'>
                 <label>Actividades del puesto</label>
-                <textarea type='text' class='form-control' v-model='ev_perfil_puesto.actitudes_puesto'></textarea>
+                <textarea type='text' class='form-control' v-model='ev_perfil_puesto.actividades_puesto'></textarea>
             </div> 
            
             <br>

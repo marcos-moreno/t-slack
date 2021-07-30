@@ -65,8 +65,8 @@
                         </li>
                     </ul>  
                 </nav>
-                <td><button type="button" class="btn btn-info btn-xs edit" @click="add_ev_puesto()">Agregar</button></td>
-                <td><a type="button" class="btn btn-secondary btn-xs edit" href="v_ev_nivel_p.php">Niveles</a></td>
+                <!-- <td><button type="button" class="btn btn-info btn-xs edit" @click="add_ev_puesto()">Agregar</button></td>
+                <td><a type="button" class="btn btn-secondary btn-xs edit" href="v_ev_nivel_p.php">Niveles</a></td> -->
                 <table class="table table-bordered table-striped">
                     <tr> 
                         <th>ev_puesto_id</th>
@@ -75,8 +75,8 @@
                         <th>tipo</th>
                         <th>nivel</th>
                         <th></th> 
-                        <th></th> 
-                        <th></th> 
+                        <!-- <th></th> 
+                        <th></th>  -->
                     </tr>
                     <tr v-for="ev_puesto in paginaCollection" >
                         
@@ -86,52 +86,17 @@
                         <td>{{ ev_puesto.tipo}}</td>
                         <td>{{ ev_puesto.ev_nivel_p[0].nombre_nivel_puesto}}</td>
                         <td><button type="button" class="btn btn-link" @click="getperfil(ev_puesto)">Perfil</button></td>
-                        <td><a :href="'./v_ev_indicador_puesto.php?ev_puesto_id=' + ev_puesto.ev_puesto_id" >Indicadores</a></td> 
+                        <!-- <td><a :href="'./v_ev_indicador_puesto.php?ev_puesto_id=' + ev_puesto.ev_puesto_id" >Indicadores</a></td> 
                         <td style="width:150px" >
                             <button type="button" class="btn btn" @click="update_ev_puesto(ev_puesto.ev_puesto_id)"><img src="../../img/lapiz.svg" width="25px" /></button>
                             <button type="button" class="btn btn" @click="delete_ev_puesto(ev_puesto.ev_puesto_id)"><img src="../../img/borrar.png" width="25px" /></button>
-                        </td> 
+                        </td>  -->
                     </tr>
                 </table>
                 <br>
                 <br>
             </div>
-        </div>  
-            
-        <div v-if="isFormCrud" >   
-            <div class="form-group">
-                <label>ID: {{ ev_puesto.ev_puesto_id }}</label>  
-            </div>
-            <div class='form-group'>
-                <label>nombre puesto</label>
-                <input type='text' class='form-control' v-model='ev_puesto.nombre_puesto' />
-            </div>  
-            <div class='form-group'>
-                <label>decripción puesto</label>
-                <input type='text' class='form-control' v-model='ev_puesto.decripcion_puesto' />
-            </div>  
-            <div class='form-group'>
-                <label>código</label>
-                <input type='text' class='form-control' v-model='ev_puesto.codigo' />
-            </div>  
-            <div class='form-group'>
-                <label>tipo</label>
-                <input type='text' class='form-control' v-model='ev_puesto.tipo' />
-            </div>   
-            <div class='form-group'>
-                <label>nivel</label> 
-                <select class='form-control' size='1'  v-model='ev_puesto.ev_nivel_p_id' >
-                    <option value='0' >-</option>
-                    <option v-for='rows in ev_nivel_pCollection' v-bind:value='rows.ev_nivel_p_id'>{{ rows.nombre_nivel_puesto }}</option>
-                </select>
-            </div>   
-            <br>
-            <br>
-            <div class="form-group">
-                <td><button type="button" class="btn btn btn-xs" @click="cancel_ev_puesto()"><img src="../../img/regresar.png" width="28px" /> Regresar</button></td> 
-                <button @click="save_ev_puesto()" class="btn btn-info btn-xs" ><img src="../../img/send.png" width="18px" /> *Guardar</button>
-            </div>   
-        </div>  
+        </div>   
     </div>
 </div>
 <script type="text/javascript" src="../../controllers/ev/c_ev_puesto.js"></script>

@@ -64,14 +64,14 @@ class Ev_perfil_puesto
                         ':competencias' => $this->received_data->model->competencias,
                         ':aptitudes' => $this->received_data->model->aptitudes,
                         ':observaciones_adicionales' => $this->received_data->model->observaciones_adicionales,
-                        ':actitudes_puesto' => $this->received_data->model->actitudes_puesto,
+                        ':actividades_puesto' => $this->received_data->model->actividades_puesto,
                         ':nivel_estudios_atributo' => $this->received_data->model->nivel_estudios_atributo,
                         ':idioma_atributo' => $this->received_data->model->idioma_atributo,
                         ':ev_puesto_id' => $this->received_data->model->ev_puesto_id,
                         ':creadopor' => $_SESSION['id_empleado'],
                         ':actualizadopor' => $_SESSION['id_empleado'],
                     ); 
-        $query = 'INSERT INTO ev_perfil_puesto (genero_atributo,edad_minima,edad_maxima,estado_civil_atributo,grado_avance_atributo,areas_conocimiento,minimo_experiencia_anios,minimo_experiencia_meses,areas_experiencia,conocimientos_especificos,equipo_software_herramientas,ev_tabulador_id_minimo,ev_tabulador_id_maximo,sueldo_promedio,media_salarial_mes,media_salarial_zona,competencias,aptitudes,observaciones_adicionales,actitudes_puesto,nivel_estudios_atributo,idioma_atributo,ev_puesto_id,creado,actualizado,creadopor,actualizadopor) VALUES (:genero_atributo,:edad_minima,:edad_maxima,:estado_civil_atributo,:grado_avance_atributo,:areas_conocimiento,:minimo_experiencia_anios,:minimo_experiencia_meses,:areas_experiencia,:conocimientos_especificos,:equipo_software_herramientas,:ev_tabulador_id_minimo,:ev_tabulador_id_maximo,:sueldo_promedio,:media_salarial_mes,:media_salarial_zona,:competencias,:aptitudes,:observaciones_adicionales,:actitudes_puesto,:nivel_estudios_atributo,:idioma_atributo,:ev_puesto_id,Now(),Now(),:creadopor,:actualizadopor) ;';
+        $query = 'INSERT INTO ev_perfil_puesto (genero_atributo,edad_minima,edad_maxima,estado_civil_atributo,grado_avance_atributo,areas_conocimiento,minimo_experiencia_anios,minimo_experiencia_meses,areas_experiencia,conocimientos_especificos,equipo_software_herramientas,ev_tabulador_id_minimo,ev_tabulador_id_maximo,sueldo_promedio,media_salarial_mes,media_salarial_zona,competencias,aptitudes,observaciones_adicionales,actividades_puesto,nivel_estudios_atributo,idioma_atributo,ev_puesto_id,creado,actualizado,creadopor,actualizadopor) VALUES (:genero_atributo,:edad_minima,:edad_maxima,:estado_civil_atributo,:grado_avance_atributo,:areas_conocimiento,:minimo_experiencia_anios,:minimo_experiencia_meses,:areas_experiencia,:conocimientos_especificos,:equipo_software_herramientas,:ev_tabulador_id_minimo,:ev_tabulador_id_maximo,:sueldo_promedio,:media_salarial_mes,:media_salarial_zona,:competencias,:aptitudes,:observaciones_adicionales,:actividades_puesto,:nivel_estudios_atributo,:idioma_atributo,:ev_puesto_id,Now(),Now(),:creadopor,:actualizadopor) ;';
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  
@@ -108,14 +108,14 @@ class Ev_perfil_puesto
                         ':competencias' => $this->received_data->model->competencias, 
                         ':aptitudes' => $this->received_data->model->aptitudes, 
                         ':observaciones_adicionales' => $this->received_data->model->observaciones_adicionales, 
-                        ':actitudes_puesto' => $this->received_data->model->actitudes_puesto, 
+                        ':actividades_puesto' => $this->received_data->model->actividades_puesto, 
                         ':nivel_estudios_atributo' => $this->received_data->model->nivel_estudios_atributo, 
                         ':idioma_atributo' => $this->received_data->model->idioma_atributo, 
                         ':ev_puesto_id' => $this->received_data->model->ev_puesto_id, 
                         ':actualizadopor' => $_SESSION['id_empleado'],
                          
                     ); 
-            $query = 'UPDATE ev_perfil_puesto SET genero_atributo=:genero_atributo,edad_minima=:edad_minima,edad_maxima=:edad_maxima,estado_civil_atributo=:estado_civil_atributo,grado_avance_atributo=:grado_avance_atributo,areas_conocimiento=:areas_conocimiento,minimo_experiencia_anios=:minimo_experiencia_anios,minimo_experiencia_meses=:minimo_experiencia_meses,areas_experiencia=:areas_experiencia,conocimientos_especificos=:conocimientos_especificos,equipo_software_herramientas=:equipo_software_herramientas,ev_tabulador_id_minimo=:ev_tabulador_id_minimo,ev_tabulador_id_maximo=:ev_tabulador_id_maximo,sueldo_promedio=:sueldo_promedio,media_salarial_mes=:media_salarial_mes,media_salarial_zona=:media_salarial_zona,competencias=:competencias,aptitudes=:aptitudes,observaciones_adicionales=:observaciones_adicionales,actitudes_puesto=:actitudes_puesto,nivel_estudios_atributo=:nivel_estudios_atributo,idioma_atributo=:idioma_atributo,ev_puesto_id=:ev_puesto_id,actualizado=Now(),actualizadopor=:actualizadopor WHERE  ev_perfil_puesto_id = :ev_perfil_puesto_id ;';
+            $query = 'UPDATE ev_perfil_puesto SET genero_atributo=:genero_atributo,edad_minima=:edad_minima,edad_maxima=:edad_maxima,estado_civil_atributo=:estado_civil_atributo,grado_avance_atributo=:grado_avance_atributo,areas_conocimiento=:areas_conocimiento,minimo_experiencia_anios=:minimo_experiencia_anios,minimo_experiencia_meses=:minimo_experiencia_meses,areas_experiencia=:areas_experiencia,conocimientos_especificos=:conocimientos_especificos,equipo_software_herramientas=:equipo_software_herramientas,ev_tabulador_id_minimo=:ev_tabulador_id_minimo,ev_tabulador_id_maximo=:ev_tabulador_id_maximo,sueldo_promedio=:sueldo_promedio,media_salarial_mes=:media_salarial_mes,media_salarial_zona=:media_salarial_zona,competencias=:competencias,aptitudes=:aptitudes,observaciones_adicionales=:observaciones_adicionales,actividades_puesto=:actividades_puesto,nivel_estudios_atributo=:nivel_estudios_atributo,idioma_atributo=:idioma_atributo,ev_puesto_id=:ev_puesto_id,actualizado=Now(),actualizadopor=:actualizadopor WHERE  ev_perfil_puesto_id = :ev_perfil_puesto_id ;';
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  
@@ -140,7 +140,7 @@ class Ev_perfil_puesto
                     ,areas_experiencia,conocimientos_especificos,equipo_software_herramientas
                     ,ev_tabulador_id_minimo,ev_tabulador_id_maximo,sueldo_promedio,media_salarial_mes
                     ,media_salarial_zona,competencias,aptitudes,observaciones_adicionales
-                    ,actitudes_puesto,nivel_estudios_atributo,idioma_atributo,p.ev_puesto_id
+                    ,actividades_puesto,nivel_estudios_atributo,idioma_atributo,p.ev_puesto_id
                     ,p.creado,p.actualizado,p.creadopor,p.actualizadopor 
                 FROM refividrio.ev_perfil_puesto p
                 INNER JOIN refividrio.ev_puesto pues ON pues.ev_puesto_id = p.ev_puesto_id

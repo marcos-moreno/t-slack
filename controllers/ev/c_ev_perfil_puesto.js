@@ -162,7 +162,7 @@ var application = new Vue({
             this.typeMessage = typeMessage;
             setTimeout(function() { application.typeMessage='' ;application.msg =''; }, 5000);
         },model_empty(){
-            this.ev_perfil_puesto = {ev_perfil_puesto_id:0,genero_atributo:'',edad_minima:'',edad_maxima:'',estado_civil_atributo:'',grado_avance_atributo:'',areas_conocimiento:'',minimo_experiencia_anios:'',minimo_experiencia_meses:'',areas_experiencia:'',conocimientos_especificos:'',equipo_software_herramientas:'',ev_tabulador_id_minimo:'',ev_tabulador_id_maximo:'',sueldo_promedio:'',media_salarial_mes:'',media_salarial_zona:'',competencias:'',aptitudes:'',observaciones_adicionales:'',actitudes_puesto:'',nivel_estudios_atributo:'',idioma_atributo:'',ev_puesto_id:'',creado:'',actualizado:'',creadopor:'',actualizadopor:''};
+            this.ev_perfil_puesto = {ev_perfil_puesto_id:0,genero_atributo:'',edad_minima:'',edad_maxima:'',estado_civil_atributo:'',grado_avance_atributo:'',areas_conocimiento:'',minimo_experiencia_anios:'',minimo_experiencia_meses:'',areas_experiencia:'',conocimientos_especificos:'',equipo_software_herramientas:'',ev_tabulador_id_minimo:'',ev_tabulador_id_maximo:'',sueldo_promedio:'',media_salarial_mes:'',media_salarial_zona:'',competencias:'',aptitudes:'',observaciones_adicionales:'',actividades_puesto:'',nivel_estudios_atributo:'',idioma_atributo:'',ev_puesto_id:'',creado:'',actualizado:'',creadopor:'',actualizadopor:''};
         },
         async request(path,jsonParameters){
             const response = await axios.post(path, jsonParameters).then(function (response) {   
