@@ -659,7 +659,7 @@ var application = new Vue({
                     this.catalogoCollection = response_catalogo; 
                 }  
             }catch(error){
-                this.show_message('No hay cátalogos.','info');
+                this.show_message('No hay Catalogos.','info');
             } 
         },async fetchData(){
             await this.gettallas(); 
@@ -694,7 +694,7 @@ var application = new Vue({
             } catch (error) {id_filtro = "";} 
             let filtrarPor = " (concat(paterno,' ',materno,' ',nombre) ILIKE '%" + this.filter + "%' " + id_filtro +")"
              " AND id_segmento = " + (this.id_segmentoSelected =="s.id_segmento" ? 'id_segmento': this.id_segmentoSelected);   
-           const response = await this.request('../../models/generales/bd_empleado.php',
+           const response = await this.request('../../models/admin/bd_empleado.php',
            {'order' : 'ORDER BY paterno,materno,nombre ASC','action' : 'select','filter' : filtrarPor});
             try{ 
                 this.show_message(response.length + ' Empleados Encontrados.','success');

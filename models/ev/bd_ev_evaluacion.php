@@ -8,19 +8,19 @@
 if (check_session()) { 
     switch($received_data->action){
         case 'update': 
-            $model = new Ev_puesto($data,$connect,$received_data);
+            $model = new Ev_evaluacion($data,$connect,$received_data);
             $model->update();
         break;
         case 'insert':
-            $model = new Ev_puesto($data,$connect,$received_data);
+            $model = new Ev_evaluacion($data,$connect,$received_data);
             $model->insert();
         break;
         case 'delete':
-            $model = new Ev_puesto($data,$connect,$received_data);
+            $model = new Ev_evaluacion($data,$connect,$received_data);
             $model->delete(); 
         break;
         case 'select': 
-            $model = new Ev_puesto($data,$connect,$received_data);
+            $model = new Ev_evaluacion($data,$connect,$received_data);
             $model->select();
         break;
     }
@@ -29,7 +29,7 @@ if (check_session()) {
     echo json_encode($output); 
 } 
 
-class Ev_puesto 
+class Ev_evaluacion 
 {   
     
     private $output = null;
@@ -40,21 +40,18 @@ class Ev_puesto
         $this->data  = $data;
         $this->connect = $connect;
         $this->received_data = $received_data;
-    }
-
+    } 
     public function insert(){
         try {
             $data = array(
-                    ':nombre_puesto' => $this->received_data->model->nombre_puesto,
-                        ':decripcion_puesto' => $this->received_data->model->decripcion_puesto,
+                    ':id_lider' => $this->received_data->model->id_lider,
+                        ':periodo_id' => $this->received_data->model->periodo_id,
                         ':creadopor' => $_SESSION['id_empleado'],
                         ':actualizadopor' => $_SESSION['id_empleado'],
-                        ':codigo' => $this->received_data->model->codigo,
-                        ':tipo' => $this->received_data->model->tipo,
-                        ':ev_nivel_p_id' => $this->received_data->model->ev_nivel_p_id,
+                        ':nombre' => $this->received_data->model->nombre,
                         
                     ); 
-        $query = 'INSERT INTO ev_puesto (nombre_puesto,decripcion_puesto,creado,creadopor,actualizado,actualizadopor,codigo,tipo,ev_nivel_p_id) VALUES (:nombre_puesto,:decripcion_puesto,Now(),:creadopor,Now(),:actualizadopor,:codigo,:tipo,:ev_nivel_p_id) ;';
+        $query = 'INSERT INTO ev_evaluacion (id_lider,periodo_id,creado,actualizado,creadopor,actualizadopor,nombre) VALUES (:id_lider,:periodo_id,Now(),Now(),:creadopor,:actualizadopor,:nombre) ;';
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  
@@ -66,21 +63,18 @@ class Ev_puesto
             echo json_encode($output); 
             return false;
         } 
-    } 
-
+    }  
     public function update(){
         try {
             $data = array(
-                    ':ev_puesto_id' => $this->received_data->model->ev_puesto_id, 
-                        ':nombre_puesto' => $this->received_data->model->nombre_puesto, 
-                        ':decripcion_puesto' => $this->received_data->model->decripcion_puesto, 
+                    ':ev_evaluacion_id' => $this->received_data->model->ev_evaluacion_id, 
+                        ':id_lider' => $this->received_data->model->id_lider, 
+                        ':periodo_id' => $this->received_data->model->periodo_id, 
                         ':actualizadopor' => $_SESSION['id_empleado'],
-                        ':codigo' => $this->received_data->model->codigo, 
-                        ':tipo' => $this->received_data->model->tipo, 
-                        ':ev_nivel_p_id' => $this->received_data->model->ev_nivel_p_id, 
+                        ':nombre' => $this->received_data->model->nombre, 
                          
                     ); 
-            $query = 'UPDATE ev_puesto SET nombre_puesto=:nombre_puesto,decripcion_puesto=:decripcion_puesto,actualizado=Now(),actualizadopor=:actualizadopor,codigo=:codigo,tipo=:tipo,ev_nivel_p_id=:ev_nivel_p_id WHERE  ev_puesto_id = :ev_puesto_id ;';
+            $query = 'UPDATE ev_evaluacion SET id_lider=:id_lider,periodo_id=:periodo_id,actualizado=Now(),actualizadopor=:actualizadopor,nombre=:nombre WHERE  ev_evaluacion_id = :ev_evaluacion_id ;';
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  
@@ -92,32 +86,27 @@ class Ev_puesto
             echo json_encode($output); 
             return false;
         }  
-    } 
-
+    }  
     public function select(){
-        try {   
-        $where = '';
-        $parameters = array(); 
-        if ($this->received_data->filter != '') { 
-            $parameters = array(':valor' => $this->received_data->filter); 
-            $where = "WHERE  nombre_puesto  ILIKE '%' || :valor || '%' OR codigo  ILIKE '%' || :valor || '%' ";
-        }
-        if (isset($this->received_data->searchID)) { 
-            $parameters = array(':valor' => $this->received_data->filter); 
-            $where = "WHERE  ev_puesto_id = :valor";
-        }
-        $query = "
-                SELECT ev_puesto_id,nombre_puesto,decripcion_puesto,creado,creadopor
-                        ,actualizado,actualizadopor,codigo,COALESCE(tipo,'') As tipo,ev_nivel_p_id 
-                FROM ev_puesto  
-                $where
-                ORDER BY nombre_puesto DESC
-                "; 
-            $statement = $this->connect->prepare($query);  
+        try {  
+            
+            $parameters = array(
+                ':valor' => $this->received_data->filter,  
+            );
+            $query = "SELECT 
+                        ev_evaluacion_id,id_lider,periodo_id,creado,actualizado
+                        ,creadopor,actualizadopor,nombre 
+                    FROM ev_evaluacion 
+                    WHERE 
+                        nombre  ILIKE '%' || :valor || '%' 
+                    ORDER BY ev_evaluacion_id DESC" ;
+                        
+            $statement = $this->connect->prepare($query); 
             $statement->execute($parameters);   
-            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {   
-                $row['ev_nivel_p'] = $this->search_union($row,'ev_nivel_p','ev_nivel_p_id','ev_nivel_p_id');
-                $data[] = $row;
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
+                    $row['empleado'] = $this->search_union($row,'empleado','id_empleado','id_lider');
+                    $row['periodo'] = $this->search_union($row,'periodo','periodo_id','periodo_id');
+                    $data[] = $row;
             } 
             echo json_encode($data); 
             return true;
@@ -126,8 +115,7 @@ class Ev_puesto
             echo json_encode($output); 
             return false;
         }  
-    }
-    
+    } 
     public function search_union($row,$table_origen,$fk_table_origen,$fk_table_usage){
         $data = array(); 
         try {    
@@ -146,10 +134,10 @@ class Ev_puesto
     public function delete(){
         try {  
             $data = array(
-                   ':ev_puesto_id' => $this->received_data->model->ev_puesto_id,
+                   ':ev_evaluacion_id' => $this->received_data->model->ev_evaluacion_id,
                             
                     ); 
-        $query = 'DELETE FROM ev_puesto WHERE ev_puesto_id = :ev_puesto_id ;'; 
+        $query = 'DELETE FROM ev_evaluacion WHERE ev_evaluacion_id = :ev_evaluacion_id ;'; 
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  
@@ -161,9 +149,5 @@ class Ev_puesto
             echo json_encode($output); 
             return false;
         }  
-    }
-
-  
-    
-
+    } 
 } 

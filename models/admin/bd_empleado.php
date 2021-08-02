@@ -23,10 +23,22 @@ if (check_session()) {
             $model = new Empleado($data,$connect,$received_data);
             $model->select();
         break;
+        case 'gteEmpleadosByLider': 
+            $model = new Empleado($data,$connect,$received_data);
+            $model->gteEmpleadosByLider();
+        break;
         case 'resetPassword': 
             $model = new Empleado($data,$connect,$received_data);
             $model->resetPassword();
         break;
+        case 'searchById': 
+            $model = new Empleado($data,$connect,$received_data);
+            $model->searchById($received_data->id_empleado);
+        break;
+        case 'searchBySession': 
+            $model = new Empleado($data,$connect,$received_data);
+            $model->searchById($_SESSION['id_empleado']); 
+        break; 
     }
 }else{
     $output = array('message' => 'Not authorized'); 
@@ -106,7 +118,7 @@ class Empleado
 
     public function update(){
         try {
-            $data = array(
+            $parameters = array(
                     ':id_empleado' => $this->received_data->model->id_empleado, 
                         ':id_segmento' => $this->received_data->model->id_segmento,   
                         ':nombre' => $this->received_data->model->nombre, 
@@ -140,7 +152,7 @@ class Empleado
             WHERE  id_empleado = :id_empleado ;';
 
             $statement = $this->connect->prepare($query); 
-            $statement->execute($data);  
+            $statement->execute($parameters);  
             $output = array('message' => 'Data Updated'); 
             echo json_encode($output); 
             return true;
@@ -163,6 +175,47 @@ class Empleado
             echo json_encode( $e );
         }  
     }
+
+    public function gteEmpleadosByLider(){
+        try {
+            $parameters = array(
+                    ':id_empleado' => $_SESSION['id_empleado'],  
+                );   
+            $query = '
+                SELECT 
+                    id_empleado,id_segmento,id_creadopor,fecha_creado,nombre
+                    ,paterno,materno,activo,celular
+                    ,correo,enviar_encuesta
+                    ,genero,id_actualizadopor,fecha_actualizado,usuario,password
+                    ,fecha_nacimiento,nss,rfc,id_cerberus_empleado
+                    ,id_talla_playera,id_numero_zapato,fecha_alta_cerberus,perfilcalculo,correo_verificado,
+                    id_empresa,desc_mail_v ,id_compac,ev_puesto_id,departamento_id
+                FROM refividrio.empleado
+                WHERE departamento_id IN 
+                    (SELECT departamento_id FROM refividrio.lider_departamento WHERE id_empleado = :id_empleado)
+                ORDER BY departamento_id DESC,paterno,materno,nombre;        
+            ' ;         
+            $statement = $this->connect->prepare($query); 
+            $statement->execute($parameters);   
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
+                    // $row['un_talla'] = $this->search_union($row,'un_talla','id_talla','id_numero_zapato');
+                    $row['segmento'] = $this->search_union($row,'segmento','id_segmento','id_segmento');
+                    // $row['un_talla'] = $this->search_union($row,'un_talla','id_talla','id_talla_playera');
+                    $row['empresa'] = $this->search_unions('empresa','id_empresa', $row['segmento'][0]['id_empresa']  );
+                    $row['ev_puesto'] = $this->search_union($row,'ev_puesto','ev_puesto_id','ev_puesto_id');
+                    $row['departamento'] = $this->search_union($row,'departamento','departamento_id','departamento_id');
+                    // $row['un_talla'] = $this->search_union($row,'un_talla','id_talla','id_talla_playera');
+                    $data[] = $row;
+            } 
+            echo json_encode($data); 
+            return true;
+        } catch (PDOException $exc) {
+            $output = array('message' => $exc->getMessage()); 
+            echo json_encode($output); 
+            return false;
+        }  
+    }
+
     public function select(){
         try {  
         $query = '
@@ -192,6 +245,38 @@ class Empleado
                     // $row['un_talla'] = $this->search_union($row,'un_talla','id_talla','id_talla_playera');
                     $data[] = $row;
             } 
+            echo json_encode($data); 
+            return true;
+        } catch (PDOException $exc) {
+            $output = array('message' => $exc->getMessage()); 
+            echo json_encode($output); 
+            return false;
+        }  
+    }
+ 
+    public function searchById($id){
+        try {  
+            $parameters = array('id_empleado' => $id);
+            $query = '
+                SELECT 
+                    id_empleado,id_segmento,id_creadopor,fecha_creado,nombre
+                    ,paterno,materno,activo,celular
+                    ,correo,enviar_encuesta
+                    ,genero,id_actualizadopor,fecha_actualizado,usuario,password
+                    ,fecha_nacimiento,nss,rfc,id_cerberus_empleado
+                    ,id_talla_playera,id_numero_zapato,fecha_alta_cerberus,perfilcalculo,correo_verificado,
+                    id_empresa,desc_mail_v ,id_compac,ev_puesto_id,departamento_id
+                FROM empleado   
+                    WHERE id_empleado=:id_empleado';
+            $statement = $this->connect->prepare($query); 
+            $statement->execute($parameters);   
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
+                    // $row['segmento'] = $this->search_union($row,'segmento','id_segmento','id_segmento');
+                    // $row['empresa'] = $this->search_unions('empresa','id_empresa', $row['segmento'][0]['id_empresa']  );
+                    // $row['ev_puesto'] = $this->search_union($row,'ev_puesto','ev_puesto_id','ev_puesto_id');
+                    // $row['departamento'] = $this->search_union($row,'departamento','departamento_id','departamento_id');
+                    $data[] = $row;
+            }
             echo json_encode($data); 
             return true;
         } catch (PDOException $exc) {

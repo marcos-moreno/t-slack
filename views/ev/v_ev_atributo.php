@@ -31,7 +31,7 @@
         
         <br>
         <div class="panel-body"  v-if="isFormCrud==false">
-            <h4>Listas de Cátalogos</h4>
+            <h4>Listas de Catalogos</h4>
             <br>
             <div class="table-responsive">
                 <nav aria-label="Page navigation example">

@@ -31,7 +31,7 @@ var sinconizador = new Vue({
             if (this.fechaProceso == '') {
                 // console.log('vacio');
                 this.show_message('La fecha no puede estar vacia,'+
-                ' recuerda que se encontrará la fecha para sancionar automaticamente pero debes indicar una fecha para conocer el périodo.'
+                ' recuerda que se encontrará la fecha para sancionar automaticamente pero debes indicar una fecha para conocer el Período.'
                 ,'info')
             } else {  
                 this.inProcess = true;

@@ -13,7 +13,7 @@ if (check_session()) {
     echo json_encode($output); 
 }
 class generate_report
-{   
+{
     private $received_data = array();
 
     public function __construct($received_data){ 
@@ -21,14 +21,14 @@ class generate_report
     }
 
     public function showReport()
-    {     
-        try { 
+    {
+        try {
             $parameters = (array) $this->received_data->params;
             $c = new Client("http://67.205.162.138:51541/jasperserver", "DesarrolloAdmin", "Dev_JasperSoft#20");
             $report = $c->reportService()->runReport('/reports/Encuestas/'.$this->received_data->name_report
-            , 'pdf', null, null,$parameters); 
-            print(base64_encode($report)); 
-        } catch (\Throwable $th) { 
+            , 'pdf', null, null,$parameters);
+            print(base64_encode($report));
+        } catch (\Throwable $th) {
             echo  $th;
         }
     }

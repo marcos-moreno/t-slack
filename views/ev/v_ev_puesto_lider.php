@@ -63,18 +63,18 @@
                         <li v-for="li in paginas" class="page-item">
                             <a class="page-link" @click="paginator(li.element)" >{{ li.element }} <div v-if="li.element == paginaActual" >_</div></a> 
                         </li>
-                    </ul>  
+                    </ul>
                 </nav>
                 <!-- <td><button type="button" class="btn btn-info btn-xs edit" @click="add_ev_puesto()">Agregar</button></td>
                 <td><a type="button" class="btn btn-secondary btn-xs edit" href="v_ev_nivel_p.php">Niveles</a></td> -->
                 <table class="table table-bordered table-striped">
                     <tr> 
                         <th>ev_puesto_id</th>
-                        <th>codigo</th> 
-                        <th>nombre_puesto</th> 
+                        <th>codigo</th>
+                        <th>nombre_puesto</th>
                         <th>tipo</th>
                         <th>nivel</th>
-                        <th></th> 
+                        <th></th>
                         <!-- <th></th> 
                         <th></th>  -->
                     </tr>

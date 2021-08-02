@@ -646,7 +646,7 @@ var application = new Vue({
                     this.catalogoCollection = response_catalogo; 
                 }  
             }catch(error){
-                this.show_message('No hay cátalogos.','info');
+                this.show_message('No hay Catalogos.','info');
             } 
         },async fetchData(){
             await this.gettallas();

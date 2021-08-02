@@ -23,6 +23,10 @@ if (check_session()) {
             $model = new Departamento($data,$connect,$received_data);
             $model->select();
         break; 
+        case 'getByLider': 
+            $model = new Departamento($data,$connect,$received_data);
+            $model->getByLider();
+        break;  
     }
 }else{
     $output = array('message' => 'Not authorized'); 
@@ -44,7 +48,7 @@ class Departamento
 
     public function insert(){
         try {
-            $data = array(
+            $parameters = array(
                     ':nombre' => $this->received_data->model->nombre,
                         ':activo' => $this->received_data->model->activo,
                         ':actualizadopor' => $_SESSION['id_empleado'],
@@ -57,7 +61,7 @@ class Departamento
         $query = 'INSERT INTO departamento (nombre,activo,creado,actualizado,actualizadopor,creadopor,id_empresa,id_segmento,id_cerberus) VALUES (:nombre,:activo,Now(),Now(),:actualizadopor,:creadopor,:id_empresa,:id_segmento,:id_cerberus) ;';
 
             $statement = $this->connect->prepare($query); 
-            $statement->execute($data);  
+            $statement->execute($parameters);  
             $output = array('message' => 'Data Inserted'); 
             echo json_encode($output); 
             return true;
@@ -66,11 +70,11 @@ class Departamento
             echo json_encode($output); 
             return false;
         } 
-    } 
+    }
 
     public function update(){
         try {
-            $data = array(
+            $parameters = array(
                     ':departamento_id' => $this->received_data->model->departamento_id, 
                         ':nombre' => $this->received_data->model->nombre, 
                         ':activo' => $this->received_data->model->activo, 
@@ -83,7 +87,7 @@ class Departamento
             $query = 'UPDATE departamento SET nombre=:nombre,activo=:activo,actualizado=Now(),actualizadopor=:actualizadopor,id_empresa=:id_empresa,id_segmento=:id_segmento,id_cerberus=:id_cerberus WHERE  departamento_id = :departamento_id ;';
 
             $statement = $this->connect->prepare($query); 
-            $statement->execute($data);  
+            $statement->execute($parameters);  
             $output = array('message' => 'Data Updated'); 
             echo json_encode($output); 
             return true;
@@ -111,6 +115,31 @@ class Departamento
             }
 
         
+            echo json_encode($data); 
+            return true;
+        } catch (PDOException $exc) {
+            $output = array('message' => $exc->getMessage()); 
+            echo json_encode($output); 
+            return false;
+        }  
+    }
+
+    public function getByLider(){
+        try {  
+            $parameters = array( 
+                    ':id_empleado' => $_SESSION['id_empleado'], 
+                ); 
+            $query = '	SELECT d.*
+            FROM refividrio.lider_departamento ld
+            INNER JOIN refividrio.departamento d ON d.departamento_id =  ld.departamento_id
+            WHERE id_empleado = :id_empleado'; 
+            $statement = $this->connect->prepare($query); 
+            $statement->execute($parameters);   
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
+                    $row['empresa'] = $this->search_union($row,'empresa','id_empresa','id_empresa');
+                    $row['segmento'] = $this->search_union($row,'segmento','id_segmento','id_segmento');
+                    $data[] = $row;
+            }
             echo json_encode($data); 
             return true;
         } catch (PDOException $exc) {

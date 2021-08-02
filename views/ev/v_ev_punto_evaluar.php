@@ -202,15 +202,15 @@
                 </select>
             </div> 
             <div class='form-group'>
-                <label>nombre</label>
+                <label>Nombre</label>
                 <input type='text' class='form-control' v-model='ev_punto_evaluar.nombre' />
             </div>  
             <div class='form-group'>
-                <label>descripcion</label>
+                <label>Descripción</label>
                 <input type='text' class='form-control' v-model='ev_punto_evaluar.descripcion' />
             </div>  
             <div class='form-group'>
-                <label>porcentaje tl</label>
+                <label>Porcentaje</label>
                 <input type='number' class='form-control' v-model='ev_punto_evaluar.porcentaje_tl' />
             </div> 
 
