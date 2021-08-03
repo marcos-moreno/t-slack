@@ -107,14 +107,25 @@ class Ev_indicador_general
 
     public function select(){
         try {  
-            $parameters = array(':filter' => $this->received_data->filter);
+            $parameters = array();
             $query = "
                 SELECT 
                     ev_indicador_general_id,nombre,descripcion,tendencia,activo,creado,creadopor
                     ,actualizado,actualizadopor,origen,allowrepor,calculado,tipo_captura_atributo
-                FROM ev_indicador_general  
-                WHERE nombre ILIKE '%' || :filter || '%'  OR  descripcion ILIKE '%' || :filter || '%' 
+                FROM ev_indicador_general    
                 ";
+            if (isset($this->received_data->filter)) {
+                $parameters = array(':filter' => $this->received_data->filter);
+                $query .= " 
+                    WHERE nombre ILIKE '%' || :filter || '%'  OR  descripcion ILIKE '%' || :filter || '%' 
+                ";
+            }
+            if (isset($this->received_data->ev_indicador_general_id)) {
+                $parameters = array(':ev_indicador_general_id' => $this->received_data->ev_indicador_general_id);
+                $query .= " 
+                    WHERE ev_indicador_general_id  = :ev_indicador_general_id 
+                ";
+            }
             $statement = $this->connect->prepare($query); 
             $statement->execute($parameters);   
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {    

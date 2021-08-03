@@ -247,7 +247,8 @@ var application = new Vue({
         let ev_indicador_general_id = document.getElementById("ev_indicador_general_id").value;
         if (!isNaN(ev_indicador_general_id) && ev_indicador_general_id > 0) {
             const ev_indicador_general = await this.request('../../models/ev/bd_ev_indicador_general.php',
-            {'action' : 'select','filter' : ' ev_indicador_general_id = ' + ev_indicador_general_id});
+            {'action' : 'select','ev_indicador_general_id' : ev_indicador_general_id});
+            console.log(ev_indicador_general);
             if (ev_indicador_general[0].ev_indicador_general_id > 0) {
                 this.ev_indicador_general = ev_indicador_general[0]; 
             } 
