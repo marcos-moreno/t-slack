@@ -217,8 +217,8 @@
                         <label>Puesto</label>   
                         <div v-if="empleadoByln.id_empleado > 0">
                             <input disabled type='text' class='form-control' v-if="empleadoByln.ev_puesto.length > 0"
-                            :value='empleadoByln.ev_puesto[0].ev_puesto_id + " " +
-                            empleadoByln.ev_puesto[0].codigo + " " + empleadoByln.ev_puesto[0].nombre_puesto + 
+                            :value='empleadoByln.ev_puesto[0].ev_puesto_id + " - (" +
+                            empleadoByln.ev_puesto[0].codigo + ") " + empleadoByln.ev_puesto[0].nombre_puesto + 
                             " " + (empleadoByln.ev_puesto[0].tipo!=null?empleadoByln.ev_puesto[0].tipo:"")' />
                         </div>
                     </div> 

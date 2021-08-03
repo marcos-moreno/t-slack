@@ -43,7 +43,7 @@ var application = new Vue({
     },
     methods:{
         // ::::::Indicadores:::::::::::::::::
-        async show_indicadores(ev_evaluacion_ln){ 
+        async show_indicadores(ev_evaluacion_ln){
             const response = await this.request('../../models/ev/bd_ev_indicador_puesto.php',{
                 'action' : 'select','filter' : ev_evaluacion_ln.ev_puesto_id
             });
@@ -52,16 +52,17 @@ var application = new Vue({
         // ::::::Indicadores:::::::::::::::::
 
         ///::::::Line:::::::::
-        async getev_evaluacion_lns(){  
+        async getev_evaluacion_lns(){
             this.ev_evaluacion_lnCollection  = [];
             this.paginaCollection_ln = [];
             const response = await this.request(this.path_ln
             ,{'action' : 'select','ev_evaluacion_id' : this.ev_evaluacion.ev_evaluacion_id});
+            console.log(response);
             try{
                 this.show_message(response.length + ' Registros Encontrados.','success');
                 this.ev_evaluacion_lnCollection = response;
                 this.paginaCollection_ln = response;
-                this.paginator_ln(1);  
+                this.paginator_ln(1);
                 this.isFormCrud_ln=false;
             }catch(error){
                 this.show_message('No hay datos Para Mostrar.','info');
@@ -194,7 +195,7 @@ var application = new Vue({
             this.is_evaluacion = false;
             this.is_evaluacion_ln = true;
             this.getev_evaluacion_lns();
-            this.paginator_ln(1);
+            // this.paginator_ln(1);
         },
         formatDate(dates) {
             if (dates === undefined)return "Error de Fecha" 

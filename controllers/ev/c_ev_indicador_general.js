@@ -18,26 +18,28 @@ var application = new Vue({
         ////paginador
 
         filter : '',
-
+        tipo_captura_atributoCollection : [],
 
     },
     methods:{
         async getev_indicador_generals(){  
             this.ev_indicador_generalCollection  = [];
             this.paginaCollection = [];
-            let filtrarPor =  "( nombre ILIKE '%" + this.filter + "%'  OR descripcion ILIKE '%" + this.filter + "%'  OR tendencia ILIKE '%" + this.filter + "%'  OR origen ILIKE '%" + this.filter + "%'  )";  
-           const response = await this.request(this.path,{'order' : 'ORDER BY ev_indicador_general_id DESC','action' : 'select','filter' : filtrarPor});
-            try{ 
+            const response = await this.request(this.path,
+            { 
+                'action' : 'select','filter' : this.filter
+            });
+            try{
                 this.show_message(response.length + ' Registros Encontrados.','success');
                 this.ev_indicador_generalCollection = response;
                 this.paginaCollection = response;
-                this.paginator(1);  
+                this.paginator(1);
                 this.isFormCrud=false;
             }catch(error){
                 this.show_message('No hay datos Para Mostrar.','info');
                 this.isFormCrud=false;
             } 
-        }, 
+        },
         async delete_ev_indicador_general(ev_indicador_general_id){   
             if(ev_indicador_general_id > 0){
                 const response = await this.request(this.path,{model:{'ev_indicador_general_id':ev_indicador_general_id},'action' : 'delete'});
@@ -129,7 +131,19 @@ var application = new Vue({
             return response; 
         },
         async fill_f_keys(){
-            
+            const tipo_captura_responce = await this.request(
+                '../../models/ev/bd_ev_atributo.php',
+                {'action' : 'select','valor' : 'tipo_captura_atributo'}
+            );
+            try{
+                if(tipo_captura_responce.length > 0){
+                    this.tipo_captura_atributoCollection = tipo_captura_responce;
+                }else
+                this.tipo_captura_atributoCollection = [];
+            }catch(error){
+                console.log(error);
+                this.tipo_captura_atributoCollection = [];
+            }     
         },paginator(i){ 
             let cantidad_pages = Math.ceil(this.ev_indicador_generalCollection.length / this.numByPag);
             this.paginas = []; 

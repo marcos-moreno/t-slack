@@ -80,7 +80,7 @@
             </div>
         </div>  
             
-        <div v-if="isFormCrud" >   
+        <div v-if="isFormCrud" > 
             <div class="form-group">
                 <label>ID: {{ ev_indicador_general.ev_indicador_general_id }}</label>  
             </div>
@@ -102,23 +102,40 @@
             <div class='form-group'>
                 <label>origen</label>
                     <select class="custom-select mb-2 mr-sm-2 mb-sm-0" v-model='ev_indicador_general.origen' > 
-                        <option value="Adempiere" >Adempiere</option> 
-                        <option value="Cerberus"  >Cerberus</option>
-                        <option value="Basecamp"  >Basecamp</option>
-                        <option value="Surver"  >Surver</option>
-                        <option value="GM Transport"  >GM Transport</option>
-                    </select> 
-            </div> 
-            <div class='custom-control custom-checkbox'>
-                <input type='checkbox' class='custom-control-input' id='ev_indicador_generalactivo _id'  
-                 v-model='ev_indicador_general.activo'  false-value='false' true-value='true' >
-                <label class='custom-control-label' for='ev_indicador_generalactivo _id'  >activo</label>
+                        <option value="Adempiere">Adempiere</option> 
+                        <option value="Cerberus">Cerberus</option>
+                        <option value="Basecamp">Basecamp</option>
+                        <option value="Surver">Surver</option>
+                        <option value="GM Transport">GM Transport</option>
+                    </select>  
             </div>  
-            <div class='custom-control custom-checkbox'>
-                <input type='checkbox' class='custom-control-input' id='ev_indicador_generalactivo_id'  
-                 v-model='ev_indicador_general.allowrepor'  false-value='false' true-value='true' >
-                <label class='custom-control-label' for='ev_indicador_generalactivo_id'  >Permitir Reportes</label>
-            </div>     
+            <div class='form-group'>
+                <label>Tipo captura</label> 
+                <select class='form-control' size='1'  v-model='ev_indicador_general.tipo_captura_atributo' >
+                    <option value='0' >-</option>
+                    <option v-for='rows in tipo_captura_atributoCollection' 
+                        v-bind:value='rows.id_atributo'>{{ rows.value }}</option>
+                </select> 
+            </div> 
+            <div class="row">
+                <div class="col-sm-2"> 
+                </div>  
+                <div class="col-sm-3"> 
+                    <input type='checkbox' class='custom-control-input' id='ev_indicador_generalactivo _id'  
+                    v-model='ev_indicador_general.activo'  false-value='false' true-value='true' >
+                    <label class='custom-control-label' for='ev_indicador_generalactivo _id'  >activo</label>
+                </div>  
+                <div class="col-sm-3"> 
+                    <input type='checkbox' class='custom-control-input' id='ev_indicador_generalactivo_id'  
+                    v-model='ev_indicador_general.allowrepor'  false-value='false' true-value='true' >
+                    <label class='custom-control-label' for='ev_indicador_generalactivo_id'  >Permitir Reportes</label>
+                </div>
+                <div class="col-sm-3"> 
+                    <input type='checkbox' class='custom-control-input' id='calculado'  
+                    v-model='ev_indicador_general.calculado'  false-value='false' true-value='true' >
+                    <label class='custom-control-label' for='calculado'  >Es calculado</label>
+                </div>
+            </div>
             <br>
             <br>
             <div class="form-group">

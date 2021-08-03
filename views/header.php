@@ -239,6 +239,9 @@ if ($valido == false) {  header('location: ../logout.php'); }
   .btn{
     font-size: 10pt; 
   }
+  .custom-select{
+    font-size: 10pt; 
+  } 
 </style>
 <body  onclick="hover()" style="font-size: 10pt;background-color: <?php session_start();   echo $_SESSION['color_back'] ?>" >
 <script type="text/javascript" src="../../controllers/user/c_leccion.js"></script>
