@@ -111,7 +111,7 @@ var application = new Vue({
 // Rubros ENd
         async getev_punto_evaluars(){  
             this.ev_punto_evaluarCollection  = [];
-            this.paginaCollection = []; 
+            this.paginaCollection = [];
             const response = await this.request(this.path,{'action' : 'select','filter' : this.ev_indicador_general.ev_indicador_general_id});
             try{ 
                 this.show_message(response.length + ' Registros Encontrados.','success');
@@ -248,7 +248,6 @@ var application = new Vue({
         if (!isNaN(ev_indicador_general_id) && ev_indicador_general_id > 0) {
             const ev_indicador_general = await this.request('../../models/ev/bd_ev_indicador_general.php',
             {'action' : 'select','ev_indicador_general_id' : ev_indicador_general_id});
-            console.log(ev_indicador_general);
             if (ev_indicador_general[0].ev_indicador_general_id > 0) {
                 this.ev_indicador_general = ev_indicador_general[0]; 
             } 

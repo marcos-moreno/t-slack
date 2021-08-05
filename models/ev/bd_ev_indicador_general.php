@@ -128,7 +128,8 @@ class Ev_indicador_general
             }
             $statement = $this->connect->prepare($query); 
             $statement->execute($parameters);   
-            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {    
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {     
+                // $row['tipo_captura'] = $this->search_union($row,'ev_atributo','id_atributo','tipo_captura_atributo');         
                 $data[] = $row;
             }
             echo json_encode($data); 

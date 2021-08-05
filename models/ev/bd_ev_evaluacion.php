@@ -23,6 +23,11 @@ if (check_session()) {
             $model = new Ev_evaluacion($data,$connect,$received_data);
             $model->select();
         break;
+        case 'evaluar_con_reportes': 
+            $model = new Ev_evaluacion($data,$connect,$received_data);
+            $model->evaluar_con_reportes();
+        break;
+        
     }
 }else{
     $output = array('message' => 'Not authorized'); 
@@ -89,18 +94,18 @@ class Ev_evaluacion
     }  
     public function select(){
         try {  
-            
             $parameters = array(
                 ':valor' => $this->received_data->filter,  
+                ':id_lider' => $_SESSION['id_empleado'],
             );
             $query = "SELECT 
                         ev_evaluacion_id,id_lider,periodo_id,creado,actualizado
                         ,creadopor,actualizadopor,nombre 
                     FROM ev_evaluacion 
                     WHERE 
-                        nombre  ILIKE '%' || :valor || '%' 
+                        id_lider = :id_lider
+                        AND nombre  ILIKE '%' || :valor || '%' 
                     ORDER BY ev_evaluacion_id DESC" ;
-                        
             $statement = $this->connect->prepare($query); 
             $statement->execute($parameters);   
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
@@ -112,6 +117,32 @@ class Ev_evaluacion
             return true;
         } catch (PDOException $exc) {
             $output = array('message' => $exc->getMessage()); 
+            echo json_encode($output); 
+            return false;
+        }  
+    } 
+    public function evaluar_con_reportes(){
+        $parameters = array(
+            ':id_empleado' => $this->received_data->id_empleado,  
+            ':ev_indicador_general_id' => $this->received_data->ev_indicador_general_id,  
+            ':ev_evaluacion_id' => $this->received_data->ev_evaluacion_id,  
+            ':id_user' => $_SESSION['id_empleado'],  
+        );
+        try {  
+            $query = "
+                    SELECT refividrio.evaluar_con_reportes(
+                        :id_empleado,:ev_indicador_general_id,:ev_evaluacion_id,:id_user
+                    )" ; 
+            $statement = $this->connect->prepare($query); 
+            $statement->execute($parameters);   
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
+                    $data = $row;
+            } 
+            $output = array('status' => 'success','data' => $data); 
+            echo json_encode($output); 
+            return true;
+        } catch (PDOException $exc) {
+            $output = array('status' => 'error','data' => $exc->getMessage(),'paramas' => $parameters ); 
             echo json_encode($output); 
             return false;
         }  

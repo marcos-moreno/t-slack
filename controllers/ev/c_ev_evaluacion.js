@@ -18,8 +18,7 @@ var application = new Vue({
         filter : '',
         evaluador : {},
         is_evaluacion : true,
-        is_evaluacion_ln : false,
-
+        is_evaluacion_ln : false, 
         // :::: Line
         isFormCrud_ln : false,
         filter_ln : "",
@@ -35,19 +34,54 @@ var application = new Vue({
         paginas_ln : [],
         paginaCollection_ln : [],
         paginaActual_ln : 1,
-        ////paginador 
-        isFormCrud_ln : '', 
+        ////paginador  
         empleadoByln : 0,
 
         filtroEmpleado : "", 
+
+        //::::::::::Evaluacion
+        itIsEvaluation : false,
+        indicadoresEvaluacion : [],
     },
     methods:{
+        //::::::::::::::Evaluar
+        async evaluar_reportes(ev_evaluacion_ln,indicador){ 
+            const response_evaluar_reportes = await this.request(this.path,{
+                'action' : 'evaluar_con_reportes'
+                ,'id_empleado' :  ev_evaluacion_ln.id_empleado
+                ,'ev_evaluacion_id' : ev_evaluacion_ln.ev_evaluacion_id
+                ,'ev_indicador_general_id' : indicador.ev_indicador_general_id
+            });  
+            if (response_evaluar_reportes.status == 'success') {
+                indicador.calificacion_indicador = response_evaluar_reportes.data.evaluar_con_reportes;
+                this.show_message("Procesado",'success'); 
+            } else {
+                indicador.calificacion_indicador = 'Error procesando';
+                this.show_message("No se pudo procesar, error -> " + response_evaluar_reportes.data,'error'); 
+            }
+        },
+        //::::::::::::::Evaluar
+       
         // ::::::Indicadores:::::::::::::::::
-        async show_indicadores(ev_evaluacion_ln){
-            const response = await this.request('../../models/ev/bd_ev_indicador_puesto.php',{
-                'action' : 'select','filter' : ev_evaluacion_ln.ev_puesto_id
-            });
-            console.log(response); 
+        async show_indicadores(ev_evaluacion_ln){ 
+            if (ev_evaluacion_ln.estado[0].value == "BO") {
+                this.ev_evaluacion_ln = ev_evaluacion_ln;
+                this.isFormCrud_ln = false;
+                this.is_evaluacion = false;
+                this.is_evaluacion_ln = false;
+                this.itIsEvaluation = true; 
+                const response = await this.request('../../models/ev/bd_ev_indicador_puesto.php',{
+                    'action' : 'search_employe_indicadores',
+                    'id_empleado' : ev_evaluacion_ln.id_empleado,
+                    'ev_evaluacion_ln_id' : ev_evaluacion_ln.ev_evaluacion_ln_id
+                });  
+                if (response.length > 0) {
+                    this.indicadoresEvaluacion = response;
+                } else {
+                    this.indicadoresEvaluacion = [];
+                }
+            }else
+                this.show_message('La evaluación ya no esta disponible.','error');
         },
         // ::::::Indicadores:::::::::::::::::
 
@@ -57,9 +91,9 @@ var application = new Vue({
             this.paginaCollection_ln = [];
             const response = await this.request(this.path_ln
             ,{'action' : 'select','ev_evaluacion_id' : this.ev_evaluacion.ev_evaluacion_id});
-            console.log(response);
+            // console.log(response);
             try{
-                this.show_message(response.length + ' Registros Encontrados.','success');
+                this.show_message(response.length + ' Empleados Encontrados.','success');
                 this.ev_evaluacion_lnCollection = response;
                 this.paginaCollection_ln = response;
                 this.paginator_ln(1);
@@ -114,12 +148,13 @@ var application = new Vue({
             for (let index = 0; index < this.empleadoCollection.length; index++) {
                 const element = this.empleadoCollection[index];
                 let nomCompuesto = element.paterno + ' ' + element.materno + ' ' + element.nombre;
-                try { 
+                try {
                     if (nomCompuesto.toUpperCase().includes(this.filtroEmpleado.toUpperCase())) {
                         this.empleadoCollectionfiltro.push(element);
                         if (asignado==false) {
                             this.ev_evaluacion_ln.id_empleado = element.id_empleado;
-                            asignado = true;
+                            this.seleccionEmpleado();
+                            asignado = true; 
                         } 
                     } 
                 } catch (error) {
@@ -183,7 +218,7 @@ var application = new Vue({
         model_empty_ln(){
             this.ev_evaluacion_ln = {
                 ev_evaluacion_ln_id:0,ev_evaluacion_id:this.ev_evaluacion.ev_evaluacion_id
-                ,id_empleado:'',ev_puesto_id:'',calificacion:0,estado_atributo:'',creado:''
+                ,id_empleado:'',ev_puesto_id:'',calificacion:0,estado_atributo:30,creado:''
                 ,actualizado:'',creadopor:'',actualizadopor:''
             };
         },  
@@ -290,7 +325,7 @@ var application = new Vue({
         },async show_message(msg,typeMessage){
             this.msg = msg;
             this.typeMessage = typeMessage;
-            setTimeout(function() { application.typeMessage='' ;application.msg =''; }, 5000);
+            setTimeout(function() { application.typeMessage='' ;application.msg =''; }, 10000);
         },model_empty(){
             this.ev_evaluacion = {
                 ev_evaluacion_id:0,

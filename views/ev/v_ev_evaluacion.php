@@ -1,8 +1,15 @@
 <?php require "../header.php";?> 
 <div  class="container-fluid" style="width:90%;"> 
     <div id="app_ev_evaluacion" style="margin-top:15px;"> 
+        <div class="pre-scrollable" >
+            <div class="alert alert-primary" v-if="typeMessage == 'info'" role="alert">{{msg}}</div>
+            <div class="alert alert-danger"  v-if="typeMessage == 'error'" role="alert">{{msg}}</div>
+            <div class="alert alert-success" v-if="typeMessage == 'success'" role="alert">{{msg}}</div>
+        </div> 
         <div v-if="is_evaluacion">
-            <div class="table-responsive">
+        <h4>Evaluación</h4>
+
+            <!-- <div class="table-responsive">
                 <table class="table table-bordered table-striped">
                     <tr>
                         <td style="weight: 30%" v-if="isFormCrud==false">
@@ -18,18 +25,12 @@
                                 </tr>
                             </table>
                         </td>
-                        <td>
-                            <div class="pre-scrollable" >
-                                <div class="alert alert-primary" v-if="typeMessage == 'info'" role="alert">{{msg}}</div>
-                                <div class="alert alert-danger"  v-if="typeMessage == 'error'" role="alert">{{msg}}</div>
-                                <div class="alert alert-success" v-if="typeMessage == 'success'" role="alert">{{msg}}</div>
-                            </div> 
+                        <td> 
                         </td> 
                     </tr>
                 </table> 
-            </div><br>
+            </div><br> -->
             <div class="panel-body"  v-if="isFormCrud==false">
-                <h4>Evaluación</h4>
                 <br>
                 <div class="table-responsive">
                     <nav aria-label="Page navigation example">
@@ -99,14 +100,16 @@
                 </div>   
             </div>  
         </div> 
-        <div v-if="is_evaluacion_ln">
-            <h5>({{ev_evaluacion.ev_evaluacion_id}}) {{ev_evaluacion.nombre}}</h5> 
-            <p>Evaluado por: {{ev_evaluacion.empleado[0].usuario}}</p>
-            <button type="button" class="btn btn-link" @click="is_evaluacion_ln=false;is_evaluacion=true;" >Evaluaciones</button> 
-                <div id="app_ev_evaluacion_ln" style="margin-top:15px;"> 
+        <div v-if="is_evaluacion_ln"> 
+                <div id="app_ev_evaluacion_ln" style="margin-top:0px;"> 
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped">
                         <tr>
+                            <td>
+                                <button type="button" class="btn btn-link" @click="is_evaluacion_ln=false;is_evaluacion=true;" >Evaluaciones</button> 
+                                <h5>({{ev_evaluacion.ev_evaluacion_id}}) {{ev_evaluacion.nombre}}</h5> 
+                                <p>Evaluado por: {{ev_evaluacion.empleado[0].usuario}}</p>
+                            </td>
                             <td style="weight: 30%" v-if="isFormCrud_ln==false">
                                 <label>Filtrar</label>  
                                 <table>
@@ -120,35 +123,41 @@
                                     </tr>
                                 </table>
                             </td>
-                            <td >
-                                <div class="pre-scrollable" >
+                            
+                            <td v-if="isFormCrud_ln==false">
+                                <button type="button" class="btn btn-info btn-xs edit"
+                                    @click="add_ev_evaluacion_ln()">Agregar empleado</button> 
+                               
+                            </td> 
+
+                              <!-- <td > 
+                              <div class="pre-scrollable" >
                                     <div class="alert alert-primary" v-if="typeMessage == 'info'" role="alert">{{msg}}</div>
                                     <div class="alert alert-danger"  v-if="typeMessage == 'error'" role="alert">{{msg}}</div>
                                     <div class="alert alert-success" v-if="typeMessage == 'success'" role="alert">{{msg}}</div>
                                 </div> 
-                            </td> 
+                            </td>  -->
                         </tr>
                     </table> 
                 </div> 
-                <br>
+                 
                 <div class="panel-body"  v-if="isFormCrud_ln==false">
-                    <div class="table-responsive">
-                        <nav aria-label="Page navigation example">
-                            <ul class="pagination">  
-                                <li>
-                                    <select class="custom-select mb-2 mr-sm-2 mb-sm-0" v-model="numByPag_ln" @change="paginator_ln(1)" > 
-                                        <option value=5  >5</option>
-                                        <option value=10 >10</option>
-                                        <option value=15 >15</option>
-                                        <option value=20 >20</option>
-                                    </select>
-                                </li>
-                                <li v-for="li in paginas_ln" class="page-item">
-                                    <a class="page-link" @click="paginator_ln(li.element)" >{{ li.element }} <div v-if="li.element == paginaActual_ln" >_</div></a> 
-                                </li>
-                            </ul>  
-                        </nav>
-                        <td><button type="button" class="btn btn-info btn-xs edit" @click="add_ev_evaluacion_ln()">Agregar empleado</button></td>
+                    <div class="table-responsive"> 
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">  
+                            <li>
+                                <select class="custom-select mb-2 mr-sm-2 mb-sm-0" v-model="numByPag_ln" @change="paginator_ln(1)" > 
+                                    <option value=5  >5</option>
+                                    <option value=10 >10</option>
+                                    <option value=15 >15</option>
+                                    <option value=20 >20</option>
+                                </select>
+                            </li>
+                            <li v-for="li in paginas_ln" class="page-item">
+                                <a class="page-link" @click="paginator_ln(li.element)" >{{ li.element }} <div v-if="li.element == paginaActual_ln" >_</div></a> 
+                            </li>
+                        </ul>  
+                    </nav>
                         <table class="table table-bordered table-striped">
                             <tr> 
                                 <th>Id.</th>
@@ -156,6 +165,7 @@
                                 <th>Puesto</th> 
                                 <th>Calificación</th> 
                                 <th>Estado</th>  
+                                <th></th> 
                                 <th></th> 
                             </tr>
                             <tr v-for="ev_evaluacion_ln in paginaCollection_ln" >
@@ -166,6 +176,8 @@
                                 <td>({{ ev_evaluacion_ln.estado[0].value}}) {{ ev_evaluacion_ln.estado[0].descripcion}}</td>
                                 <td style="width:150px" >
                                     <button type="button" class="btn-link btn" @click="show_indicadores(ev_evaluacion_ln)">Indicadores</button>
+                                </td> 
+                                <td>
                                     <button type="button" class="btn btn" @click="delete_ev_evaluacion_ln(ev_evaluacion_ln.ev_evaluacion_ln_id)"><img src="../../img/borrar.png" width="25px" /></button>
                                 </td> 
                             </tr>
@@ -229,7 +241,7 @@
                         </div>  
                         <div class="col-sm">
                             <label>Estado de la evaluación</label> 
-                            <select class='form-control' size='1'  v-model='ev_evaluacion_ln.estado_atributo' >
+                            <select disabled class='form-control' size='1'  v-model='ev_evaluacion_ln.estado_atributo' >
                                 <option value='0' >-</option>
                                 <option v-for='rows in estados' v-bind:value='rows.id_atributo'>
                                     ({{ rows.value }}) {{ rows.descripcion }}
@@ -243,6 +255,41 @@
                     </div>   
                 </div>  
             </div>
+        </div>
+        <div v-if="itIsEvaluation">
+            <button type="button" class="btn btn-link" @click="itIsEvaluation=false;is_evaluacion_ln=true;" >Colaboradores</button> 
+            <h5>({{ev_evaluacion_ln.id_empleado}}) {{ev_evaluacion_ln.empleado[0].nombre}} {{ev_evaluacion_ln.empleado[0].paterno}} {{ev_evaluacion_ln.empleado[0].materno}}</h5>
+            <p>({{ev_evaluacion_ln.ev_puesto[0].codigo}}) {{ev_evaluacion_ln.ev_puesto[0].nombre_puesto}}</p>
+            <div class="accordion">
+                <div class="card" v-for="indicador in indicadoresEvaluacion">
+                    <div class="card-header" :id="'h'+indicador.ev_indicador_puesto_id">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" v-bind:data-target="'#c'+indicador.ev_indicador_puesto_id" aria-expanded="true" v-bind:aria-controls="'c'+indicador.ev_indicador_puesto_id">
+                            {{indicador.ev_indicador_general[0].nombre}}
+                            </button> 
+                        </h2>
+                        {{indicador.calificacion_indicador}} pts / {{indicador.porcentaje}} pts
+                    </div>
+                    <div :id="'c'+indicador.ev_indicador_puesto_id" class="collapse" v-bind:aria-labelledby="'h'+indicador.ev_indicador_puesto_id" >
+                        <div class="card-body">
+                            <div v-if="indicador.ev_indicador_general.tipo_captura.length > 0">
+                                <p>{{indicador.ev_indicador_general[0].descripcion}}</p>
+                                <div v-if="indicador.ev_indicador_general.tipo_captura[0].value == 'Reportes'">
+                                    <button type="button" name="filter" class="btn btn-info btn-xs" 
+                                    @click="evaluar_reportes(
+                                                ev_evaluacion_ln,
+                                                indicador
+                                            )">Evaluar {{indicador.ev_indicador_general[0].nombre}}</button>
+                                </div>
+                            </div>
+                            <div v-else>
+                                No hay forma de avaluación
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br><br><br><br>
         </div>
     </div>
 </div>

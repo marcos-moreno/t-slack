@@ -27,6 +27,11 @@ if (check_session()) {
             $model = new Ev_indicador_puesto($data,$connect,$received_data);
             $model->selectByEmployee();
         break;
+        case 'search_employe_indicadores': 
+            $model = new Ev_indicador_puesto($data,$connect,$received_data);
+            $model->search_employe_indicadores();
+        break;
+        
     }
 }else{
     $output = array('message' => 'Not authorized'); 
@@ -108,13 +113,15 @@ class Ev_indicador_puesto
                     FROM ev_indicador_puesto   
                     WHERE ev_puesto_id = :filter
                     ORDER BY porcentaje DESC
-                    ' ; 
+                    '; 
             $statement = $this->connect->prepare($query); 
             $statement->execute($parameters);   
             $result = false;
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
                     $row['ev_puesto'] = $this->search_union($row,'ev_puesto','ev_puesto_id','ev_puesto_id');
-                    $row['ev_indicador_general'] = $this->search_union($row,'ev_indicador_general','ev_indicador_general_id','ev_indicador_general_id');
+                    $temp = $this->search_union($row,'ev_indicador_general','ev_indicador_general_id','ev_indicador_general_id');
+                    $temp['tipo_captura'] = $this->search_union($temp[0],'ev_atributo','id_atributo','tipo_captura_atributo');
+                    $row['ev_indicador_general'] = $temp;
                     $data[] = $row;
                     $result = true;
             }
@@ -130,6 +137,50 @@ class Ev_indicador_puesto
             return false;
         }  
     }
+
+    public function search_employe_indicadores(){
+        try {   
+            $parameters = array( 
+                    ':id_empleado' => $this->received_data->id_empleado,
+                    ':ev_evaluacion_ln_id' => $this->received_data->ev_evaluacion_ln_id,
+                ); 
+            $query = '
+                SELECT 
+                        ip.ev_indicador_puesto_id, ip.ev_puesto_id, ip.porcentaje, ip.creado,
+                        ip.creadopor,ip.actualizado,ip.actualizadopor, ip.ev_indicador_general_id
+                        ,COALESCE(ie.calificacion_indicador,0) As calificacion_indicador
+                FROM ev_indicador_puesto   ip
+                INNER JOIN empleado e ON e.id_empleado = :id_empleado
+                     AND ip.ev_puesto_id = e.ev_puesto_id
+                LEFT JOIN ev_indicador_evaluado  ie ON ie.id_empleado = e.id_empleado 
+                    AND ip.ev_indicador_general_id = ie.ev_indicador_general_id
+                    AND ie.ev_evaluacion_ln_id = :ev_evaluacion_ln_id
+                ORDER BY porcentaje DESC 
+                    '; 
+            $statement = $this->connect->prepare($query); 
+            $statement->execute($parameters);   
+            $result = false;
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
+                    $row['ev_puesto'] = $this->search_union($row,'ev_puesto','ev_puesto_id','ev_puesto_id');
+                    $temp = $this->search_union($row,'ev_indicador_general','ev_indicador_general_id','ev_indicador_general_id');
+                    $temp['tipo_captura'] = $this->search_union($temp[0],'ev_atributo','id_atributo','tipo_captura_atributo');
+                    $row['ev_indicador_general'] = $temp;
+                    $data[] = $row;
+                    $result = true;
+            }
+            if ($result) {
+                echo json_encode($data); 
+            } else {
+                echo json_encode(array()); 
+            }
+            return true;
+        } catch (PDOException $exc) {
+            $output = array('message' => $exc->getMessage()); 
+            echo json_encode($output); 
+            return false;
+        }  
+    }
+
     public function selectByEmployee(){
         try {   
             $data = array(
@@ -180,7 +231,7 @@ class Ev_indicador_puesto
             return $data; 
         } catch (PDOException $exc) {
             $output = array('message' => $exc->getMessage()); 
-            return json_encode($output);  
+            return [];  
         }  
     }
     public function delete(){
