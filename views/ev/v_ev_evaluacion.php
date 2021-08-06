@@ -175,7 +175,7 @@
                                 <td>{{ ev_evaluacion_ln.calificacion}}</td>
                                 <td>({{ ev_evaluacion_ln.estado[0].value}}) {{ ev_evaluacion_ln.estado[0].descripcion}}</td>
                                 <td style="width:150px" >
-                                    <button type="button" class="btn-link btn" @click="show_indicadores(ev_evaluacion_ln)">Indicadores</button>
+                                    <button type="button" class="btn-link btn" @click="show_indicadores(ev_evaluacion_ln)">Ver evaluación</button>
                                 </td> 
                                 <td>
                                     <button type="button" class="btn btn" @click="delete_ev_evaluacion_ln(ev_evaluacion_ln.ev_evaluacion_ln_id)"><img src="../../img/borrar.png" width="25px" /></button>
@@ -264,24 +264,39 @@
                 <div class="card" v-for="indicador in indicadoresEvaluacion">
                     <div class="card-header" :id="'h'+indicador.ev_indicador_puesto_id">
                         <h2 class="mb-0">
-                            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" v-bind:data-target="'#c'+indicador.ev_indicador_puesto_id" aria-expanded="true" v-bind:aria-controls="'c'+indicador.ev_indicador_puesto_id">
-                            {{indicador.ev_indicador_general[0].nombre}}
+                            <button class="btn btn-link text-left" type="button" data-toggle="collapse" v-bind:data-target="'#c'+indicador.ev_indicador_puesto_id" aria-expanded="true" v-bind:aria-controls="'c'+indicador.ev_indicador_puesto_id">
+                            {{indicador.ev_indicador_general[0].nombre}} --->
                             </button> 
+                            <FONT style="color:#289001" size="3px">{{indicador.calificacion_indicador}} pts obtenidos de </FONT>  
+                            
+                            <FONT style="color:#696969" size="3px">{{indicador.porcentaje}} pts </FONT> 
                         </h2>
-                        {{indicador.calificacion_indicador}} pts / {{indicador.porcentaje}} pts
                     </div>
                     <div :id="'c'+indicador.ev_indicador_puesto_id" class="collapse" v-bind:aria-labelledby="'h'+indicador.ev_indicador_puesto_id" >
                         <div class="card-body">
                             <div v-if="indicador.ev_indicador_general.tipo_captura.length > 0">
                                 <p>{{indicador.ev_indicador_general[0].descripcion}}</p>
-                                <div v-if="indicador.ev_indicador_general.tipo_captura[0].value == 'Reportes'">
-                                    <button type="button" name="filter" class="btn btn-info btn-xs" 
-                                    @click="evaluar_reportes(
-                                                ev_evaluacion_ln,
-                                                indicador
-                                            )">Evaluar {{indicador.ev_indicador_general[0].nombre}}</button>
+                                
+                                <div v-if="indicador.ev_indicador_general.tipo_captura[0].value=='Reportes'">
+                                    <div v-if="indicador.ev_indicador_general.tipo_captura[0].value == 'Reportes'">
+                                        <button type="button" name="filter" class="btn btn-info btn-xs" 
+                                        @click="evaluar_reportes(
+                                                    ev_evaluacion_ln,
+                                                    indicador
+                                                )">Recalcular {{indicador.ev_indicador_general[0].nombre}}</button>
+                                    </div>
                                 </div>
-                            </div>
+                                <div v-else-if="indicador.ev_indicador_general.tipo_captura[0].value=='Reportes'">
+                                    <div v-if="indicador.ev_indicador_general.tipo_captura[0].value == 'Reportes'">
+                                        <button type="button" name="filter" class="btn btn-info btn-xs" 
+                                        @click="evaluar_reportes(
+                                                    ev_evaluacion_ln,
+                                                    indicador
+                                                )">Recalcular {{indicador.ev_indicador_general[0].nombre}}</button>
+                                    </div>
+                                </div>
+                                
+                            </div> 
                             <div v-else>
                                 No hay forma de avaluación
                             </div>

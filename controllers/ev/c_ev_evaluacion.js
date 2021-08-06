@@ -63,8 +63,24 @@ var application = new Vue({
         //::::::::::::::Evaluar
        
         // ::::::Indicadores:::::::::::::::::
+
+        async procesar_evaluacion(ev_evaluacion_ln){ 
+            const response_evaluar_reportes = await this.request(this.path,{
+                'action' : 'procesar_evaluacion'
+                ,'id_empleado' :  ev_evaluacion_ln.id_empleado
+                ,'ev_evaluacion_id' : ev_evaluacion_ln.ev_evaluacion_id 
+                ,'ev_evaluacion_ln_id' : ev_evaluacion_ln.ev_evaluacion_ln_id 
+            });  
+            if (response_evaluar_reportes.status == 'success') { 
+                this.show_message("Evaluaciones Procesadas",'success'); 
+            } else { 
+                this.show_message("No se pudo procesar, error -> " + response_evaluar_reportes.data,'error'); 
+            }
+        },
+
         async show_indicadores(ev_evaluacion_ln){ 
             if (ev_evaluacion_ln.estado[0].value == "BO") {
+                await this.procesar_evaluacion(ev_evaluacion_ln);
                 this.ev_evaluacion_ln = ev_evaluacion_ln;
                 this.isFormCrud_ln = false;
                 this.is_evaluacion = false;

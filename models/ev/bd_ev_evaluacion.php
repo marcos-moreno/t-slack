@@ -27,7 +27,10 @@ if (check_session()) {
             $model = new Ev_evaluacion($data,$connect,$received_data);
             $model->evaluar_con_reportes();
         break;
-        
+        case 'procesar_evaluacion': 
+            $model = new Ev_evaluacion($data,$connect,$received_data);
+            $model->procesar_evaluacion();
+        break; 
     }
 }else{
     $output = array('message' => 'Not authorized'); 
@@ -92,6 +95,33 @@ class Ev_evaluacion
             return false;
         }  
     }  
+
+    public function procesar_evaluacion(){
+        $parameters = array(
+            ':ev_evaluacion_id' => $this->received_data->ev_evaluacion_id,  
+            ':ev_evaluacion_ln_id' => $this->received_data->ev_evaluacion_ln_id,  
+            ':id_empleado' => $this->received_data->id_empleado,    
+            ':id_user' => $_SESSION['id_empleado'],  
+        );
+        try {  
+            $query = "
+                    SELECT refividrio.procesar_evaluacion(
+                        :ev_evaluacion_id,:ev_evaluacion_ln_id,:id_empleado,:id_user
+                    )" ; 
+            $statement = $this->connect->prepare($query); 
+            $statement->execute($parameters);   
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
+                    $data = $row;
+            } 
+            $output = array('status' => 'success','data' => $data); 
+            echo json_encode($output); 
+            return true;
+        } catch (PDOException $exc) {
+            $output = array('status' => 'error','data' => $exc->getMessage(),'paramas' => $parameters ); 
+            echo json_encode($output); 
+            return false;
+        }  
+    } 
     public function select(){
         try {  
             $parameters = array(
@@ -142,7 +172,7 @@ class Ev_evaluacion
             echo json_encode($output); 
             return true;
         } catch (PDOException $exc) {
-            $output = array('status' => 'error','data' => $exc->getMessage(),'paramas' => $parameters ); 
+            $output = array('status' => 'error','data' => $exc->getMessage()); 
             echo json_encode($output); 
             return false;
         }  
