@@ -207,8 +207,6 @@ if ($valido == false) {  header('location: ../logout.php'); }
             </div>
           </div>
         </div>
-
-
 <script>
   async function hover() {
     httpGet( '../../models/auth/check_session.php', 
@@ -247,3 +245,4 @@ if ($valido == false) {  header('location: ../logout.php'); }
 <script type="text/javascript" src="../../controllers/user/c_leccion.js"></script>
 <script type="text/javascript" src="../../controllers/user/notifications_u.js"></script>
 <script type="text/javascript" src="../../controllers/admin/changePasword.js"></script>  
+<script type="text/javascript" src='../../controllers/config.js'></script>

@@ -31,7 +31,7 @@
         
         <br>
         <div class="panel-body"  v-if="isFormCrud==false">
-            <h4>ev_escala_evaluacion</h4>
+            <h4>Escala de evaluación</h4>
             <br>
             <div class="table-responsive">
                 <nav aria-label="Page navigation example">

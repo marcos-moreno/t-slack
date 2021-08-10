@@ -54,7 +54,7 @@
                     <tr> 
                         <th>ID</th>
                         <th>nombre</th>
-                        <th>descripcion</th>
+                        <th>descripción</th>
                         <th>tendencia</th>
                         <th>activo</th> 
                         <th>origen</th>
@@ -89,7 +89,7 @@
                 <input type='text' class='form-control' v-model='ev_indicador_general.nombre' />
             </div>  
             <div class='form-group'>
-                <label>descripcion</label>
+                <label>descripción</label>
                 <input type='text' class='form-control' v-model='ev_indicador_general.descripcion' />
             </div>  
             <div class='form-group'>

@@ -20,8 +20,7 @@ var application = new Vue({
             const response2 = await this.seachPollComplete();
             this.pollComplete = response2; 
         },  
-        openPoll(encuesta){
-            console.log(encuesta);
+        openPoll(encuesta){ 
             if (encuesta.estado_leccion == "CO" || encuesta.totallecciones == 0) { 
                 location.href="usuario-encuesta.php?id_encuesta=" + encuesta.id_encuesta; 
             } else {
@@ -145,8 +144,6 @@ var application = new Vue({
     created: async function(){
         const account_response = await axios.post('../../models/user/bd_account.php', 
         {  action:'validaDatos' }).then(function(response){ return  response.data });
-        console.log(account_response);
-
         if (account_response[0].valido=="false"||account_response[0].valido==false) {
             location.href ="account.php";
         }else{

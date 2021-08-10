@@ -260,6 +260,7 @@
             <button type="button" class="btn btn-link" @click="itIsEvaluation=false;is_evaluacion_ln=true;" >Colaboradores</button> 
             <h5>({{ev_evaluacion_ln.id_empleado}}) {{ev_evaluacion_ln.empleado[0].nombre}} {{ev_evaluacion_ln.empleado[0].paterno}} {{ev_evaluacion_ln.empleado[0].materno}}</h5>
             <p>({{ev_evaluacion_ln.ev_puesto[0].codigo}}) {{ev_evaluacion_ln.ev_puesto[0].nombre_puesto}}</p>
+            <h5>{{ev_evaluacion_ln.calificacion}} Calificación general obtenida hasta el momento</h5>
             <div class="accordion">
                 <div class="card" v-for="indicador in indicadoresEvaluacion">
                     <div class="card-header" :id="'h'+indicador.ev_indicador_puesto_id">

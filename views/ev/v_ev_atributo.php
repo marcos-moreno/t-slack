@@ -52,13 +52,13 @@
                 <td><button type="button" class="btn btn-info btn-xs edit" @click="add_ev_atributo()">Agregar</button></td>
                 <table class="table table-bordered table-striped">
                     <tr> 
-                        <th>id_atributo</th>
+                        <th>Id</th>
                                     
                         <th>value</th>
                                     
                         <th>activo</th>
                                     
-                        <th>descripcion</th>
+                        <th>descripción</th>
                                     
                         <th>tabla</th>
                                      
@@ -100,7 +100,7 @@
                 <label class='custom-control-label' for='ev_atributoactivo _id'  >activo</label>
             </div> 
             <div class='form-group'>
-                <label>descripcion</label>
+                <label>descripción</label>
                 <input type='text' class='form-control' v-model='ev_atributo.descripcion' />
             </div>  
             <div class='form-group'>

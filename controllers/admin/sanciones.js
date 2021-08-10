@@ -14,7 +14,6 @@ var sinconizador = new Vue({
         async searc_sincronizadas(){
             const Incidencias_creadas = await this.request('../../models/bd/bd_poll.php', {action:'getIncidencias_creadas',sincronizadas: "'"+ this.show_sincronizado + "'"});
             this.incidenciasCollection = Incidencias_creadas;
-            console.log(Incidencias_creadas);
         },
         fn_selectAll(){ 
             if (this.selectAll == 1) {
@@ -76,8 +75,12 @@ var sinconizador = new Vue({
         }, 
         async enviar_sancion(sancion){   
             const response = await axios
-            .get('https://rep.refividrio.com.mx:5858/api/sanciones'
-                ,{params:{
+            .get(configEP.EndPointCerberus + 'sanciones'
+                ,{
+                    headers:{
+                        "token" : localStorage.getItem("API_KEY_CERBERUS")
+                    },
+                    params:{
                             idEmpleado: sancion.id_cerberus_empleado,
                             nivelSancion: sancion.nivel_sancion,
                             fecha: this.fechaProceso
@@ -85,7 +88,6 @@ var sinconizador = new Vue({
                 })
             .then(function(response){ return response.data;})
             .catch(function(response){ return response;});
-             console.log(response);
             if (response.data[0].respuesta.includes('Éxito')) {
                 const response_inicdencia = await this.request('../../models/bd/bd_poll.php',
                                                     {action:'updateIncidencia',
@@ -106,6 +108,5 @@ var sinconizador = new Vue({
     created: async function(){
         const Incidencias_creadas = await this.request('../../models/bd/bd_poll.php', {action:'getIncidencias_creadas',sincronizadas:'false'});
         this.incidenciasCollection = Incidencias_creadas;
-        console.log(Incidencias_creadas);
     } 
  });

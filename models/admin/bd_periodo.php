@@ -100,11 +100,14 @@ class Periodo
     } 
 
     public function select(){
-        try {  
-            
+        try {
+            $activo_sql = "";
             $parameters = array(
-                ':valor' => $this->received_data->filter,  
+                ':valor' => $this->received_data->filter
             );
+            if ($this->received_data->activo === true) {
+                $activo_sql = " AND p.activo = true ";
+            }
             $query = "SELECT nombre_periodo
                         ,to_char(inicio_periodo, 'yyyy-MM-ddThh:mm') As inicio_periodo
                         ,to_char(fin_periodo, 'yyyy-MM-ddThh:mm') As fin_periodo,ejercicio
@@ -115,6 +118,7 @@ class Periodo
                     INNER JOIN refividrio.ev_atributo at ON at.id_atributo = elemento_sistema_atributo 
                     WHERE
                         at.value = :valor
+                        ". $activo_sql ."
                     ORDER BY ejercicio DESC, numero_periodo DESC, elemento_sistema_atributo DESC" ;
             $statement = $this->connect->prepare($query); 
             $statement->execute($parameters);   

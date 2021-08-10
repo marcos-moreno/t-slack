@@ -63,24 +63,24 @@ var application = new Vue({
         //::::::::::::::Evaluar
        
         // ::::::Indicadores:::::::::::::::::
-
         async procesar_evaluacion(ev_evaluacion_ln){ 
             const response_evaluar_reportes = await this.request(this.path,{
                 'action' : 'procesar_evaluacion'
                 ,'id_empleado' :  ev_evaluacion_ln.id_empleado
                 ,'ev_evaluacion_id' : ev_evaluacion_ln.ev_evaluacion_id 
                 ,'ev_evaluacion_ln_id' : ev_evaluacion_ln.ev_evaluacion_ln_id 
-            });  
-            if (response_evaluar_reportes.status == 'success') { 
+            });
+            if (response_evaluar_reportes.status == 'success') {
+                ev_evaluacion_ln.calificacion = response_evaluar_reportes.data.procesar_evaluacion;
+                console.log(response_evaluar_reportes.data);
                 this.show_message("Evaluaciones Procesadas",'success'); 
             } else { 
                 this.show_message("No se pudo procesar, error -> " + response_evaluar_reportes.data,'error'); 
             }
-        },
-
+        }, 
         async show_indicadores(ev_evaluacion_ln){ 
             if (ev_evaluacion_ln.estado[0].value == "BO") {
-                await this.procesar_evaluacion(ev_evaluacion_ln);
+                const responce_evl = await this.procesar_evaluacion(ev_evaluacion_ln);
                 this.ev_evaluacion_ln = ev_evaluacion_ln;
                 this.isFormCrud_ln = false;
                 this.is_evaluacion = false;
@@ -284,7 +284,7 @@ var application = new Vue({
                 }else{
                     this.show_message(response.message,'error');
                 }
-            }else{ 
+            }else{
                 this.show_message('Un ID 0 No es posible Eliminar.','info');
             } 
         },   
@@ -372,7 +372,7 @@ var application = new Vue({
             }     
 
             const response_periodo = await this.request('../../models/admin/bd_periodo.php',
-            {'action' : 'select','filter':'EV'});
+            {'action' : 'select','filter':'EV', activo : true});
             try{  
                 if(response_periodo.length > 0){  
                     this.periodoCollection = response_periodo; 

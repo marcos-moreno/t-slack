@@ -55,7 +55,7 @@
                                     
                         <th>nombre</th>
                                     
-                        <th>descripcion</th>
+                        <th>descripción</th>
                                     
                         <th>obligatorio</th>
                                     

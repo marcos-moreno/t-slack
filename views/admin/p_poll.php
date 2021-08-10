@@ -124,7 +124,7 @@
                                   <h5 >Datos para El Nuevo Intento.</h5> 
 
                                   <div class="form-group">
-                                    <label>Descripcion</label>
+                                    <label>Descripción</label>
                                     <input type="text" class="form-control" v-model="in_descripcion" />
                                   </div> 
 

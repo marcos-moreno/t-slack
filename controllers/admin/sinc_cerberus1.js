@@ -201,8 +201,12 @@ var sinconizador = new Vue({
             }  
          }
          ,async get_data_new_employees_cerberus(arrayEmpleadoSlack,arrayEmpleadoSlacknss){ 
-            const response = await axios.get('https://rep.refividrio.com.mx:5858/api/NewEmpleado' 
-           ,{params:{
+            const response = await axios.get(configEP.EndPointCerberus + 'NewEmpleado' 
+           ,{
+            headers:{
+                "token" : localStorage.getItem("API_KEY_CERBERUS")
+            },
+            params:{
                  //'arrayEmpleadoSlack':arrayEmpleadoSlack,
                  'arrayEmpleadoSlacknss':arrayEmpleadoSlack,
                 //'arrayEmpleadoSlacknss':arrayEmpleadoSlacknss
@@ -214,8 +218,12 @@ var sinconizador = new Vue({
             });
             return response;
         },async get_data_cerberusByName(employe){ 
-            const response = await axios.get('https://rep.refividrio.com.mx:5858/api/empleado' 
-            ,{params:{
+            const response = await axios.get(configEP.EndPointCerberus + 'empleado' 
+            ,{
+                headers:{
+                    "token" : localStorage.getItem("API_KEY_CERBERUS")
+                },
+                params:{
                 'nombreEmpleado':employe.nombre,
                 'apPatEmpleado':employe.paterno ,
                 'apMatEmpleado':employe.materno ,
@@ -228,8 +236,12 @@ var sinconizador = new Vue({
             })  
             return response;
         },async get_data_cerberusByID(id){ 
-            const response = await axios.get('https://rep.refividrio.com.mx:5858/api/empleadoById' 
-            ,{params:{
+            const response = await axios.get(configEP.EndPointCerberus + 'empleadoById' 
+            ,{
+                headers:{
+                    "token" : localStorage.getItem("API_KEY_CERBERUS")
+                }
+                ,params:{
                 'id_cerberus_empleado':id, 
             } 
             }).then(function (response) {    

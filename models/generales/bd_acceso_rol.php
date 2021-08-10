@@ -56,8 +56,8 @@ class Acceso_rol
             $output = array('message' => 'Data Inserted'); 
             echo json_encode($output); 
             return true;
-        } catch (Exception $exc) {
-            $output = array('message' => $exc); 
+        } catch (PDOException $exc) {
+            $output = array('status'  => 'erro','message' => $exc->getMessage()); 
             echo json_encode($output); 
             return false;
         } 
@@ -78,11 +78,11 @@ class Acceso_rol
             $output = array('message' => 'Data Updated'); 
             echo json_encode($output); 
             return true;
-        } catch (Exception $exc) {
-            $output = array('message' => $exc); 
+        } catch (PDOException $exc) {
+            $output = array('status'  => 'erro','message' => $exc->getMessage()); 
             echo json_encode($output); 
             return false;
-        }  
+        } 
     } 
 
     public function select(){
@@ -106,8 +106,8 @@ class Acceso_rol
         
             echo json_encode($data); 
             return true;
-        } catch (Exception $exc) {
-            $output = array('message' => $exc); 
+        } catch (PDOException $exc) {
+            $output = array('status'  => 'erro','message' => $exc->getMessage()); 
             echo json_encode($output); 
             return false;
         }  
@@ -123,11 +123,11 @@ class Acceso_rol
                     $data[] = $row;
             }  
             return $data; 
-        } catch (Exception $exc) {
-            $output = array('message' => $exc); 
+        } catch (PDOException $exc) {
+            $output = array('status'  => 'erro','message' => $exc->getMessage()); 
             echo json_encode($output); 
             return false;
-        }  
+        } 
     }
     public function delete(){
         try {  
@@ -142,11 +142,11 @@ class Acceso_rol
             $output = array('message' => 'Data Deleted'); 
             echo json_encode($output); 
             return true;
-        } catch (Exception $exc) {
-            $output = array('message' => $exc); 
+        } catch (PDOException $exc) {
+            $output = array('status'  => 'erro','message' => $exc->getMessage()); 
             echo json_encode($output); 
             return false;
-        }  
+        } 
     }
 
   

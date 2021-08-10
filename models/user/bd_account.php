@@ -4,8 +4,7 @@ require_once "../auth/check.php";
 if (check_session()) { 
     require_once "../postgres.php";
     $received_data = json_decode(file_get_contents("php://input"));
-    $data = array(); 
-
+    $parameters = array(":id_empleado" => $_SESSION['id_empleado']);  
     if ($received_data->action == 'fetchAccount') {
         $query = " SELECT e.id_empleado, e.id_segmento, e.id_creadopor, e.fecha_creado, 
                         e.nombre, e.paterno, e.materno, e.activo, e.celular, 
@@ -17,9 +16,9 @@ if (check_session()) {
                     FROM refividrio.empleado e
                     INNER JOIN refividrio.segmento s ON s.id_segmento = e.id_segmento
                     INNER JOIN refividrio.empresa empresa ON empresa.id_empresa = s.id_empresa 
-                    WHERE  id_empleado =".$_SESSION['id_empleado'];
+                    WHERE  id_empleado = :id_empleado";
         $statement = $connect->prepare($query);
-        $statement->execute();
+        $statement->execute($parameters);
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $data[] = $row;
         }
@@ -50,7 +49,7 @@ if (check_session()) {
         ); 
         $query = "UPDATE refividrio.empleado SET 
                                      celular = :celular
-                                     ,correo = :correo 
+                                     ,correo = :correo
                                      ,fecha_actualizado = CURRENT_TIMESTAMP
                                      ,fecha_nacimiento = :fecha_nacimiento 
                                      ,id_actualizadopor = :id_actualizadopor

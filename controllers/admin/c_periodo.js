@@ -24,7 +24,8 @@ var application = new Vue({
         async getperiodos(){  
             this.periodoCollection  = [];
             this.paginaCollection = [];
-            const response = await this.request(this.path,{'action' : 'select','filter' : this.filter});
+            const response = await this.request(
+                this.path,{'action' : 'select','filter' : 'EV', activo : 'all'});
             try{ 
                 this.show_message(response.length + ' Registros Encontrados.','success');
                 this.periodoCollection = response;

@@ -17,7 +17,7 @@
        <tr>
        <th>ID</th>
         <th style="width:350px" >Mensaje</th>
-        <th>Descripcion</th>
+        <th>Descripción</th>
         <th>Editar</th>
         <th>Eliminar</th>
        </tr>
@@ -45,7 +45,7 @@
         <input type="text" class="form-control" v-model="notificationSelected.msg" />
       </div> 
       <div class="form-group">
-        <label>Descripcion.</label>
+        <label>Descripción</label>
         <textarea  type="textbox" class="form-control" v-model="notificationSelected.description" rows="4" cols="50"></textarea>
       </div>  
       <div class="row">

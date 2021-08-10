@@ -20,7 +20,7 @@ var account = new Vue({
         async findRegister(){
             let fI = this.FechaI/*.replace("-",""); fI = fI.replace("-","")*/;
             let fF = this.FechaF/*.replace("-",""); fF = fF.replace("-","")*/;  
-            const registros = await axios.get('https://rep.refividrio.com.mx:5858/api/registros?FechaI='+fI+'&FechaF='+fF+'&operacion=es&IdEmpleado='+ this.account.id_cerberus_empleado,{"0":"0"} ).then(function(response){ return  response.data });
+            const registros = await axios.get(configEP.EndPointCerberus + 'registros?FechaI='+fI+'&FechaF='+fF+'&operacion=es&IdEmpleado='+ this.account.id_cerberus_empleado,{"0":"0"} ).then(function(response){ return  response.data });
             this.formatearRegistros(registros.data);
         },
         formatearRegistros(registros){

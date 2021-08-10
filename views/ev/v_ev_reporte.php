@@ -90,7 +90,7 @@
                 <table class="table table-bordered table-striped">
                     <tr> 
                         <th>ID</th>
-                        <th>Descripcion</th>
+                        <th>Descripción</th>
                         <th>Fecha</th>
                         <th>Indicador</th>
                         <th></th> 
@@ -140,7 +140,7 @@
                 </select>
             </div>  
             <div class='form-group'>
-                <label >descripcion</label>
+                <label >descripción</label>
                 <textarea class='form-control' v-model='ev_reporte.descripcion' >  </textarea>
             </div>  
             <br>

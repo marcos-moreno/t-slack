@@ -1,3 +1,5 @@
+
+
 var account = new Vue({ 
     el:'#account',
     data:{
@@ -14,12 +16,18 @@ var account = new Vue({
         isError:false,
     },
     methods:{ 
-        
         async findRegister(){
-            let fI = this.FechaI/*.replace("-",""); fI = fI.replace("-","")*/;
-            let fF = this.FechaF/*.replace("-",""); fF = fF.replace("-","")*/;  
-            const registros = await axios.get('https://rep.refividrio.com.mx:5858/api/registros?FechaI='+fI+'&FechaF='+fF+'&operacion=es&IdEmpleado='+ this.account.id_cerberus_empleado,{"0":"0"} ).then(function(response){ return  response.data });
-            this.formatearRegistros(registros.data);
+            let fI = this.FechaI;
+            let fF = this.FechaF;  
+            let endPoint = `${configEP.EndPointCerberus}registros?FechaI=${fI}&FechaF=${fF}&operacion=es&IdEmpleado=${this.account.id_cerberus_empleado}`;
+            const registros = await axios.get(endPoint,{
+                    headers:{
+                        "token" : localStorage.getItem("API_KEY_CERBERUS")
+                    }
+            }).then(function(response){ return  response.data });
+            if (registros.status == "success") {
+                this.formatearRegistros(registros.data);
+            }
         },
         formatearRegistros(registros){
             let reg_temp = []; 
