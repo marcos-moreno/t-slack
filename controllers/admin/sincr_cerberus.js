@@ -21,7 +21,6 @@ var sinconizador = new Vue({
                 const element = this.employesCerberus[index];
                 let employee = {}; 
                 try { 
-                    console.log(element);
                     employee.id_empresa_cerberus = element.idEmpresa;
                     employee.nombre = element.nombreEmpleado;
                     employee.paterno = element.apPatEmpleado;
@@ -49,7 +48,6 @@ var sinconizador = new Vue({
                     employee.idsucursal_cerberus = element.idSucursal; 
                     employee.id_compac = element.idConpaq;
                     let user_duplicate = false;
-
                     try {
                         if (employee.correo.length > 8 && employee.celular.length == 10) {
                             employee.correo_verificado = 'true';
@@ -94,8 +92,8 @@ var sinconizador = new Vue({
                         + '\n'+ error,'error'); 
                 }
             }
-            await this.fetchAllEmployees();  
             this.employesCerberus = [];
+            await this.fetchAllEmployees();  
         },validaUser(user){
             let valid = true;
             try { 
@@ -113,7 +111,7 @@ var sinconizador = new Vue({
             const res = await this.get_data_cerberusByID(this.id_cerberus);
             this.employesCerberus = [];
             try {
-                if (res.length > 0) {
+                if (res.idEmpleadoCerberus != undefined) {
                     this.employesCerberus[0] = res; 
                 }
             } catch (error) {
@@ -123,10 +121,10 @@ var sinconizador = new Vue({
         },cancelSinc(){
             this.employesCerberus = []; 
             this.is_newEmployees = false;
-        },async show_message(msg,typeMessage){ 
+        },async show_message(msg,typeMessage){
             this.msg = msg;
             this.typeMessage = typeMessage;
-            setTimeout(function() { sinconizador.typeMessage='' ;sinconizador.msg =''; }, 90000);
+            setTimeout(function() { sinconizador.typeMessage='' ;sinconizador.msg =''; }, 190000);
         },async searchNewEmployees(){
             this.text_modal = "estamos buscando empleados nuevos en Cerberus";
             this.view_modal = true; 
@@ -146,9 +144,15 @@ var sinconizador = new Vue({
             this.employesCerberus = array_result; 
         },async showDataCerberus(row){  
             const res = await this.get_data_cerberusByID(row.id_cerberus_empleado);
-            if (res.idEmpleadoCerberus > 0) {
-                this.employeCerberus = res;  
+            try {
+                if (res.idEmpleadoCerberus != undefined) {
+                    this.employeCerberus = res;  
+                }
+            } catch (error) {
+                this.employeCerberus = {};
+                console.log(error);
             }
+
         },filter(){  
             let array_result= [];
             this.employesSlack.forEach(element => { 
