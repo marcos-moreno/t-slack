@@ -4,6 +4,17 @@
 <button type="button"  class="btn btn-info btn-xs" @click="searchNewEmployees">Buscar Empleados Nuevos</button>
 
   <br/> 
+  <div v-if="view_modal"  class="modal-mask" style="height:100%" > 
+      <div class="modal-dialog modal-dialog-centered"  >
+          <div class="modal-content"  >  
+              <div class="modal-body"  >      
+                  <img width="100%"  src="../../img/progress.gif">
+                  Espera por favor {{text_modal}}...
+              </div>
+          </div> 
+      </div>
+  </div>  
+
   <div >
       <div class="alert alert-primary" v-if="typeMessage == 'info'" role="alert">{{msg}}</div>
       <div class="alert alert-danger"  v-if="typeMessage == 'error'" role="alert">{{msg}}</div>
@@ -147,4 +158,4 @@
         </div> 
       </div>
 </div> 
-<script type="text/javascript" src="../../controllers/admin/sinc_cerberus1.js"></script>  
+<script type="text/javascript" src="../../controllers/admin/sincr_cerberus.js"></script>  

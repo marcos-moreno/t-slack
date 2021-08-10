@@ -11,7 +11,9 @@ var sinconizador = new Vue({
       msg:'', 
       id_cerberus : 0,
       array_duplicate : [],
-      display_duplicate : false
+      display_duplicate : false,
+      view_modal : false,
+      text_modal : ""
     },
     methods:{
         async completeSinc(){  
@@ -110,9 +112,8 @@ var sinconizador = new Vue({
         },async buscarCerberus(){
             const res = await this.get_data_cerberusByID(this.id_cerberus);
             this.employesCerberus = [];
-            console.log(this.employesCerberus);
             try {
-                if (res.idEmpleadoCerberus > 0) {
+                if (res.length > 0) {
                     this.employesCerberus[0] = res; 
                 }
             } catch (error) {
@@ -127,24 +128,13 @@ var sinconizador = new Vue({
             this.typeMessage = typeMessage;
             setTimeout(function() { sinconizador.typeMessage='' ;sinconizador.msg =''; }, 90000);
         },async searchNewEmployees(){
-            let cadena = "";
-            let arrayEmpleadoSlacknss = ""; 
-            for (let index = 0; index < this.employesSlack.length; index++) {
-                const element = this.employesSlack[index];
-                if (element.id_cerberus_empleado != null) {
-                    cadena += "'" + element.id_cerberus_empleado + "',";
-                    arrayEmpleadoSlacknss += "'" + element.nss + "',";
-                }
-            } 
-            cadena += "#";
-            cadena = cadena.replace(',#', ''); 
-            arrayEmpleadoSlacknss += "#";
-            arrayEmpleadoSlacknss = arrayEmpleadoSlacknss.replace(',#', ''); 
-
-            const res = await this.get_data_new_employees_cerberus(cadena,arrayEmpleadoSlacknss);
+            this.text_modal = "estamos buscando empleados nuevos en Cerberus";
+            this.view_modal = true; 
+            const res = await this.get_data_new_employees_cerberus();
             this.employesCerberus = res;
             // console.log(this.employesCerberus);
             this.is_newEmployees = true;
+            this.view_modal = false; 
         },DelNewEmployee(row){
             let array_result= [];
             for (let index = 0; index < this.employesCerberus.length; index++) {
@@ -156,7 +146,9 @@ var sinconizador = new Vue({
             this.employesCerberus = array_result; 
         },async showDataCerberus(row){  
             const res = await this.get_data_cerberusByID(row.id_cerberus_empleado);
-            this.employeCerberus = res;  
+            if (res.idEmpleadoCerberus > 0) {
+                this.employeCerberus = res;  
+            }
         },filter(){  
             let array_result= [];
             this.employesSlack.forEach(element => { 
@@ -200,21 +192,23 @@ var sinconizador = new Vue({
                 } 
             }  
          }
-         ,async get_data_new_employees_cerberus(arrayEmpleadoSlack,arrayEmpleadoSlacknss){ 
+         ,async get_data_new_employees_cerberus(){ 
             const response = await axios.get(configEP.EndPointCerberus + 'NewEmpleado' 
            ,{
             headers:{
                 "token" : localStorage.getItem("API_KEY_CERBERUS")
             },
             params:{
-                 //'arrayEmpleadoSlack':arrayEmpleadoSlack,
-                 'arrayEmpleadoSlacknss':arrayEmpleadoSlack,
-                //'arrayEmpleadoSlacknss':arrayEmpleadoSlacknss
             } 
-            }).then(function (response) {   
-                return response.data.data; 
+            }).then(function (response) {
+                if (response.data.status == "success") {
+                    return response.data.data; 
+                }else{
+                    return [];
+                }
             }).catch(function (response) {  
-                return response;
+                console.log(response);
+                return [];
             });
             return response;
         },async get_data_cerberusByName(employe){ 
@@ -236,6 +230,8 @@ var sinconizador = new Vue({
             })  
             return response;
         },async get_data_cerberusByID(id){ 
+            this.text_modal = "estamos recuperando la información de Cerberus";
+            this.view_modal = true;
             const response = await axios.get(configEP.EndPointCerberus + 'empleadoById' 
             ,{
                 headers:{
@@ -244,11 +240,16 @@ var sinconizador = new Vue({
                 ,params:{
                 'id_cerberus_empleado':id, 
             } 
-            }).then(function (response) {    
-                return response.data.data[0]; 
+            }).then(function (response) {   
+                if (response.data.status == "success") {
+                    return response.data.data[0];
+                }else{
+                    [];
+                }  
             }).catch(function (response) {  
                 return response.data;
-            }) 
+            })  
+            this.view_modal = false;
             return response;
         },async request(path,jsonParameters){
             const response = await axios.post(path, jsonParameters).then(function (response) {   
@@ -264,7 +265,7 @@ var sinconizador = new Vue({
             for (let index = 0; index < empleados_sin_fecha_alta.length; index++) {
                 let empleado_slack = empleados_sin_fecha_alta[index];
                 let empleadoCerberus = await this.get_data_cerberusByID(empleado_slack.id_cerberus_empleado);
-                empleado_slack.perfilcalculo = empleadoCerberus.perfilCalculo; 
+                empleado_slack.perfilcalculo = empleadoCerberus != [] ? empleadoCerberus.perfilCalculo:""; 
                 const resUpdate = await this.request('../../models/bd/bd_employee.php', {action:'updateParameter',model:empleado_slack});
                 console.log(resUpdate);
             }
