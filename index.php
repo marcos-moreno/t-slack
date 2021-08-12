@@ -31,14 +31,14 @@
 					</div> 
 					<div class="modal-body"> 
 							<div class="form-group">
-								<input :disabled="!isRols" type="name" class="form-control" name="user" 
+								<input :disabled="!isRols" type="text" class="form-control" name="user" 
 								placeholder="user - cel - mail" v-model="user" required="required">		
 							</div>
 							<div class="form-group">
 								<input :disabled="!isRols" type="password" v-model="password"  class="form-control" v-on:keyup.enter="getRoles()" name="password" id="password" placeholder="Password"  required="required">	
 							</div>     
-							<div class="form-group" >
-								<select :disabled="isRols" v-model="id_rol" class="form-control" id="rol">
+							<div class="form-group" v-if="!isRols">
+								<select  v-model="id_rol" class="form-control" id="rol">
 									<option v-for='rol in roles' v-bind:value='rol.id_rol'>
 										{{rol.rol}}
 									</option>
