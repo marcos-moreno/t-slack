@@ -5,11 +5,7 @@
  require_once 'auth/check.php'; 
 
 if (check_session()) {  
-    switch($received_data->action){
-        case 'comparePassword': 
-            $model = new Log_Request($data,$connect,$received_data);
-            $model->comparePassword();
-        break; 
+    switch($received_data->action){ 
         case 'changePassword':
             $model = new Log_Request($data,$connect,$received_data);
             $model->changePassword(); 
@@ -22,6 +18,10 @@ if (check_session()) {
             $output = array('status'  => 'session_active'); 
             echo json_encode($output);
         break;
+        case 'isPass_default':
+            $model = new Log_Request($data,$connect,$received_data);
+            $model->isPass_default();
+        break; 
     }
 }else{
     if($received_data->action == 'getRoles'){
@@ -46,36 +46,56 @@ class Log_Request
         $this->data  = $data;
         $this->connect = $connect;
         $this->received_data = $received_data;
-    } 
-    public function changePassword(){
-        if (md5($this->received_data->password_old) == $_SESSION['password']) {
-            $query = '';
-            try {
-                if ($this->received_data->password_new != '') {
-                    require_once "postgres.php";  
-                    $query = " UPDATE empleado SET  password =  md5('" . $this->received_data->password_new . "')  WHERE id_empleado= " . $_SESSION['id_empleado']  ;
-                    $statement = $connect->prepare($query);
-                    $statement->execute(); 
-                    echo json_encode('Password Updated'); 
-                }else{
-                    echo 'La contraseña NO es válida.';
-                } 
-            } catch (PDOException $exc) {
-                $output = array('status'  => 'erro','message' => $exc->getMessage()); 
-                echo json_encode($output); 
-                return false;
-            } 
-        } else {
-            echo 'La contraseña NO es válida.';
-        }
-    } 
+    }  
 
-    public function comparePassword(){ 
-        if (md5($this->received_data->password_old) == $_SESSION['password']) {
-            echo 'contraseña válida';
-        } else {
-            echo 'La contraseña NO es válida.';
-        }  
+    public function changePassword(){
+        try { 
+            $output = array('status'  => '','data' => array()); 
+            $parametros = array(
+                ':id_empleado' => $_SESSION['id_empleado'], 
+                ':password'=> $this->received_data->password_old
+            ); 
+            $query =  "
+            SELECT 	
+                e.id_empleado
+            FROM refividrio.empleado e
+            INNER JOIN empleado_rol er ON er.id_empleado = e.id_empleado
+            INNER JOIN rol r ON r.id_rol = er.id_rol
+            WHERE 
+                password = md5(:password) AND e.id_empleado = :id_empleado AND e.activo = true
+            LIMIT 1    
+            ";  
+            $statement = $this->connect->prepare($query); 
+            $statement->execute($parametros); 
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                if ($row['id_empleado'] == $_SESSION['id_empleado']) {
+                    try {
+                        $params = array(
+                            ':password_new' => $this->received_data->password_new,
+                            ':id_empleado' => $_SESSION['id_empleado'] 
+                        );
+                        $query = " UPDATE empleado SET  password =  md5(:password_new)  WHERE id_empleado= :id_empleado"  ;
+                        $statement2 = $this->connect->prepare($query); 
+                        $statement2->execute($params);  
+                        $output = array('status'  => 'success'); 
+                        echo json_encode($output);
+                        return true;
+                    } catch (PDOException $exc) {
+                        $output = array('status'  => 'errorChangePass','data' => $exc->getMessage()); 
+                        echo json_encode($output);
+                        return false;
+                    }
+                   
+                }
+            } 
+            $output = array('status'  => 'errorOldPass','data' => 'no hay conincidencia'); 
+            echo json_encode($output);
+            return false;
+        } catch (PDOException $exc) {
+            $output = array('status'  => 'errorOldPass','data' => $exc->getMessage()); 
+            echo json_encode($output);
+            return false;
+        }
     } 
     
     public function getRoles(){  
@@ -110,12 +130,43 @@ class Log_Request
             $output = array('status'  => 'success','data' => $data); 
             echo json_encode($output);   
         } catch (PDOException $exc) {
-            $output = array('status'  => 'erro','message' => $exc->getMessage()); 
+            $output = array('status'  => 'error','message' => $exc->getMessage()); 
             echo json_encode($output); 
             return false;
         }  
     } 
 
+    public function isPass_default(){  
+        try { 
+            $data = array();
+            $parametros = array(':id_empleado' => $_SESSION['id_empleado']); 
+            $query =  "
+            SELECT 	
+                e.id_empleado
+            FROM refividrio.empleado e
+            INNER JOIN empleado_rol er ON er.id_empleado = e.id_empleado
+            INNER JOIN rol r ON r.id_rol = er.id_rol
+            WHERE e.id_empleado = :id_empleado 
+            AND password = md5('refividrio')
+            AND e.activo = true"; 
+            $statement = $this->connect->prepare($query); 
+            $statement->execute($parametros);
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $data[] = $row; 
+                $output = array('status'  => 'success','data' => true); 
+                echo json_encode($output);   
+                return;
+            }
+            $output = array('status'  => 'success','data' => false); 
+            echo json_encode($output);   
+            return;
+        } catch (PDOException $exc) {
+            $output = array('status'  => 'error','data' => false); 
+            echo json_encode($output); 
+            return false;
+        }  
+    } 
+    
     public function login(){  
         try { 
             $data = array();

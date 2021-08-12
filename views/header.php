@@ -28,20 +28,7 @@ if ($valido == false) {  header('location: ../logout.php'); }
   <script src="../../css/js/axios.min.js"></script>     
   <link href="../../css/modal.css" rel="stylesheet" type="text/css">
   <link rel="stylesheet" href="../../css/notificaciones_model.css"> 
-</head>
-
-
-<input id="resetPassword" style="display:none" value=  
-  <?php 
-  session_start(); 
-  if ($_SESSION['password'] == 'af8d96655446891992fa92383ae70b02') {
-  echo("reset");
-  }else{echo("0");} 
-  ?>
-> 
-
-
-
+</head> 
 
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="overflow: auto;">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -243,6 +230,6 @@ if ($valido == false) {  header('location: ../logout.php'); }
 </style>
 <body  onclick="hover()" style="font-size: 10pt;background-color: <?php session_start();   echo $_SESSION['color_back'] ?>" >
 <script type="text/javascript" src="../../controllers/user/c_leccion.js"></script>
-<script type="text/javascript" src="../../controllers/user/notifications_u.js"></script>
-<script type="text/javascript" src="../../controllers/admin/changePasword.js"></script>  
+<script type="text/javascript" src="../../controllers/user/notifications_us.js"></script>
+<script type="text/javascript" src="../../controllers/admin/c_changePasword.js"></script>  
 <script type="text/javascript" src='../../controllers/config.js'></script>

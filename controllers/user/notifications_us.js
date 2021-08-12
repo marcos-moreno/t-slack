@@ -58,9 +58,9 @@ var notification = new Vue({
     }, 
  
     mounted:function(){
-        let reset = document.getElementById("resetPassword").value;
-        if(reset != "reset"){ 
-            this.fetchAllNotifications(); 
-        }
+        // let reset = document.getElementById("resetPassword").value;
+        // if(reset != "reset"){ 
+        //     this.fetchAllNotifications(); 
+        // }
     }
    });

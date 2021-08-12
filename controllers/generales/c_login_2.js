@@ -28,14 +28,10 @@ var login = new Vue({
                     this.roles = rols.data; 
                     this.isRols = false;
                     this.id_rol = rols.data[0].id_rol;
-                    // if (this.roles.length > 1) {
-                    //     this.msg = "Usuario encontrado";  
-                    //     this.msgErro = "";   
-                    // } 
                     this.login();
                 }else if (rols.status == "success" && rols.data.length > 1 ) {
                     this.roles = rols.data; 
-                    this.isRols = false; 
+                    this.isRols = false;
                     if (this.roles.length > 1) {
                         this.msg = "Selecciona tu rol de acceso";  
                         this.msgErro = "";   
@@ -63,7 +59,6 @@ var login = new Vue({
                 if (login.status == "success") {
                     try {
                         if (login.data.id_empleado > 0) {
-                            console.log(login.data.api_key_cerberus);
                             if (login.data.api_key_cerberus != false) {
                                 if (login.data.api_key_cerberus.status  == "success") {
                                     localStorage.setItem("API_KEY_CERBERUS",login.data.api_key_cerberus.data.token );
