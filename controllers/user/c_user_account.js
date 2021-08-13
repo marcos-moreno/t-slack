@@ -25,6 +25,7 @@ var account = new Vue({
                         "token" : localStorage.getItem("API_KEY_CERBERUS")
                     }
             }).then(function(response){ return  response.data });
+            console.log(registros); 
             if (registros.status == "success") {
                 this.formatearRegistros(registros.data);
             }
@@ -222,8 +223,8 @@ var account = new Vue({
         } 
     }, 
     async created(){
-        let reset = document.getElementById("resetPassword").value;
-        if(reset != "reset"){ 
+        // let reset = document.getElementById("resetPassword").value;
+        // if(reset != "reset"){ 
             this.FechaI = this.fechaActual();
             this.FechaF = this.fechaActual(); 
             await this.fetchData(); 
@@ -240,6 +241,6 @@ var account = new Vue({
                 $('#ModalMsg').modal('show');  
             } 
             this.findRegister(); 
-        } 
+        // } 
     } 
  });
