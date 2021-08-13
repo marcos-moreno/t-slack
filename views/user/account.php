@@ -174,4 +174,4 @@
       </div>  
     </div> 
 </div>
-<script type="text/javascript" src="../../controllers/user/user_account.js"></script>
+<script type="text/javascript" src="../../controllers/user/c_user_account.js"></script>
