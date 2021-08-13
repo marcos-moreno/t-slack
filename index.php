@@ -64,4 +64,4 @@
 	</div>     
 </body>
 
-<script src="controllers/generales/c_login_2.js"></script> 
+<script src="controllers/generales/c_login_3.js"></script> 

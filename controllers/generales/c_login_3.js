@@ -64,12 +64,12 @@ var login = new Vue({
                                 if (login.data.api_key_cerberus.status  == "success") {
                                     localStorage.setItem("API_KEY_CERBERUS",login.data.api_key_cerberus.data.token );
                                 }
-                            } 
-                            location.href=login.data.pagina_inicio; 
+                            }
                         }
                     } catch (error) {
                         console.log(error);
                     }
+                    location.href=login.data.pagina_inicio; 
                 }else{
                     this.msg = "";  
                     this.msgErro = "Usuario inválido";  

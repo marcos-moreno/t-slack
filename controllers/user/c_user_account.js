@@ -25,7 +25,6 @@ var account = new Vue({
                         "token" : localStorage.getItem("API_KEY_CERBERUS")
                     }
             }).then(function(response){ return  response.data });
-            console.log(registros); 
             if (registros.status == "success") {
                 this.formatearRegistros(registros.data);
             }
