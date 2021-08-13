@@ -33,12 +33,11 @@ if (check_session()) {
                 ':id_actualizadopor' =>  $_SESSION['id_empleado'],
                 ':usuario' => $received_data->model->usuario, 
                 ':fecha_nacimiento' => $received_data->model->fecha_nacimiento,
-                ':nss' =>  $received_data->model->nss  ,
+                ':nss' =>  $received_data->model->nss,
                 ':rfc' => $received_data->model->rfc,
                 ':id_cerberus_empleado' => $received_data->model->id_cerberus_empleado,
                 ':fecha_alta_cerberus' => $received_data->model->fecha_alta_cerberus, 
                 ':perfilcalculo' => $received_data->model->perfilcalculo, 
-
                 ':iddepartamento_cerbeus' => $received_data->model->iddepartamento_cerbeus, 
                 ':idempresa_cerberus' => $received_data->model->idempresa_cerberus, 
                 ':idsucursal_cerberus' => $received_data->model->idsucursal_cerberus,  

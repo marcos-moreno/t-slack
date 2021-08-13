@@ -17,6 +17,17 @@ var sinconizador = new Vue({
     },
     methods:{
         async completeSinc(){  
+
+        //    await axios.post(configEP.EndPointCerberus + 'set_sincronizado_surver' 
+        //     ,{'idEmpleado':4373},{headers:{"token" : localStorage.getItem("API_KEY_CERBERUS")}}).then(function (response) {
+        //         console.log("response: set_sincronizado_surver");
+        //         console.log(response);
+        //     }).catch(function (response) {  
+        //         console.log("response error: set_sincronizado_surver");
+        //         console.log(response);
+        //     })
+        //     return;
+
             for (let index = 0; index < this.employesCerberus.length; index++) {
                 const element = this.employesCerberus[index];
                 let employee = {}; 
@@ -57,15 +68,35 @@ var sinconizador = new Vue({
                     } catch (error) {
                         employee.correo_verificado = 'false';
                     }
+                    employee.correo_verificado = true;
 
                     if (this.validaUser(usuario)) {
                         employee.usuario =  usuario;
                     }else{
                         employee.usuario =  usuario + "_d";
                         user_duplicate = true;
-                    }  
+                    }
                     const res = await this.request('../../models/bd/bd_employee.php', {action:'insertSinc',model:employee}); 
                     if (res.message == 'sinc succes') {
+                        // ##################################
+                        // const response =  
+                        await
+                        axios.post(configEP.EndPointCerberus + 'set_sincronizado_surver' 
+                        ,{
+                            'idEmpleado':element.idEmpleadoCerberus
+                        },{
+                            headers:{  
+                                "token" : localStorage.getItem("API_KEY_CERBERUS")
+                            }
+                        }).then(function (response) {
+                            console.log(`response (${element.idEmpleadoCerberus}): set_sincronizado_surver (success)`);
+                            // console.log(response);
+                        }).catch(function (response) {  
+                            console.log("response error: set_sincronizado_surver");
+                            console.log(response);
+                        });
+
+                        this.request('', {action:'insertSinc',model:employee}); 
                         this.show_message(this.msg + '\nSincronizado: ' + employee.id_cerberus_empleado,'success'); 
                         if (user_duplicate) {
                             this.array_duplicate.push(employee);  
@@ -196,15 +227,12 @@ var sinconizador = new Vue({
                 } 
             }  
          }
-         ,async get_data_new_employees_cerberus(){ 
+         ,async get_data_new_employees_cerberus(){
             const response = await axios.get(configEP.EndPointCerberus + 'NewEmpleado' 
            ,{
-            headers:{
-                "token" : localStorage.getItem("API_KEY_CERBERUS")
-            },
-            params:{
-            } 
-            }).then(function (response) {
+                headers:{"token" : localStorage.getItem("API_KEY_CERBERUS")},
+                params:{} 
+            }).then(function (response) { 
                 if (response.data.status == "success") {
                     return response.data.data; 
                 }else{

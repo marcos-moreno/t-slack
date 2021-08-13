@@ -21,19 +21,26 @@ if (check_session()) {
         case 'isPass_default':
             $model = new Log_Request($data,$connect,$received_data);
             $model->isPass_default();
-        break; 
+        break;  
     }
 }else{
-    if($received_data->action == 'getRoles'){
-        $model = new Log_Request($data,$connect,$received_data);
-        $model->getRoles();
-    }else if($received_data->action == 'login'){
-        $model = new Log_Request($data,$connect,$received_data);
-        $model->login();
-    }else{
-        $output = array('message' => 'Not authorized'); 
-        echo json_encode($output); 
-    } 
+
+    // if($received_data->action == 'get_token'){
+    //     $model = new Log_Request($data,$connect,$received_data);
+    //     var_dump($model->get_token(array('id_empleado' => '150','rol'=>'Admin')));
+    // }else{ 
+        if($received_data->action == 'getRoles'){
+            $model = new Log_Request($data,$connect,$received_data);
+            $model->getRoles();
+        }else if($received_data->action == 'login'){
+            $model = new Log_Request($data,$connect,$received_data);
+            $model->login();
+        }else{
+            $output = array('message' => 'Not authorized'); 
+            json_encode($output); 
+        } 
+    // }
+
 } 
 
 class Log_Request 
@@ -230,36 +237,37 @@ class Log_Request
             } 
         } catch (PDOException $exc) {
             $output = array('status'  => 'erro','message' => $exc->getMessage()); 
-            echo json_encode($output); 
+            echo json_encode($output);
             return false;
         }  
     } 
     public function get_token($data)
     {
-        try {
+        try { 
             $url = 'https://rep.refividrio.com.mx:5858/api/login';
+            // $url = 'http://localhost:5860/api/login';
             $ch = curl_init($url);
             $jsonData = array(
                 'API_KEY'=>'surver_$MGsecretkey$Surver$NodeJS&ApiCerberus',
                 "id_empleado" => $data['id_empleado'],
                 "rol" => $data['rol']
-            );
+            ); 
             $jsonDataEncoded = json_encode($jsonData);
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonDataEncoded);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-            $result = curl_exec($ch);
-            $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            if ( $status !== 201 && $status !== 200 ) {
-                return false;
-                // die("Error: call to URL $url failed with status $status, response $result, curl_error " . curl_error($ch) . ", curl_errno " . curl_errno($ch));
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5); 
+            $result = curl_exec($ch); 
+            $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);  
+            if ( $status !== 201 && $status !== 200 ) { 
+                return  ("Error: call to URL $url failed with status $status, response $result, curl_error " . curl_error($ch) . ", curl_errno " . curl_errno($ch));
             }
             curl_close($ch);
             return  $result;
         } catch (\Throwable $th) {
+            echo $th;
             return false;
         }   
     }  

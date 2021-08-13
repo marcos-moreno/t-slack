@@ -59,6 +59,7 @@ var login = new Vue({
                 if (login.status == "success") {
                     try {
                         if (login.data.id_empleado > 0) {
+                            console.log(login.data);
                             if (login.data.api_key_cerberus != false) {
                                 if (login.data.api_key_cerberus.status  == "success") {
                                     localStorage.setItem("API_KEY_CERBERUS",login.data.api_key_cerberus.data.token );
