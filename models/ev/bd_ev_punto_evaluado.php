@@ -113,7 +113,9 @@ class Ev_punto_evaluado
                   
                     $row['ev_punto_evaluar_ln'] = $this->search_union($row,'ev_punto_evaluar_ln','ev_punto_evaluar_ln_id','ev_punto_evaluar_ln_id');
                   
-                    $row['empleado'] = $this->search_union($row,'empleado','id_empleado','id_empleado');
+                    $empleado = $this->search_union($row,'empleado','id_empleado','id_empleado');     
+                    $empleado[0]['password'] = '';
+                    $row['empleado'] = $empleado ; 
                   
                     $row['ev_evaluacion'] = $this->search_union($row,'ev_evaluacion','ev_evaluacion_id','ev_evaluacion_id');
                   

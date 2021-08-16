@@ -52,15 +52,14 @@ class Ev_evaluacion
     public function insert(){
         try {
             $data = array(
-                    ':id_lider' => $this->received_data->model->id_lider,
+                        ':id_lider' => $this->received_data->model->id_lider,
                         ':periodo_id' => $this->received_data->model->periodo_id,
                         ':creadopor' => $_SESSION['id_empleado'],
                         ':actualizadopor' => $_SESSION['id_empleado'],
                         ':nombre' => $this->received_data->model->nombre,
-                        
-                    ); 
-        $query = 'INSERT INTO ev_evaluacion (id_lider,periodo_id,creado,actualizado,creadopor,actualizadopor,nombre) VALUES (:id_lider,:periodo_id,Now(),Now(),:creadopor,:actualizadopor,:nombre) ;';
-
+                    );
+            $query = 'INSERT INTO ev_evaluacion (id_lider,periodo_id,creado,actualizado,creadopor,actualizadopor,nombre)
+                        VALUES (:id_lider,:periodo_id,Now(),Now(),:creadopor,:actualizadopor,:nombre) ;';
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  
             $output = array('message' => 'Data Inserted'); 
@@ -75,19 +74,20 @@ class Ev_evaluacion
     public function update(){
         try {
             $data = array(
-                    ':ev_evaluacion_id' => $this->received_data->model->ev_evaluacion_id, 
+                        ':ev_evaluacion_id' => $this->received_data->model->ev_evaluacion_id, 
                         ':id_lider' => $this->received_data->model->id_lider, 
                         ':periodo_id' => $this->received_data->model->periodo_id, 
                         ':actualizadopor' => $_SESSION['id_empleado'],
                         ':nombre' => $this->received_data->model->nombre, 
-                         
                     ); 
-            $query = 'UPDATE ev_evaluacion SET id_lider=:id_lider,periodo_id=:periodo_id,actualizado=Now(),actualizadopor=:actualizadopor,nombre=:nombre WHERE  ev_evaluacion_id = :ev_evaluacion_id ;';
+            $query = 'UPDATE ev_evaluacion SET id_lider=:id_lider,periodo_id=:periodo_id,actualizado=Now()
+                        ,actualizadopor=:actualizadopor,nombre=:nombre 
+                        WHERE  ev_evaluacion_id = :ev_evaluacion_id ;';
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  
-            $output = array('message' => 'Data Updated'); 
-            echo json_encode($output); 
+            $output = array('message' => 'Data Updated');
+            echo json_encode($output);
             return true;
         } catch (PDOException $exc) {
             $output = array('message' => $exc->getMessage()); 
@@ -102,11 +102,13 @@ class Ev_evaluacion
             ':ev_evaluacion_ln_id' => $this->received_data->ev_evaluacion_ln_id,  
             ':id_empleado' => $this->received_data->id_empleado,    
             ':id_user' => $_SESSION['id_empleado'],  
+            ':no_faltas' => $this->received_data->no_faltas,  
+            ':no_retardos' => $this->received_data->no_retardos,  
         );
-        try {  
+        try {
             $query = "
                     SELECT refividrio.procesar_evaluacion(
-                        :ev_evaluacion_id,:ev_evaluacion_ln_id,:id_empleado,:id_user
+                        :ev_evaluacion_id,:ev_evaluacion_ln_id,:id_empleado,:id_user,:no_faltas,:no_retardos
                     )" ; 
             $statement = $this->connect->prepare($query); 
             $statement->execute($parameters);   
@@ -138,8 +140,10 @@ class Ev_evaluacion
                     ORDER BY ev_evaluacion_id DESC" ;
             $statement = $this->connect->prepare($query); 
             $statement->execute($parameters);   
-            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
-                    $row['empleado'] = $this->search_union($row,'empleado','id_empleado','id_lider');
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {   
+                    $empleado = $this->search_union($row,'empleado','id_empleado','id_lider');     
+                    $empleado[0]['password'] = '';
+                    $row['empleado'] = $empleado ; 
                     $row['periodo'] = $this->search_union($row,'periodo','periodo_id','periodo_id');
                     $data[] = $row;
             } 

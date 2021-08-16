@@ -113,9 +113,11 @@ class Solicitud_uniforme
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);   
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
-                    $row['empleado'] = $this->search_union($row,'empleado','id_empleado','id_empleado');
-                    $row['tipo_entregas'] = $this->search_union($row,'un_tipo_entregas','id_tipo_entrega','id_tipo_entrega');
-                    $data[] = $row;
+                $empleado = $this->search_union($row,'empleado','id_empleado','id_empleado');     
+                $empleado[0]['password'] = '';
+                $row['empleado'] = $empleado ;  
+                $row['tipo_entregas'] = $this->search_union($row,'un_tipo_entregas','id_tipo_entrega','id_tipo_entrega');
+                $data[] = $row;
             } 
             echo json_encode($data); 
             return true;

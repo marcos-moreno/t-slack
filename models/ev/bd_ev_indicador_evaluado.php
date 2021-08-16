@@ -111,7 +111,9 @@ class Ev_indicador_evaluado
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
                     $row['ev_indicador_general'] = $this->search_union($row,'ev_indicador_general','ev_indicador_general_id','ev_indicador_general_id');
                   
-                    $row['empleado'] = $this->search_union($row,'empleado','id_empleado','id_empleado');
+                    $empleado = $this->search_union($row,'empleado','id_empleado','id_empleado');     
+                    $empleado[0]['password'] = '';
+                    $row['empleado'] = $empleado ;  
                   
                     $row['ev_evaluacion_ln'] = $this->search_union($row,'ev_evaluacion_ln','ev_evaluacion_ln_id','ev_evaluacion_ln_id');
                   

@@ -79,18 +79,22 @@ var app_chagePassword = new Vue({
     },
     async mounted() {},
     async created(){ 
-        let linkComprobate = "../../models/login.php"; 
-        const reset = await axios.post(linkComprobate, {
-            action:'isPass_default' 
-        }).then(function (response) { 
-           return response;
-        })
-        .catch(function (response) {  
+        try {
+            let linkComprobate = "../../models/login.php"; 
+            const reset = await axios.post(linkComprobate, {
+                action:'isPass_default' 
+            }).then(function (response) { 
             return response;
-        });  
-        if(reset.data.data){
-            this.modalchagePassword = true;
-            this.isPass_default = true;
-        }
+            })
+            .catch(function (response) {  
+                return response;
+            });  
+            if(reset.data.data){
+                this.modalchagePassword = true;
+                this.isPass_default = true;
+            }
+        } catch (error) {
+            console.log(error);
+        } 
     }
    });  

@@ -1,6 +1,16 @@
 <?php require "../header.php";?> 
 <div  class="container-fluid" style="width:90%;"> 
     <div id="app_ev_evaluacion" style="margin-top:15px;"> 
+        <div v-if="is_load"  class="modal-mask" style="height:100%" > 
+            <div class="modal-dialog modal-dialog-centered"  >
+                <div class="modal-content"  >  
+                    <div class="modal-body"  >      
+                        <img width="100%"  src="../../img/progress.gif">
+                        Espera por favor {{text_modal}}...
+                    </div>
+                </div> 
+            </div>
+        </div> 
         <div class="pre-scrollable" >
             <div class="alert alert-primary" v-if="typeMessage == 'info'" role="alert">{{msg}}</div>
             <div class="alert alert-danger"  v-if="typeMessage == 'error'" role="alert">{{msg}}</div>
@@ -278,7 +288,7 @@
                             <div v-if="indicador.ev_indicador_general.tipo_captura.length > 0">
                                 <p>{{indicador.ev_indicador_general[0].descripcion}}</p>
                                 
-                                <div v-if="indicador.ev_indicador_general.tipo_captura[0].value=='Reportes'">
+                                <!-- <div v-if="indicador.ev_indicador_general.tipo_captura[0].value=='Reportes'">
                                     <div v-if="indicador.ev_indicador_general.tipo_captura[0].value == 'Reportes'">
                                         <button type="button" name="filter" class="btn btn-info btn-xs" 
                                         @click="evaluar_reportes(
@@ -295,7 +305,7 @@
                                                     indicador
                                                 )">Recalcular {{indicador.ev_indicador_general[0].nombre}}</button>
                                     </div>
-                                </div>
+                                </div> -->
                                 
                             </div> 
                             <div v-else>

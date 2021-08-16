@@ -2,6 +2,8 @@
 var application = new Vue({
     el:'#app_ev_evaluacion',
     data:{ 
+        is_load : false,
+        text_modal : "",
         ev_evaluacion : {},
         ev_evaluacionCollection : [],
         isFormCrud: false,
@@ -63,22 +65,53 @@ var application = new Vue({
         //::::::::::::::Evaluar
        
         // ::::::Indicadores:::::::::::::::::
-        async procesar_evaluacion(ev_evaluacion_ln){ 
+        async getIncidenciasCerberus(inicio,fin,idEmpleado_cerberus){
+            const response = await axios
+            .get(configEP.EndPointCerberus + 'no_faltas_retardos'
+                ,{
+                    headers:{
+                        "token" : localStorage.getItem("API_KEY_CERBERUS")
+                    }, 
+                    params:{ 
+                            fechaInicio: inicio,
+                            fechaFin:fin,
+                            idEmpleado: idEmpleado_cerberus
+                        }
+                })
+            .then(function(response){ return response.data;})
+            .catch(function(response){ return response;}); 
+            if (response.status == "success" && response.data.length > 0) {
+                return response.data[0];
+            }else{
+                return {no_retardos: 0, no_faltas: 0, idEmpleado: idEmpleado_cerberus};
+            }
+        },
+        async procesar_evaluacion(ev_evaluacion_ln){
+            this.is_load = true;
+            this.text_modal = "estamos calculando la evaluación del colaborador."
+            let jsonResponce = await this.getIncidenciasCerberus(
+                this.ev_evaluacion.periodo[0].inicio_periodo,
+                this.ev_evaluacion.periodo[0].fin_periodo,
+                ev_evaluacion_ln.empleado[0].id_cerberus_empleado
+            );
             const response_evaluar_reportes = await this.request(this.path,{
                 'action' : 'procesar_evaluacion'
                 ,'id_empleado' :  ev_evaluacion_ln.id_empleado
                 ,'ev_evaluacion_id' : ev_evaluacion_ln.ev_evaluacion_id 
                 ,'ev_evaluacion_ln_id' : ev_evaluacion_ln.ev_evaluacion_ln_id 
+                ,'no_faltas' : jsonResponce.no_faltas
+                ,'no_retardos' : jsonResponce.no_retardos
             });
+            this.is_load = false;
             if (response_evaluar_reportes.status == 'success') {
                 ev_evaluacion_ln.calificacion = response_evaluar_reportes.data.procesar_evaluacion;
-                console.log(response_evaluar_reportes.data);
+                // console.log(response_evaluar_reportes.data);
                 this.show_message("Evaluaciones Procesadas",'success'); 
             } else { 
                 this.show_message("No se pudo procesar, error -> " + response_evaluar_reportes.data,'error'); 
             }
         }, 
-        async show_indicadores(ev_evaluacion_ln){ 
+        async show_indicadores(ev_evaluacion_ln){
             if (ev_evaluacion_ln.estado[0].value == "BO") {
                 const responce_evl = await this.procesar_evaluacion(ev_evaluacion_ln);
                 this.ev_evaluacion_ln = ev_evaluacion_ln;
@@ -171,15 +204,15 @@ var application = new Vue({
                             this.ev_evaluacion_ln.id_empleado = element.id_empleado;
                             this.seleccionEmpleado();
                             asignado = true; 
-                        } 
+                        }
                     } 
                 } catch (error) {
                     console.log(error);
                     this.empleadoCollectionfiltro = [];
-                } 
+                }
             }
-        }, 
-        async save_ev_evaluacion_ln(){  
+        },
+        async save_ev_evaluacion_ln(){
             this.ev_evaluacion_ln.ev_puesto_id = this.empleadoByln.ev_puesto_id;
             if (this.ev_evaluacion_ln.ev_puesto_id == null || this.ev_evaluacion_ln.ev_puesto_id == 0 || this.ev_evaluacion_ln.ev_puesto_id == '') {
                 this.show_message('El empleado no tiene asignado un puesto.','error');

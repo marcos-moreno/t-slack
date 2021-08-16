@@ -222,24 +222,37 @@ var account = new Vue({
         } 
     }, 
     async created(){
-        // let reset = document.getElementById("resetPassword").value;
-        // if(reset != "reset"){ 
-            this.FechaI = this.fechaActual();
-            this.FechaF = this.fechaActual(); 
-            await this.fetchData(); 
-            if (this.account.correo_verificado) { 
-            } else {
-                this.isHello = true;
-                this.msg =  "Tenemos un problema con tu correo electrónico por favor actualizalo.";
-                $('#ModalMsg').modal('show'); 
+        await this.fetchData();  
+        try {
+            let linkComprobate = "../../models/login.php";
+            const reset = await axios.post(linkComprobate, {
+                action:'isPass_default'
+            }).then(function (response) { 
+            return response;
+            })
+            .catch(function (response) {  
+                return response;
+            });  
+            if(reset.data.data){
+            }else{
+                if (this.account.correo_verificado) {
+                } else {
+                    this.isHello = true;
+                    this.msg =  "Tenemos un problema con tu correo electrónico por favor actualizalo.";
+                    $('#ModalMsg').modal('show'); 
+                }
+                if (!this.validForm()) {
+                    this.msg = "Algunos datos de tu cuenta no son correctos.";
+                    this.isError = true;
+                    this.isHello = false;
+                    $('#ModalMsg').modal('show');  
+                } 
             }
-            if (!this.validForm()) {
-                this.msg = "Algunos datos de tu cuenta no son correctos.";
-                this.isError = true;
-                this.isHello = false;
-                $('#ModalMsg').modal('show');  
-            } 
-            this.findRegister(); 
-        // } 
+        } catch (error) {
+            console.log(error);
+        }
+        this.FechaI = this.fechaActual();
+        this.FechaF = this.fechaActual(); 
+        this.findRegister();
     } 
  });

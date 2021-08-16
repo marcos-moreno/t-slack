@@ -109,8 +109,10 @@ class Ev_evaluacion_ln
             $statement = $this->connect->prepare($query); 
             $statement->execute($parameters);   
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
-                    $row['estado'] = $this->search_union($row,'ev_atributo','id_atributo','estado_atributo');         
-                    $row['empleado'] = $this->search_union($row,'empleado','id_empleado','id_empleado');
+                    $row['estado'] = $this->search_union($row,'ev_atributo','id_atributo','estado_atributo');  
+                    $empleado = $this->search_union($row,'empleado','id_empleado','id_empleado');     
+                    $empleado[0]['password'] = '';
+                    $row['empleado'] = $empleado ; 
                     $row['ev_puesto'] = $this->search_union($row,'ev_puesto','ev_puesto_id','ev_puesto_id');
                     $data[] = $row;
             }

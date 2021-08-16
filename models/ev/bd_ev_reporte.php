@@ -119,8 +119,10 @@ class Ev_reporte
             $dataResult=[];       
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);   
-            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
-                    $row['empleado'] = $this->search_union($row,'empleado','id_empleado','id_empleado');
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {   
+                    $empleado = $this->search_union($row,'empleado','id_empleado','id_empleado');     
+                    $empleado[0]['password'] = '';
+                    $row['empleado'] = $empleado ; 
                     $row['ev_indicador_puesto'] = $this->search_union($row,'ev_indicador_puesto','ev_indicador_id','ev_indicador_puesto_id');
                     $dataResult[] = $row;
             }
