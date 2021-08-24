@@ -53,7 +53,7 @@
                 <table class="table table-bordered table-striped">
                     <tr> 
                         <th>Id</th>
-                        <th>ev_indicador_general_id</th>
+                        <th>Indicador</th>
                         <th>porcentaje</th>
                         <th>parametro_menor</th>
                         <th>parametro_mayor</th>

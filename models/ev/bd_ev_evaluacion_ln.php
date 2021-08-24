@@ -97,15 +97,17 @@ class Ev_evaluacion_ln
             
             $parameters = array(
                 ':ev_evaluacion_id' => $this->received_data->ev_evaluacion_id,  
+                ':filter' => $this->received_data->filter,  
             );
-            $query = "SELECT ev_evaluacion_ln_id,ev_evaluacion_id,id_empleado
-                        ,ev_puesto_id,calificacion,estado_atributo,creado
-                        ,actualizado,creadopor,actualizadopor 
-                    FROM ev_evaluacion_ln 
-                    WHERE 
-                        ev_evaluacion_id = :ev_evaluacion_id
+            $query = "SELECT ln.ev_evaluacion_ln_id,ln.ev_evaluacion_id,ln.id_empleado
+                        ,ln.ev_puesto_id,ln.calificacion,ln.estado_atributo,ln.creado
+                        ,ln.actualizado,ln.creadopor,ln.actualizadopor 
+                    FROM ev_evaluacion_ln ln
+                    INNER JOIN empleado e ON ln.id_empleado = e.id_empleado
+                    WHERE  
+                        ln.ev_evaluacion_id = :ev_evaluacion_id
+                        AND CONCAT(e.nombre,' ',e.paterno,' ',e.materno) ILIKE '%' || :filter || '%' 
                     ORDER BY 1 DESC" ;
-                        
             $statement = $this->connect->prepare($query); 
             $statement->execute($parameters);   
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  

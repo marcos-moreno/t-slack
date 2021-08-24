@@ -55,7 +55,7 @@ class Ev_indicador_puesto
         $parameters = array();
         try {
             $parameters = array(
-                    ':ev_puesto_id' => $this->received_data->model->ev_puesto_id, 
+                        ':ev_puesto_id' => $this->received_data->model->ev_puesto_id, 
                         ':porcentaje' => $this->received_data->model->porcentaje, 
                         ':creadopor' => $_SESSION['id_empleado'],
                         ':actualizadopor' => $_SESSION['id_empleado'], 
@@ -80,7 +80,7 @@ class Ev_indicador_puesto
     public function update(){
         try {
             $data = array(
-                    ':ev_indicador_puesto_id' => $this->received_data->model->ev_indicador_puesto_id, 
+                        ':ev_indicador_puesto_id' => $this->received_data->model->ev_indicador_puesto_id, 
                         ':ev_puesto_id' => $this->received_data->model->ev_puesto_id,  
                         ':porcentaje' => $this->received_data->model->porcentaje,  
                         ':actualizadopor' => $_SESSION['id_empleado'],
@@ -96,7 +96,7 @@ class Ev_indicador_puesto
             echo json_encode($output); 
             return true;
         } catch (PDOException $exc) {
-            $output = array('message' => $exc->getMessage()); 
+            $output = array('message' => $exc->getMessage());
             echo json_encode($output); 
             return false;
         }  
@@ -158,13 +158,20 @@ class Ev_indicador_puesto
                 ORDER BY porcentaje DESC 
                     '; 
             $statement = $this->connect->prepare($query); 
-            $statement->execute($parameters);   
+            $statement->execute($parameters);
             $result = false;
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
                     $row['ev_puesto'] = $this->search_union($row,'ev_puesto','ev_puesto_id','ev_puesto_id');
                     $temp = $this->search_union($row,'ev_indicador_general','ev_indicador_general_id','ev_indicador_general_id');
                     $temp['tipo_captura'] = $this->search_union($temp[0],'ev_atributo','id_atributo','tipo_captura_atributo');
                     $row['ev_indicador_general'] = $temp;
+                    $temp2 = $this->get_Puntos_evaluar($row);
+                    for ($i=0; $i < count($temp2); $i++) {
+                        $temp2[$i]['ev_puntos_evaluar_ln'] = $this->get_ev_puntos_evaluar_ln(
+                            $temp2[$i],$row,$this->received_data->id_empleado,$this->received_data->ev_evaluacion_id
+                        );
+                    }
+                    $row['ev_puntos_evaluar'] = $temp2;
                     $data[] = $row;
                     $result = true;
             }
@@ -217,8 +224,64 @@ class Ev_indicador_puesto
         }  
     }
 
-  
+    public function get_ev_puntos_evaluar_ln($row,$row_general,$id_empleado,$ev_evaluacion_id){
+        $data = array(); 
+        try {
+            $parameters = array(
+                ':id_lider' => $_SESSION['id_empleado'],
+                ':ev_punto_evaluar_id' => $row['ev_punto_evaluar_id'],
+                ':id_empleado' => $id_empleado,
+                ':ev_punto_evaluar_id' => $row['ev_punto_evaluar_id'],
+                ':ev_evaluacion_id' => $ev_evaluacion_id
+            );
+            $query = '
+                SELECT
+                    pt.*,
+                    COALESCE(cal_pt.is_checked,false) As is_checked,
+                    e.id_empleado,
+                    eval.ev_evaluacion_id
+                FROM ev_punto_evaluar_ln pt
+                INNER JOIN empleado e ON e.id_empleado = :id_empleado
+                INNER JOIN ev_evaluacion eval ON eval.ev_evaluacion_id = :ev_evaluacion_id
+                LEFT JOIN ev_calif_p_evaluar_ln cal_pt
+                    ON  cal_pt.ev_punto_evaluar_ln_id = pt.ev_punto_evaluar_ln_id
+                    AND cal_pt.id_lider = :id_lider
+                    AND cal_pt.id_empleado = e.id_empleado
+                    AND cal_pt.ev_evaluacion_id = eval.ev_evaluacion_id
+                WHERE
+                    pt.ev_punto_evaluar_id = :ev_punto_evaluar_id';
+            $statement = $this->connect->prepare($query);
+            $statement->execute($parameters);
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $data[] = $row;
+            }
+            return $data;
+        } catch (PDOException $exc) {
+            $output = array('message' => $exc->getMessage()); 
+            return [];
+        }
+    }
     
+    public function get_Puntos_evaluar($row){
+        $data = array(); 
+        try {
+            $query = 'SELECT 
+                        pe.*,tc.nombre As tipo_evaluacion,es_capturado,direct_data,opcion_multiple
+                        FROM ev_punto_evaluar pe
+                        INNER JOIN refividrio.ev_tipo_captura tc ON tc.ev_tipo_captura_id = pe.ev_tipo_captura_id
+                        WHERE ev_indicador_general_id = ' .$row['ev_indicador_general_id'] ;               
+            $statement = $this->connect->prepare($query); 
+            $statement->execute($data);   
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {   
+                    $data[] = $row;
+            }  
+            return $data; 
+        } catch (PDOException $exc) {
+            $output = array('message' => $exc->getMessage()); 
+            return [];  
+        }  
+    }
+
     public function search_union($row,$table_origen,$fk_table_origen,$fk_table_usage){
         $data = array(); 
         try {    
@@ -238,7 +301,7 @@ class Ev_indicador_puesto
         try {  
             $data = array(
                         ':ev_indicador_puesto_id' => $this->received_data->model->ev_indicador_puesto_id,
-                    ); 
+                    );
             $query = 'DELETE FROM ev_indicador_puesto WHERE ev_indicador_puesto_id = :ev_indicador_puesto_id ;'; 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  
@@ -251,8 +314,4 @@ class Ev_indicador_puesto
             return false;
         }  
     }
-
-  
-    
-
 } 

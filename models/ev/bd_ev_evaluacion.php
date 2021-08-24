@@ -19,6 +19,10 @@ if (check_session()) {
             $model = new Ev_evaluacion($data,$connect,$received_data);
             $model->delete(); 
         break;
+        case 'save_dat_point': 
+            $model = new Ev_evaluacion($data,$connect,$received_data);
+            $model->save_dat_point();
+        break;
         case 'select': 
             $model = new Ev_evaluacion($data,$connect,$received_data);
             $model->select();
@@ -123,7 +127,27 @@ class Ev_evaluacion
             echo json_encode($output); 
             return false;
         }  
-    } 
+    }
+    public function save_dat_point(){
+        try {  
+            $parameters = array(
+                ':points' => $this->received_data->points,  
+                ':id_lider' => $_SESSION['id_empleado'],
+            );
+            $query = "SELECT refividrio.save_dat_point(:points,:id_lider)";
+            $statement = $this->connect->prepare($query); 
+            $statement->execute($parameters);   
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {   
+                $data[] = $row;
+            } 
+            echo json_encode($data); 
+            return true;
+        } catch (PDOException $exc) {
+            $output = array('message' => $exc->getMessage()); 
+            echo json_encode($output); 
+            return false;
+        }  
+    }  
     public function select(){
         try {  
             $parameters = array(

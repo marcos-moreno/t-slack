@@ -105,25 +105,34 @@ var application = new Vue({
             this.is_load = false;
             if (response_evaluar_reportes.status == 'success') {
                 ev_evaluacion_ln.calificacion = response_evaluar_reportes.data.procesar_evaluacion;
-                // console.log(response_evaluar_reportes.data);
                 this.show_message("Evaluaciones Procesadas",'success'); 
             } else { 
                 this.show_message("No se pudo procesar, error -> " + response_evaluar_reportes.data,'error'); 
             }
-        }, 
+        },
+        async save_dat_point(data_save){
+            this.is_load = true;
+            await this.request(this.path,{
+                'action' : 'save_dat_point',
+                'points' : JSON.stringify(data_save)
+            });
+            await this.show_indicadores(this.ev_evaluacion_ln);
+        },
         async show_indicadores(ev_evaluacion_ln){
             if (ev_evaluacion_ln.estado[0].value == "BO") {
-                const responce_evl = await this.procesar_evaluacion(ev_evaluacion_ln);
+                await this.procesar_evaluacion(ev_evaluacion_ln);
                 this.ev_evaluacion_ln = ev_evaluacion_ln;
                 this.isFormCrud_ln = false;
                 this.is_evaluacion = false;
                 this.is_evaluacion_ln = false;
-                this.itIsEvaluation = true; 
+                this.itIsEvaluation = true;
                 const response = await this.request('../../models/ev/bd_ev_indicador_puesto.php',{
                     'action' : 'search_employe_indicadores',
                     'id_empleado' : ev_evaluacion_ln.id_empleado,
-                    'ev_evaluacion_ln_id' : ev_evaluacion_ln.ev_evaluacion_ln_id
-                });  
+                    'ev_evaluacion_ln_id' : ev_evaluacion_ln.ev_evaluacion_ln_id,
+                    'ev_evaluacion_id' : ev_evaluacion_ln.ev_evaluacion_id
+                });
+                console.log(response);
                 if (response.length > 0) {
                     this.indicadoresEvaluacion = response;
                 } else {
@@ -139,7 +148,7 @@ var application = new Vue({
             this.ev_evaluacion_lnCollection  = [];
             this.paginaCollection_ln = [];
             const response = await this.request(this.path_ln
-            ,{'action' : 'select','ev_evaluacion_id' : this.ev_evaluacion.ev_evaluacion_id});
+            ,{'action' : 'select','ev_evaluacion_id' : this.ev_evaluacion.ev_evaluacion_id,filter : this.filter_ln});
             // console.log(response);
             try{
                 this.show_message(response.length + ' Empleados Encontrados.','success');
@@ -191,7 +200,7 @@ var application = new Vue({
             this.paginas_ln.push({'element':'Sig'});
         },
        
-        async buscarValorEmpleado(){ 
+        async buscarValorEmpleado(){
             this.empleadoCollectionfiltro = [];
             let asignado = false;
             for (let index = 0; index < this.empleadoCollection.length; index++) {

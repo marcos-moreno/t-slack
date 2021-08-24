@@ -284,11 +284,55 @@
                         </h2>
                     </div>
                     <div :id="'c'+indicador.ev_indicador_puesto_id" class="collapse" v-bind:aria-labelledby="'h'+indicador.ev_indicador_puesto_id" >
-                        <div class="card-body">
+                        <div class="card-body"> 
                             <div v-if="indicador.ev_indicador_general.tipo_captura.length > 0">
-                                <p>{{indicador.ev_indicador_general[0].descripcion}}</p>
-                                
-                                <!-- <div v-if="indicador.ev_indicador_general.tipo_captura[0].value=='Reportes'">
+                                <p>{{indicador.ev_indicador_general[0].descripcion}}</p> 
+                                <!-- <p>{{indicador.ev_indicador_general[0]}}</p>  -->
+                                <div v-if="indicador.ev_indicador_general.tipo_captura[0].value == 'Encuesta'">
+                                    <div v-if="indicador.ev_indicador_general.tipo_captura[0].value == 'Encuesta'">
+                                       <!-- {{indicador.ev_puntos_evaluar}}  -->
+                                       <!-- {{indicador.ev_indicador_general.tipo_captura}} -->
+                                       <!-- v-if="indicador.ev_indicador_general.tipo_captura.value == 'Encuesta' " -->
+                                        <div class="accordion">
+                                            <div class="card" v-if="punto_evaluar.tipo_evaluacion == 'SI/NO' " 
+                                                v-for="punto_evaluar in indicador.ev_puntos_evaluar">
+                                                {{punto_evaluar.tipo_evaluacion}}
+                                                <div class="card-header" :id="'h'+punto_evaluar.ev_punto_evaluar_id">
+                                                    <h2 class="mb-0">
+                                                        <button class="btn btn-link text-left" type="button" data-toggle="collapse"
+                                                            v-bind:data-target="'#c'+punto_evaluar.ev_punto_evaluar_id" aria-expanded="true"
+                                                            v-bind:aria-controls="'c'+punto_evaluar.ev_punto_evaluar_id">
+                                                            {{punto_evaluar.nombre}} --->
+                                                        </button>
+                                                        <FONT style="color:#289001" size="3px">{{punto_evaluar.porcentaje_tl}}</FONT>  
+                                                    </h2>
+                                                </div>
+                                                <div :id="'c'+punto_evaluar.ev_punto_evaluar_id" class="collapse" v-bind:aria-labelledby="'h'+punto_evaluar.ev_punto_evaluar_id" >
+                                                    <div class="card-body">
+                                                        <ul id="example-1">
+                                                            <div v-for="rubro in punto_evaluar.ev_puntos_evaluar_ln">
+                                                                <input
+                                                                    type="checkbox" style="margin-left:15px;"
+                                                                    :id="punto_evaluar.ev_punto_evaluar_id+'_chec'+rubro.ev_punto_evaluar_ln_id" 
+                                                                    v-model="rubro.is_checked">
+                                                                <span>{{ rubro.nombre }}</span>
+                                                            </div>
+                                                            <br>
+                                                            <button type="button" class="btn btn-primary" 
+                                                                @click="save_dat_point(punto_evaluar.ev_puntos_evaluar_ln)"
+                                                            >Guardar</button>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--
+                                <div v-if="indicador.ev_indicador_general.tipo_captura[0].value=='Reportes'">
                                     <div v-if="indicador.ev_indicador_general.tipo_captura[0].value == 'Reportes'">
                                         <button type="button" name="filter" class="btn btn-info btn-xs" 
                                         @click="evaluar_reportes(
@@ -305,8 +349,8 @@
                                                     indicador
                                                 )">Recalcular {{indicador.ev_indicador_general[0].nombre}}</button>
                                     </div>
-                                </div> -->
-                                
+                                </div>
+                                -->
                             </div> 
                             <div v-else>
                                 No hay forma de avaluación
