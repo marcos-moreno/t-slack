@@ -272,9 +272,7 @@ var application = new Vue({
         },
         async fill_f_keys(){
             const response_empleado = await this.request('../../models/admin/bd_empleado.php'
-            ,{'order' : 'ORDER BY id_empleado DESC'
-            ,'action' : 'select'
-            ,filter:" activo='true' AND id_segmento IN (SELECT id_segmento from segmento WHERE id_empresa IN (1,2,3))"});
+            ,{'action' : 'selectSimple','method':'reportes'}); 
             try{  
                 if(response_empleado.length > 0){  
                     this.empleadoCollection = response_empleado; 
@@ -302,7 +300,7 @@ var application = new Vue({
             }catch(error){
                 this.show_message('No se encontrarón Departamentos.','info');
             }  
-        },paginator(i){ 
+        },paginator(i){
             let cantidad_pages = Math.ceil(this.ev_reporteCollection.length / this.numByPag);
             this.paginas = []; 
             if (i === 'Ant' ) {

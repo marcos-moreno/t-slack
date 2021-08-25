@@ -39,6 +39,11 @@ if (check_session()) {
             $model = new Empleado($data,$connect,$received_data);
             $model->searchById($_SESSION['id_empleado']); 
         break; 
+        case 'selectSimple': 
+            $model = new Empleado($data,$connect,$received_data);
+            $model->selectSimple(); 
+        break; 
+        
     }
 }else{
     $output = array('message' => 'Not authorized'); 
@@ -206,6 +211,43 @@ class Empleado
                     $row['departamento'] = $this->search_union($row,'departamento','departamento_id','departamento_id');
                     // $row['un_talla'] = $this->search_union($row,'un_talla','id_talla','id_talla_playera');
                     $data[] = $row;
+            } 
+            echo json_encode($data); 
+            return true;
+        } catch (PDOException $exc) {
+            $output = array('message' => $exc->getMessage()); 
+            echo json_encode($output); 
+            return false;
+        }  
+    }
+   
+    public function selectSimple(){
+        try {  
+            $query = "
+                SELECT 
+                    id_empleado,id_segmento,id_creadopor,fecha_creado,nombre
+                    ,paterno,materno,activo,celular
+                    ,correo,enviar_encuesta
+                    ,genero,id_actualizadopor,fecha_actualizado,usuario,password
+                    ,fecha_nacimiento,nss,rfc,id_cerberus_empleado
+                    ,id_talla_playera,id_numero_zapato,fecha_alta_cerberus,perfilcalculo,correo_verificado,
+                    id_empresa,desc_mail_v ,id_compac,ev_puesto_id,departamento_id
+                FROM empleado   
+                
+                ";
+            switch ($this->received_data->method) {
+                case 'reportes':
+                    $query .= "    WHERE activo='true' 
+                                AND id_segmento IN (SELECT id_segmento from segmento WHERE id_empresa IN (1,2,3)) ORDER BY id_empleado DESC";
+                    break; 
+                default:
+                    $query .= "";
+                    break;
+            }
+            $statement = $this->connect->prepare($query); 
+            $statement->execute($data);   
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $data[] = $row;
             } 
             echo json_encode($data); 
             return true;
