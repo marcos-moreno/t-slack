@@ -22,15 +22,15 @@
                             </tr>
                             <tr> 
                                 <td> 
-                                    <select class='form-control'  v-model='empresa_id_filter' style="width:150px" @change="get_segmentosFilter()" > 
-                                        <option value='todo'>Todas las Empresas</option>
+                                    <select class='form-control'  v-model='empresa_id_filter' style="width:150px" @change="segmento_id_filter=0;get_segmentosFilter()" > 
+                                        <option value=0>-</option>
                                         <option v-for='rows in empresas' v-bind:value='rows.id_empresa'>{{ rows.empresa_observaciones }}</option>
                                     </select>
                                 </td> 
                                 <td>
                                 <!-- {{segmentoFilterCollection}} -->
                                     <select class='form-control'  v-model='segmento_id_filter' style="width:150px" @change="getempleados()" > 
-                                        <option value='todo'>Todo los Segmentos</option>
+                                        <option value=0 >Todo los Segmentos</option>
                                         <option v-for='rows in segmentoFilterCollection' v-bind:value='rows.id_segmento'>{{ rows.nombre }}</option>
                                     </select>
                                 </td>
@@ -84,11 +84,11 @@
                     <tr v-for="empleado in paginaCollection" > 
                         <td>{{ empleado.id_empleado}}</td>
                         <td>{{ empleado.id_cerberus_empleado}}</td> 
-                        <td>{{ empleado.empresa[0].empresa_observaciones }}</td>
-                        <td>{{ empleado.segmento[0].nombre}}</td>  
+                        <td>{{ empleado.empresa_observaciones }}</td>
+                        <td>{{ empleado.segmento}}</td>  
                         <td>
                             <div  v-if="empleado.departamento.length>0">
-                                {{ empleado.departamento[0].nombre}}
+                                {{ empleado.departamento}}
                             </div>
                             <div v-else></div>
                         </td> 
@@ -344,7 +344,7 @@
 
 
 </div>
-<script type="text/javascript" src="../../controllers/admin/c_empleado.js"></script>
+<script type="text/javascript" src="../../controllers/admin/c_empleado_1.js"></script>
 
   
 

@@ -19,8 +19,8 @@ var application = new Vue({
         ////paginador
         filter : '',
         empresas:[],
-        empresa_id_filter:1,
-        segmento_id_filter:1,
+        empresa_id_filter:0,
+        segmento_id_filter:0,
         activos_filter : true,
         myModelRol : false,
         dynamicTitle: "",
@@ -67,19 +67,18 @@ var application = new Vue({
         async getempleados(){  
             this.empleadoCollection  = [];
             this.paginaCollection = [];
-            let filtrar_segmento = (this.segmento_id_filter > 0 ? " AND id_segmento = " + this.segmento_id_filter : " AND id_segmento = 0")
-            filtrar_segmento = (this.segmento_id_filter == 'todo' ?
-             " AND id_segmento IN (SELECT id_segmento FROM segmento WHERE activo = true AND id_empresa = " + this.empresa_id_filter + ")" : filtrar_segmento)
-             this.empresa_id_filter == "todo" ? filtrar_segmento = "" : filtrar_segmento = filtrar_segmento;
-             
-            let filtrarPor =  "(CONCAT(paterno ,' ',materno,' ',nombre) ILIKE '%" + this.filter + "%' OR  nombre ILIKE '%" + this.filter + "%'  OR paterno ILIKE '%" + this.filter + "%'  OR materno ILIKE '%"
-                                 + this.filter + "%'  OR celular ILIKE '%" + this.filter + "%'  OR correo ILIKE '%" + this.filter +
-                                  "%'  OR usuario ILIKE '%" + this.filter + "%'  OR password ILIKE '%" + this.filter + "%'  OR nss ILIKE '%" +
-                                   this.filter + "%'  OR rfc ILIKE '%" + this.filter + "%'  OR perfilcalculo ILIKE '%" + this.filter + 
-                                   "%'  OR   CAST (id_cerberus_empleado AS VARCHAR (100)) = '" + this.filter + "'  ) " + filtrar_segmento + "  AND  activo = " +  this.activos_filter + " ";  
-           const response = await this.request(this.path,{'order' : 'ORDER BY id_empleado DESC','action' : 'select','filter' : filtrarPor});
-        //   console.log(response);
-           try{ 
+            const response = await this.request(
+                this.path
+                ,{
+                    'id_segmento' : this.segmento_id_filter
+                    ,'activo' :this.activos_filter 
+                    ,'id_empresa' :this.empresa_id_filter
+                    ,'action' : 'select'
+                    ,'filter' : this.filter.toString()
+                }
+            );
+            console.log(response);
+            try{
                 this.show_message(response.length + ' Registros Encontrados.','success');
                 this.empleadoCollection = response;
                 this.paginaCollection = response;
@@ -205,16 +204,15 @@ var application = new Vue({
         }, 
         
         async fill_f_keys(){
-            this.get_segmentos(); 
-            this.get_segmentosFilter()
-            this.segmento_id_filter = 'todo';
+            // this.get_segmentos(); 
+            // this.get_segmentosFilter();
             const response_empresa = await this.request('../../models/bd/bd_company.php',{'action' : 'fetchall'});
             try{  
                 if(response_empresa.length > 0){  
                     this.empresas = response_empresa; 
                 }  
             }catch(error){
-                this.show_message('No se encontrarón Empresas.','info');
+                this.show_message('No se encontrarón Puestos.','info');
             } 
             const response_ev_puesto = await this.request('../../models/ev/bd_ev_puesto.php',{'action' : 'select','filter' : ''});
             try{  
@@ -223,7 +221,7 @@ var application = new Vue({
                     this.ev_puestoCollectionFiltro = this.ev_puestoCollection; 
                 }  
             }catch(error){
-                this.show_message('No se encontrarón Empresas.','info');
+                this.show_message('No se encontrarón Puestos.','info');
             }
 
             const response_departamento = await this.request('../../models/admin/bd_departamento.php'
@@ -300,10 +298,10 @@ var application = new Vue({
     async mounted() {    
     },
     async created(){
-       await this.getempleados();
        await this.model_empty();
        await this.fill_f_keys();
-       this.paginator(1);
+    //    await this.getempleados();
+    //    this.paginator(1);
     }
 }); 
         

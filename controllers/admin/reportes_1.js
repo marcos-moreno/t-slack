@@ -15,12 +15,12 @@ var report = new Vue({
     },
     methods:{ 
        
-        async getEmployeesBySegment(){  
-            let filtrarPor =  " id_segmento=" + this.segmentSelected;  
-            const response = await axios.post('../../models/admin/bd_empleado.php',{'order' : 'ORDER BY id_empleado DESC','action' : 'select','filter' : filtrarPor})
+        async getEmployeesBySegment(){   
+            const response = await axios.post('../../models/admin/bd_empleado.php',
+            {'action' : 'selectSimple','method':'reportesJasperAdmin','filter' : this.segmentSelected})
                             .then(function (response) {   
                                 return response.data; 
-                            }).catch(function (response) {  
+                            }).catch(function (response) {
                                 return response.data;
                             })
             report.empleados = response;

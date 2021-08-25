@@ -139,10 +139,9 @@ var application = new Vue({
                 })
             return response; 
         },
-        async fill_f_keys(){
-             
+        async fill_f_keys(){ 
             const response_empleado = await this.request('../../models/admin/bd_empleado.php',
-            {'order' : 'ORDER BY id_empleado DESC','action' : 'select'});
+            {'action' : 'selectSimple'});
             try{  
                 if(response_empleado.length > 0){  
                     this.empleadoCollection = response_empleado; 

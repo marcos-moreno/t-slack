@@ -204,11 +204,11 @@ class Empleado
             $statement->execute($parameters);   
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
                     // $row['un_talla'] = $this->search_union($row,'un_talla','id_talla','id_numero_zapato');
-                    $row['segmento'] = $this->search_union($row,'segmento','id_segmento','id_segmento');
-                    // $row['un_talla'] = $this->search_union($row,'un_talla','id_talla','id_talla_playera');
-                    $row['empresa'] = $this->search_unions('empresa','id_empresa', $row['segmento'][0]['id_empresa']  );
-                    $row['ev_puesto'] = $this->search_union($row,'ev_puesto','ev_puesto_id','ev_puesto_id');
-                    $row['departamento'] = $this->search_union($row,'departamento','departamento_id','departamento_id');
+                    // $row['segmento'] = $this->search_union($row,'segmento','id_segmento','id_segmento');
+                    // // $row['un_talla'] = $this->search_union($row,'un_talla','id_talla','id_talla_playera');
+                    // $row['empresa'] = $this->search_unions('empresa','id_empresa', $row['segmento'][0]['id_empresa']  );
+                    // $row['ev_puesto'] = $this->search_union($row,'ev_puesto','ev_puesto_id','ev_puesto_id');
+                    // $row['departamento'] = $this->search_union($row,'departamento','departamento_id','departamento_id');
                     // $row['un_talla'] = $this->search_union($row,'un_talla','id_talla','id_talla_playera');
                     $data[] = $row;
             } 
@@ -233,12 +233,14 @@ class Empleado
                     ,id_talla_playera,id_numero_zapato,fecha_alta_cerberus,perfilcalculo,correo_verificado,
                     id_empresa,desc_mail_v ,id_compac,ev_puesto_id,departamento_id
                 FROM empleado   
-                
+                WHERE activo=true
                 ";
             switch ($this->received_data->method) {
                 case 'reportes':
-                    $query .= "    WHERE activo='true' 
-                                AND id_segmento IN (SELECT id_segmento from segmento WHERE id_empresa IN (1,2,3)) ORDER BY id_empleado DESC";
+                    $query .= " AND id_segmento IN (SELECT id_segmento from segmento WHERE id_empresa IN (1,2,3)) ORDER BY id_empleado DESC";
+                    break; 
+                case 'reportesJasperAdmin':
+                    $query .= " AND id_segmento = " . $this->received_data->filter;
                     break; 
                 default:
                     $query .= "";
@@ -260,37 +262,53 @@ class Empleado
 
     public function select(){
         try {  
-        $query = '
+            $parameters = array(
+                ':filter' => $this->received_data->filter,  
+                ':activo' => $this->received_data->activo,  
+                ':id_segmento' => $this->received_data->id_segmento,  
+                ':id_empresa' => $this->received_data->id_empresa,  
+            );   
+            $query = "
                 SELECT 
-                    id_empleado,id_segmento,id_creadopor,fecha_creado,nombre
-                    ,paterno,materno,activo,celular
-                    ,correo,enviar_encuesta
-                    ,genero,id_actualizadopor,fecha_actualizado,usuario,password
-                    ,fecha_nacimiento,nss,rfc,id_cerberus_empleado
-                    ,id_talla_playera,id_numero_zapato,fecha_alta_cerberus,perfilcalculo,correo_verificado,
-                    id_empresa,desc_mail_v ,id_compac,ev_puesto_id,departamento_id
-                FROM empleado  
-                    ' . (isset($this->received_data->filter) ? ' 
-                    WHERE ' . $this->received_data->filter:'') . 
-                    (isset($this->received_data->order) ? $this->received_data->order:'') ;
-                        
+                    e.id_empleado,e.id_segmento,e.id_creadopor,e.fecha_creado,e.nombre
+                    ,e.paterno,e.materno,e.activo,e.celular
+                    ,e.correo,e.enviar_encuesta
+                    ,e.genero,e.id_actualizadopor,e.fecha_actualizado,e.usuario,e.password
+                    ,e.fecha_nacimiento,e.nss,e.rfc,e.id_cerberus_empleado
+                    ,e.id_talla_playera,e.id_numero_zapato,e.fecha_alta_cerberus,e.perfilcalculo,e.correo_verificado,
+                    e.id_empresa,e.desc_mail_v ,e.id_compac,e.ev_puesto_id,e.departamento_id
+                    ,em.empresa_observaciones,s.nombre As segmento,d.nombre As departamento
+                FROM empleado e
+                INNER JOIN segmento s ON s.id_segmento = e.id_segmento 
+                INNER JOIN empresa em ON em.id_empresa = s.id_empresa
+                INNER JOIN departamento d ON d.departamento_id = e.departamento_id
+                    WHERE  
+                    (   
+                        CONCAT(e.paterno ,' ',e.materno,' ',e.nombre) ILIKE '%' || :filter || '%' 
+                        OR e.nombre ILIKE '%' || :filter || '%' 
+                        OR e.paterno ILIKE '%' || :filter || '%' 
+                        OR e.materno ILIKE '%' || :filter || '%' 
+                        OR CAST(e.nss AS VARCHAR (100)) ILIKE '%' || :filter || '%' 
+                        OR e.rfc ILIKE '%' || :filter || '%' 
+                        OR e.perfilcalculo ILIKE '%' || :filter || '%' 
+                        OR e.usuario ILIKE '%' || :filter || '%' 
+                        OR CAST(e.id_cerberus_empleado AS VARCHAR (100)) ILIKE '%' || :filter || '%' 
+                        OR CAST(e.id_empleado AS VARCHAR (100)) ILIKE '%' || :filter || '%'  
+                    ) 
+                    AND  e.activo = :activo
+                    AND  e.id_segmento = (CASE WHEN :id_segmento::Integer = 0 THEN e.id_segmento ELSE :id_segmento END)
+                    AND  s.id_empresa = :id_empresa
+                ORDER BY CONCAT(e.paterno ,' ',e.materno,' ',e.nombre) DESC
+                ";  
             $statement = $this->connect->prepare($query); 
-            $statement->execute($data);   
-            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
-                    // $row['un_talla'] = $this->search_union($row,'un_talla','id_talla','id_numero_zapato');
-                    $row['segmento'] = $this->search_union($row,'segmento','id_segmento','id_segmento');
-                    // $row['un_talla'] = $this->search_union($row,'un_talla','id_talla','id_talla_playera');
-                    $row['empresa'] = $this->search_unions('empresa','id_empresa', $row['segmento'][0]['id_empresa']  );
-                    $row['ev_puesto'] = $this->search_union($row,'ev_puesto','ev_puesto_id','ev_puesto_id');
-                    $row['departamento'] = $this->search_union($row,'departamento','departamento_id','departamento_id');
-                    
-                    // $row['un_talla'] = $this->search_union($row,'un_talla','id_talla','id_talla_playera');
-                    $data[] = $row;
+            $statement->execute($parameters);   
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $data[] = $row;
             } 
             echo json_encode($data); 
             return true;
         } catch (PDOException $exc) {
-            $output = array('message' => $exc->getMessage()); 
+            $output = array('message' => $exc->getMessage(),"filter" => $this->received_data); 
             echo json_encode($output); 
             return false;
         }  
