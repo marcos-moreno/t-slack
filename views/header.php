@@ -35,29 +35,27 @@ if ($valido == false) {  header('location: ../logout.php'); }
       <span class="navbar-toggler-icon"></span>
     </button> 
     <a class="navbar-brand" href="#"><img src="../../img/logo.png" style="width:70%">
-      <?php echo '<br/><font size="1.5">Rol: '.$_SESSION['rol'].'</font>' ?> 
+      <?php echo '<br/><font size="1.5">Rol: '.$_SESSION['rol'].' '. strtolower($_SESSION['nombre']) .'</font>' ?> 
     </a>  
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <?php   echo '<br/><font size="2.5" color="#B1C6CD" >' . $nombre. '</font>' ?>  
       <ul class="navbar-nav mr-auto">  
         <?php echo $elementos_string; ?>   
+        <li class="nav-item active" >
+          <a class="nav-link" onclick='document.getElementById("execModalChangePass").click();' href="#">Cambiar Contraseña<span class="sr-only">(current)</span></a>
+        </li> 
         <li class="nav-item active">
           <a class="nav-link" href="../logout.php">Salir <span class="sr-only">(current)</span></a>
         </li> 
       </ul> 
-    </div>
+    </div>  
 
-
-
-
-    <div id='chagePassword_DIV'> 
-
-          <?php if($_SESSION['rol'] == 'user'){?> 
-              <button @click="showModal()" style="background:none;border:none;" > 
-              <a style="color:#0078C2;">Cambiar Contraseña<span class="sr-only">(current)</span></a>
-              </button>
-            <?php } ?> 
-
+    <div id='chagePassword_DIV'>  
+      <?php if($_SESSION['rol'] == 'user'){?> 
+        <button @click="showModal()" style="display:none;border:none;" id="execModalChangePass"> 
+        <a style="color:#0078C2;">Cambiar Contraseña<span class="sr-only">(current)</span></a>
+        </button>
+      <?php } ?>  
       <div v-if="modalchagePassword" >  
         <transition name="model" >
           <div class="modal-mask" > 
@@ -197,7 +195,7 @@ if ($valido == false) {  header('location: ../logout.php'); }
 <script>
   async function hover() {
     httpGet( '../../models/auth/check_session.php', 
-      function(response) { 
+      function(response) {
         if (response == 1) { 
         }else{
           location.href="../";
@@ -231,5 +229,5 @@ if ($valido == false) {  header('location: ../logout.php'); }
 <body  onclick="hover()" style="font-size: 10pt;background-color: <?php session_start();   echo $_SESSION['color_back'] ?>" >
 <script type="text/javascript" src="../../controllers/user/c_leccion.js"></script>
 <script type="text/javascript" src="../../controllers/user/notifications_us.js"></script>
-<script type="text/javascript" src="../../controllers/admin/c_changePasword.js"></script>  
+<script type="text/javascript" src="../../controllers/admin/c_changePasword1.js"></script>  
 <script type="text/javascript" src='../../controllers/config.js'></script>
