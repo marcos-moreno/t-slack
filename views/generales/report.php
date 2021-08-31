@@ -99,7 +99,8 @@
                   <option value='M'  >M.CUMPLEAÑOS DE COLABORADORES POR MES</option> 
                   <option value='N'  >N.GRÁFICAS POR ENCUESTA</option>                 
                   <option value='Ñ'  >Ñ.ENCUESTAS SANCIONADAS</option>       
-                  <option value='O'  >O.GRÁFICA DE PREGUNTAS EVALUADAS</option>                               
+                  <option value='O'  >O.GRÁFICA DE PREGUNTAS EVALUADAS</option>
+                  <option value='P'  >P. CASOS DE RIESGO BAJO COVID-19</option>                               
                 </select>  
                 </br>
                 <button type="button" class="btn btn-info float-right"  @click='generateReport()' >Consultar</button>       
@@ -113,4 +114,4 @@
 
   <div id="viewReport"> </div>   
   
-<script type="text/javascript" src="../../controllers/admin/reportes_1.js" ></script>
+<script type="text/javascript" src="../../controllers/admin/reportes_2.js" ></script>
