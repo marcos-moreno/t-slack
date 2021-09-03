@@ -10,17 +10,20 @@
                         <table>
                             <tr>
                                 <td>
+                                    <label>Id</label>
+                                    <input type="text" style="width: 80px;" class="form-control" v-model="id_empleado_filtro" />
+                                </td> 
+                                <td>
+                                    <label>Nombre</label>
                                     <input type="text" class="form-control" v-model="filter" />
                                 </td> 
                                 <td>
-                                    <button type="button" name="filter" class="btn btn-info btn-xs" @click="getempleados()"> filtrar</button>
-                                </td>
-                                <td class='form-group'>
-                                    <input type='checkbox' class='custom-control-input' id='active_filter' @change="getempleados()"   v-model='activos_filter'  false-value=false true-value=true >
-                                    <label class='custom-control-label' for='active_filter'  >activo</label>
-                                </td>
+                                    <input type='checkbox' id='active_filter' @change="getempleados()"
+                                     v-model='activos_filter'  false-value=false true-value=true >
+                                    <label for='active_filter'  >activo</label>
+                                </td> 
                             </tr>
-                            <tr> 
+                            <tr>
                                 <td> 
                                     <select class='form-control'  v-model='empresa_id_filter' style="width:150px" @change="segmento_id_filter=0;get_segmentosFilter()" > 
                                         <option value=0>-</option>
@@ -34,6 +37,9 @@
                                         <option v-for='rows in segmentoFilterCollection' v-bind:value='rows.id_segmento'>{{ rows.nombre }}</option>
                                     </select>
                                 </td>
+                                <td> 
+                                    <button type="button" name="filter" class="btn btn-info btn-xs" @click="getempleados()"> filtrar</button>
+                                </td> 
                             </tr>
                         </table>
                     </td>
@@ -344,12 +350,4 @@
 
 
 </div>
-<script type="text/javascript" src="../../controllers/admin/c_empleado_1.js"></script>
-
-  
-
-
-
-
-
-
+<script type="text/javascript" src="../../controllers/admin/c_empleado_2.js"></script>

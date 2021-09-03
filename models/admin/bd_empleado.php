@@ -225,15 +225,16 @@ class Empleado
         try {  
             $query = "
                 SELECT 
-                    id_empleado,id_segmento,id_creadopor,fecha_creado,nombre
-                    ,paterno,materno,activo,celular
-                    ,correo,enviar_encuesta
-                    ,genero,id_actualizadopor,fecha_actualizado,usuario,password
-                    ,fecha_nacimiento,nss,rfc,id_cerberus_empleado
-                    ,id_talla_playera,id_numero_zapato,fecha_alta_cerberus,perfilcalculo,correo_verificado,
-                    id_empresa,desc_mail_v ,id_compac,ev_puesto_id,departamento_id
-                FROM empleado   
-                WHERE activo=true
+                    e.id_empleado,e.id_segmento,e.id_creadopor,e.fecha_creado,e.nombre
+                    ,e.paterno,e.materno,e.activo,e.celular
+                    ,e.correo,e.enviar_encuesta
+                    ,e.genero,e.id_actualizadopor,e.fecha_actualizado,e.usuario,e.password
+                    ,e.fecha_nacimiento,e.nss,e.rfc,e.id_cerberus_empleado
+                    ,e.id_talla_playera,e.id_numero_zapato,e.fecha_alta_cerberus,e.perfilcalculo,e.correo_verificado,
+                    e.id_empresa,e.desc_mail_v ,e.id_compac,e.ev_puesto_id,e.departamento_id,d.nombre As departamento
+                FROM empleado  e
+                INNER JOIN departamento d ON d.departamento_id = e.departamento_id
+                WHERE e.activo=true
                 ";
             switch ($this->received_data->method) {
                 case 'reportes':
@@ -267,6 +268,7 @@ class Empleado
                 ':activo' => $this->received_data->activo,  
                 ':id_segmento' => $this->received_data->id_segmento,  
                 ':id_empresa' => $this->received_data->id_empresa,  
+                ':id_empleado_filtro' =>  $this->received_data->id_empleado_filtro,  
             );   
             $query = "
                 SELECT 
@@ -298,6 +300,9 @@ class Empleado
                     AND  e.activo = :activo
                     AND  e.id_segmento = (CASE WHEN :id_segmento::Integer = 0 THEN e.id_segmento ELSE :id_segmento END)
                     AND  s.id_empresa = :id_empresa
+                    AND  e.id_empleado::character varying = (CASE WHEN :id_empleado_filtro <> '' 
+                                                                    THEN :id_empleado_filtro::character varying 
+                                                                    ELSE e.id_empleado::character varying END)
                 ORDER BY CONCAT(e.paterno ,' ',e.materno,' ',e.nombre) DESC
                 ";  
             $statement = $this->connect->prepare($query); 
