@@ -238,10 +238,10 @@ class Empleado
                 ";
             switch ($this->received_data->method) {
                 case 'reportes':
-                    $query .= " AND id_segmento IN (SELECT id_segmento from segmento WHERE id_empresa IN (1,2,3)) ORDER BY id_empleado DESC";
+                    $query .= " AND e.id_segmento IN (SELECT id_segmento from segmento WHERE id_empresa IN (1,2,3)) ORDER BY id_empleado DESC";
                     break; 
                 case 'reportesJasperAdmin':
-                    $query .= " AND id_segmento = " . $this->received_data->filter;
+                    $query .= " AND e.id_segmento = " . $this->received_data->filter;
                     break; 
                 default:
                     $query .= "";
@@ -303,13 +303,13 @@ class Empleado
                     AND  e.id_empleado::character varying = (CASE WHEN :id_empleado_filtro <> '' 
                                                                     THEN :id_empleado_filtro::character varying 
                                                                     ELSE e.id_empleado::character varying END)
-                ORDER BY CONCAT(e.paterno ,' ',e.materno,' ',e.nombre) DESC
+                ORDER BY e.id_segmento ASC, CONCAT(e.paterno ,' ',e.materno,' ',e.nombre) ASC
                 ";  
-            $statement = $this->connect->prepare($query); 
-            $statement->execute($parameters);   
+            $statement = $this->connect->prepare($query);
+            $statement->execute($parameters);
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                 $data[] = $row;
-            } 
+            }
             echo json_encode($data); 
             return true;
         } catch (PDOException $exc) {
