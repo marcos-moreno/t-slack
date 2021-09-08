@@ -296,7 +296,7 @@
                                         <div class="accordion">
                                             <div class="card" v-if="punto_evaluar.tipo_evaluacion == 'SI/NO' " 
                                                 v-for="punto_evaluar in indicador.ev_puntos_evaluar">
-                                                {{punto_evaluar.tipo_evaluacion}}
+                                                <!-- {{punto_evaluar.tipo_evaluacion}} -->
                                                 <div class="card-header" :id="'h'+punto_evaluar.ev_punto_evaluar_id">
                                                     <h2 class="mb-0">
                                                         <button class="btn btn-link text-left" type="button" data-toggle="collapse"
@@ -363,4 +363,4 @@
         </div>
     </div>
 </div>
-<script type="text/javascript" src="../../controllers/ev/c_ev_evaluacion.js"></script>
+<script type="text/javascript" src="../../controllers/ev/c_ev_evaluacion1.js"></script>

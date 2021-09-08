@@ -104,7 +104,7 @@ class Departamento
         $query = 'SELECT departamento_id,nombre,activo,creado,actualizado,actualizadopor,creadopor,id_empresa,id_segmento,id_cerberus 
                     FROM departamento  
                     ' . (isset($this->received_data->filter) ? ' 
-                    WHERE ' . $this->received_data->filter:'') .  ' ORDER BY id_empresa,departamento_id DESC';
+                    WHERE ' . $this->received_data->filter:'') .  ' ORDER BY id_empresa,nombre ASC';
                         
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);   
@@ -113,8 +113,6 @@ class Departamento
                     $row['segmento'] = $this->search_union($row,'segmento','id_segmento','id_segmento');
                     $data[] = $row;
             }
-
-        
             echo json_encode($data); 
             return true;
         } catch (PDOException $exc) {

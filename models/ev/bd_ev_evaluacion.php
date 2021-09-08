@@ -35,6 +35,18 @@ if (check_session()) {
             $model = new Ev_evaluacion($data,$connect,$received_data);
             $model->procesar_evaluacion();
         break; 
+        case 'select_evaluacion_lider': 
+            $model = new Ev_evaluacion($data,$connect,$received_data);
+            $model->select_evaluacion_lider();
+        break; 
+        case 'select_puntos_evaluar': 
+            $model = new Ev_evaluacion($data,$connect,$received_data);
+            $model->select_puntos_evaluar();
+        break;
+        case 'save_dat_evaluac_por_user': 
+            $model = new Ev_evaluacion($data,$connect,$received_data);
+            $model->save_dat_evaluac_por_user();
+        break; 
     }
 }else{
     $output = array('message' => 'Not authorized'); 
@@ -74,7 +86,7 @@ class Ev_evaluacion
             echo json_encode($output); 
             return false;
         } 
-    }  
+    }
     public function update(){
         try {
             $data = array(
@@ -97,9 +109,8 @@ class Ev_evaluacion
             $output = array('message' => $exc->getMessage()); 
             echo json_encode($output); 
             return false;
-        }  
-    }  
-
+        }
+    }
     public function procesar_evaluacion(){
         $parameters = array(
             ':ev_evaluacion_id' => $this->received_data->ev_evaluacion_id,  
@@ -178,7 +189,150 @@ class Ev_evaluacion
             echo json_encode($output); 
             return false;
         }  
-    } 
+    }
+    public function save_dat_evaluac_por_user(){
+        $parameters = array();
+        try {
+            $data = [];
+            $parameters = array(
+                ':respuestas_collection' => $this->received_data->respuestas_collection,
+                ':v_id_lider' => $this->received_data->id_lider,
+                ':v_id_user' => $_SESSION['id_empleado'],
+            );
+            $query = "
+                SELECT refividrio.save_dat_evaluac_por_user(
+                    :respuestas_collection, 
+                    :v_id_lider, 
+                    :v_id_user
+                )
+            ";
+            $statement = $this->connect->prepare($query); 
+            $statement->execute($parameters);   
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $data[] = $row;
+            }
+            $output = array('status' => 'success','data' => $data);
+            echo json_encode($output); 
+            return true;
+        } catch (PDOException $exc) {
+            $output = array('status' => 'error','message' => $exc->getMessage(),'params' => $parameters); 
+            echo json_encode($output); 
+            return false;
+        }  
+    }
+    public function select_evaluacion_lider(){
+        try {
+            $data = [];
+            $parameters = array(
+                ':id_empleado' => $_SESSION['id_empleado'],
+            );
+            $query = "
+                SELECT
+                        nm1.id_empleado,
+                -- 		d.nombre As departamento,
+                -- 		ld.tipo_lider,
+                        lid.id_empleado As id_lider,
+                        CONCAT(lid.paterno,' ',lid.materno,' ',lid.nombre) As nombre_lider,
+                        ev_evaluacion_por_user_id
+                        
+                FROM
+                (
+                    SELECT
+                        e.departamento_id,
+                        e.id_empleado,
+                        CASE WHEN j.id_superior IS NOT NULL 
+                            THEN j.id_superior 
+                            ELSE jd.id_empleado 
+                        END As id_superior,
+                        epu.ev_evaluacion_por_user_id
+                    FROM
+                    empleado e
+                    LEFT JOIN jerarquizacion j ON j.id_empleado = e.id_empleado
+                    LEFT JOIN jerarquizacion jd ON jd.departamento_id = e.departamento_id AND j.id_superior IS NULL
+                    LEFT JOIN ev_evaluacion_por_user epu 
+                        ON epu.id_lider = j.id_superior
+                        AND epu.id_usuario = e.id_empleado
+                    -- 	AND id_indicador_general  
+                        AND epu.mes = date_part('month',NOW())
+                        AND epu.ejercicio = date_part('year',NOW())
+                )As nm1
+                INNER JOIN empleado lid ON lid.id_empleado = nm1.id_superior
+                WHERE nm1.id_empleado = :id_empleado
+                AND ev_evaluacion_por_user_id IS NULL
+                ORDER BY id_empleado,nm1.departamento_id
+            ";
+            $statement = $this->connect->prepare($query); 
+            $statement->execute($parameters);   
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $data[] = $row;
+            }
+            $output = array('status' => 'success','data' => $data);
+            echo json_encode($output); 
+            return true;
+        } catch (PDOException $exc) {
+            $output = array('status' => 'error','message' => $exc->getMessage()); 
+            echo json_encode($output); 
+            return false;
+        }  
+    }
+    public function select_puntos_evaluar(){
+        try {
+            $data = [];
+            // id_lider id_indicador
+            $parameters = array(
+                ':ev_indicador_general_id' => $this->received_data->id_indicador,
+            );
+            $query = "
+                SELECT 
+                    pe.ev_punto_evaluar_id, pe.ev_indicador_general_id, pe.ev_tipo_captura_id, pe.nombre, pe.descripcion, pe.porcentaje_tl,
+                    pe.creado, pe.creadopor, pe.actualizado, pe.actualizadopor, pe.min_escala, pe.max_escala, pe.incremento
+                    ,tc.nombre As tipo_captura,tc.es_capturado,tc.direct_data,tc.opcion_multiple,tc.dato,tc.es_evaluado,
+                    --CASE WHEN tc.nombre = 'RADIO' THEN '' ELSE '' END
+                    '' AS respuesta
+                FROM refividrio.ev_punto_evaluar pe
+                    INNER JOIN ev_tipo_captura tc ON tc.ev_tipo_captura_id = pe.ev_tipo_captura_id
+                WHERE pe.ev_indicador_general_id = :ev_indicador_general_id
+                ORDER BY pe.ev_punto_evaluar_id
+                ;
+            ";
+            $statement = $this->connect->prepare($query); 
+            $statement->execute($parameters);   
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $row['ev_punto_evaluar_ln'] = $this->search_union($row,'ev_punto_evaluar_ln','ev_punto_evaluar_id','ev_punto_evaluar_id');
+                $data[] = $row;
+            }
+            $output = array('status' => 'success','data' => $data);
+            echo json_encode($output); 
+            return true;
+        } catch (PDOException $exc) {
+            $output = array('status' => 'error','message' => $exc->getMessage()); 
+            echo json_encode($output); 
+            return false;
+        }  
+    }
+      // public function ev_punto_evaluar_ln($row){
+    //     $data = array(); 
+    //     try {    
+    //         $query = "
+    //         SELECT 
+    //         ln.*
+    //         ,CASE WHEN tc.nombre = 'RADIO' THEN 'false' ELSE '' END AS is_checked
+    //         FROM ev_punto_evaluar_ln  ln
+    //         INNER JOIN ev_punto_evaluar pe ON pe.ev_punto_evaluar_id = ln.ev_punto_evaluar_id
+    //         INNER JOIN ev_tipo_captura tc ON tc.ev_tipo_captura_id = pe.ev_tipo_captura_id
+    //         WHERE 
+    //         ln.ev_punto_evaluar_id = " . $row['ev_punto_evaluar_id'] ;               
+    //         $statement = $this->connect->prepare($query); 
+    //         $statement->execute($data);   
+    //         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {   
+    //                 $data[] = $row;
+    //         }  
+    //         return $data; 
+    //     } catch (PDOException $exc) {
+    //         $output = array('message' => $exc->getMessage()); 
+    //         return json_encode($output);  
+    //     }  
+    // }
     public function evaluar_con_reportes(){
         $parameters = array(
             ':id_empleado' => $this->received_data->id_empleado,  

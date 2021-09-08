@@ -102,7 +102,6 @@ var application = new Vue({
                 ,'no_faltas' : jsonResponce.no_faltas
                 ,'no_retardos' : jsonResponce.no_retardos
             });
-            this.is_load = false;
             if (response_evaluar_reportes.status == 'success') {
                 ev_evaluacion_ln.calificacion = response_evaluar_reportes.data.procesar_evaluacion;
                 this.show_message("Evaluaciones Procesadas",'success'); 
@@ -132,7 +131,6 @@ var application = new Vue({
                     'ev_evaluacion_ln_id' : ev_evaluacion_ln.ev_evaluacion_ln_id,
                     'ev_evaluacion_id' : ev_evaluacion_ln.ev_evaluacion_id
                 });
-                console.log(response);
                 if (response.length > 0) {
                     this.indicadoresEvaluacion = response;
                 } else {
@@ -140,6 +138,8 @@ var application = new Vue({
                 }
             }else
                 this.show_message('La evaluación ya no esta disponible.','error');
+            
+            this.is_load = false;
         },
         // ::::::Indicadores:::::::::::::::::
 
