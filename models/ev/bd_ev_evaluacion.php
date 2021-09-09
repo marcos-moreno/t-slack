@@ -250,11 +250,12 @@ class Ev_evaluacion
                     LEFT JOIN jerarquizacion j ON j.id_empleado = e.id_empleado
                     LEFT JOIN jerarquizacion jd ON jd.departamento_id = e.departamento_id AND j.id_superior IS NULL
                     LEFT JOIN ev_evaluacion_por_user epu 
-                        ON epu.id_lider = j.id_superior
-                        AND epu.id_usuario = e.id_empleado
+                        ON epu.id_usuario = e.id_empleado 
+                    --epu.id_lider = j.id_superior
+                    --    AND epu.id_usuario = e.id_empleado
                     -- 	AND id_indicador_general  
-                        AND epu.mes = date_part('month',NOW())
-                        AND epu.ejercicio = date_part('year',NOW())
+                    --    AND epu.mes = date_part('month',NOW())
+                    --    AND epu.ejercicio = date_part('year',NOW())
                 )As nm1
                 INNER JOIN empleado lid ON lid.id_empleado = nm1.id_superior
                 WHERE nm1.id_empleado = :id_empleado
