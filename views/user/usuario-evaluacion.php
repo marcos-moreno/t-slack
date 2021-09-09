@@ -32,9 +32,9 @@
             <h5>Espera por favor, estamos guardando tus Respuestas.</h5>
         </center>  
         <div v-if="is_upload==false && cargando==false && termino==false"  > 
-            <button @click="valueDefault()"  class="btn btn-info" style="margin-top:15px;" :disabled=btePressed  v-if="cargando==false" > 
+            <!-- <button @click="valueDefault()"  class="btn btn-info" style="margin-top:15px;" :disabled=btePressed  v-if="cargando==false" > 
                         valueDefault
-            </button>
+            </button> -->
             <div v-for="row in puntos_evaluar" class="card" > 
                 <div  class="container">
                     <br>

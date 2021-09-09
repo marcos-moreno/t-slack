@@ -292,7 +292,7 @@ class Ev_evaluacion
                 FROM refividrio.ev_punto_evaluar pe
                     INNER JOIN ev_tipo_captura tc ON tc.ev_tipo_captura_id = pe.ev_tipo_captura_id
                 WHERE pe.ev_indicador_general_id = :ev_indicador_general_id
-                ORDER BY pe.ev_punto_evaluar_id
+                ORDER BY pe.ev_punto_evaluar_id ASC
                 ;
             ";
             $statement = $this->connect->prepare($query); 
