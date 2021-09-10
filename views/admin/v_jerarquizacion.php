@@ -4,7 +4,7 @@
         <div class="table-responsive">
             <table class="table table-bordered table-striped">
                 <tr>
-                    <td style="weight: 30%" v-if="isFormCrud==false">
+                    <td style="width: 30%" v-if="isFormCrud==false">
                         <label>Filtrar</label>  
                         <table>
                             <tr>

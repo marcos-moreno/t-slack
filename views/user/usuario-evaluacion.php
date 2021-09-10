@@ -67,4 +67,4 @@
         </div> 
     </div> 
 </div>
-<script type="text/javascript" src="../../controllers/user/ctl_evaluacion.js"></script>
+<script type="text/javascript" src="../../controllers/user/ctl_evaluacion1.js"></script>

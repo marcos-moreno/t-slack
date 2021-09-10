@@ -24,8 +24,9 @@ var application = new Vue({
                 const element = this.puntos_evaluar[index];
                 if (element.respuesta == '') {
                     alert("Por favor responde a todas las preguntas.");
-                    return false; 
-                } 
+                    this.is_upload = false;
+                    return;
+                }
                 let value = element.ev_punto_evaluar_ln.find(x => x.valor == element.respuesta);
                 value = (value != undefined ? value.nombre : element.respuesta);
                 jsonRespuestas.push({
