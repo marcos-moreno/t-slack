@@ -227,40 +227,34 @@ class Ev_evaluacion
                 ':id_empleado' => $_SESSION['id_empleado'],
             );
             $query = "
-                SELECT
-                        nm1.id_empleado,
-                -- 		d.nombre As departamento,
-                -- 		ld.tipo_lider,
+                SELECT * FROM (
+                    SELECT
+                        superior.id_empleado,
                         lid.id_empleado As id_lider,
                         CONCAT(lid.paterno,' ',lid.materno,' ',lid.nombre) As nombre_lider,
                         ev_evaluacion_por_user_id
-                        
-                FROM
-                (
-                    SELECT
-                        e.departamento_id,
-                        e.id_empleado,
-                        CASE WHEN j.id_superior IS NOT NULL 
-                            THEN j.id_superior 
-                            ELSE jd.id_empleado 
-                        END As id_superior,
-                        epu.ev_evaluacion_por_user_id
-                    FROM
-                    empleado e
-                    LEFT JOIN jerarquizacion j ON j.id_empleado = e.id_empleado
-                    LEFT JOIN jerarquizacion jd ON jd.departamento_id = e.departamento_id AND j.id_superior IS NULL
-                    LEFT JOIN ev_evaluacion_por_user epu 
-                        ON epu.id_usuario = e.id_empleado 
-                    --epu.id_lider = j.id_superior
-                    --    AND epu.id_usuario = e.id_empleado
-                    -- 	AND id_indicador_general  
-                    --    AND epu.mes = date_part('month',NOW())
-                    --    AND epu.ejercicio = date_part('year',NOW())
-                )As nm1
-                INNER JOIN empleado lid ON lid.id_empleado = nm1.id_superior
-                WHERE nm1.id_empleado = :id_empleado
-                AND ev_evaluacion_por_user_id IS NULL
-                ORDER BY id_empleado,nm1.departamento_id
+                    FROM 
+                    empleado lid 
+                    JOIN LATERAL(
+                        SELECT 
+                            CASE WHEN direct_sup IS NOT NULL THEN direct_sup ELSE dep_sup END As id_superior,
+                            nm1.id_empleado
+                        FROM(
+                            SELECT 
+                                (SELECT j.id_superior FROM jerarquizacion j WHERE j.id_empleado = e.id_empleado) As direct_sup ,
+                                (SELECT j.id_empleado FROM jerarquizacion j WHERE j.departamento_id = e.departamento_id) As dep_sup,
+                                e.id_empleado
+                            FROM
+                            Empleado e
+                            WHERE e.id_empleado = :id_empleado
+                        )As nm1
+                    )As superior ON lid.id_empleado = superior.id_superior
+                    LEFT JOIN ev_evaluacion_por_user epu ON epu.id_lider = superior.id_superior
+                    AND epu.id_usuario = superior.id_empleado
+                    AND epu.mes = date_part('month',NOW())
+                    AND epu.ejercicio = date_part('year',NOW()) 
+                )As mnd 
+                WHERE ev_evaluacion_por_user_id IS NULL
             ";
             $statement = $this->connect->prepare($query); 
             $statement->execute($parameters);   
@@ -288,12 +282,13 @@ class Ev_evaluacion
                     pe.ev_punto_evaluar_id, pe.ev_indicador_general_id, pe.ev_tipo_captura_id, pe.nombre, pe.descripcion, pe.porcentaje_tl,
                     pe.creado, pe.creadopor, pe.actualizado, pe.actualizadopor, pe.min_escala, pe.max_escala, pe.incremento
                     ,tc.nombre As tipo_captura,tc.es_capturado,tc.direct_data,tc.opcion_multiple,tc.dato,tc.es_evaluado,
+                    orden,
                     --CASE WHEN tc.nombre = 'RADIO' THEN '' ELSE '' END
                     '' AS respuesta
                 FROM refividrio.ev_punto_evaluar pe
                     INNER JOIN ev_tipo_captura tc ON tc.ev_tipo_captura_id = pe.ev_tipo_captura_id
                 WHERE pe.ev_indicador_general_id = :ev_indicador_general_id
-                ORDER BY pe.ev_punto_evaluar_id DESC
+                ORDER BY orden ASC
                 ;
             ";
             $statement = $this->connect->prepare($query); 

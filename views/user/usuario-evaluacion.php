@@ -39,8 +39,8 @@
                 <div  class="container">
                     <br>
                     <div :id="'label_'+ row.id_pregunta"   class="alert alert-info" >
-                        <span v-if="row.respuesta !='' || intent_save == false" style="color:black;"><strong> {{ row.nombre }}</strong></span> 
-                        <span v-if="row.respuesta ==''  && intent_save == true" style="color:red;"><strong> {{ row.nombre }}</strong></span> 
+                        <span v-if="row.respuesta !='' || intent_save == false" style="color:black;"><strong>{{ row.orden }}.- {{ row.nombre }}</strong></span> 
+                        <span v-if="row.respuesta ==''  && intent_save == true" style="color:red;"><strong>{{ row.orden }}.- {{ row.nombre }}</strong></span> 
                     </div>
                     <div v-if="row.tipo_captura == 'RADIO' && row.es_evaluado == true" class="form-check">
                         <div v-for="r in row.ev_punto_evaluar_ln">      

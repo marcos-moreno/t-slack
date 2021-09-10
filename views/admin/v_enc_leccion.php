@@ -64,13 +64,13 @@
                     <tr> 
                         <th>id</th>
                                     
-                        <th>nombre</th>
+                        <th>Nombre</th>
                                     
-                        <th>descipcion</th> 
+                        <th>Descipcion</th> 
                                     
-                        <th>tipo</th>
+                        <th>Tipo</th>
                                     
-                        <th>link</th>
+                        <th>Link</th>
                                     
                         <th>Texto</th>
                                     
@@ -119,11 +119,11 @@
                 <label>ID: {{ enc_leccion.id_enc_leccion }}</label>  
             </div>
             <div class='form-group'>
-                <label>nombre</label>
+                <label>Nombre</label>
                 <input type='text' class='form-control' v-model='enc_leccion.nombre' />
             </div>  
             <div class='form-group'>
-                <label>descipcion</label>
+                <label>Descipción</label>
                 <input type='text' class='form-control' v-model='enc_leccion.descipcion' />
             </div> 
 
@@ -133,7 +133,7 @@
             </div> 
 
             <div class='form-group'>
-                <label>tipo</label>
+                <label>Tipo</label>
                 <select class='form-control' v-model='enc_leccion.tipo' @change="movementetype()" >
                     <option value="link" >Link</option>
                     <option value="video" >Video</option>
@@ -142,16 +142,16 @@
                 </select> 
             </div>  
             <div class='form-group'>
-                <label>link</label>
+                <label>Link</label>
                 <input type='text' class='form-control' v-model='enc_leccion.link' />
             </div>   
             <div class='custom-control custom-checkbox'>
                 <input type='checkbox' class='custom-control-input' id='enc_leccioninicio _id'   v-model='enc_leccion.inicio'  false-value='false' true-value='true' >
-                <label class='custom-control-label' for='enc_leccioninicio _id'  >inicio</label>
+                <label class='custom-control-label' for='enc_leccioninicio _id'  >Inicio</label>
             </div>  
             <div class='custom-control custom-checkbox'>
                 <input type='checkbox' class='custom-control-input' id='enc_leccionfinal _id'   v-model='enc_leccion.final'  false-value='false' true-value='true' >
-                <label class='custom-control-label' for='enc_leccionfinal _id'  >final</label>
+                <label class='custom-control-label' for='enc_leccionfinal _id'  >Final</label>
             </div>  
             <div class='custom-control custom-checkbox'>
                 <input type='checkbox' class='custom-control-input' id='enc_leccionleccion _id'   v-model='enc_leccion.leccion'  false-value='false' true-value='true' >
