@@ -55,7 +55,7 @@
                                 <option v-for="rows in empleados" v-bind:value='rows.id_empleado'>{{ rows.paterno }} {{ rows.materno }} {{ rows.nombre }}</option>
                               </select>
 
-                              <div v-if="reportSelected=='M'">
+                              <div v-if="reportSelected=='M' || reportSelected=='Q'">
                                 <label>Mes:</label>
                                 <select class='form-control'  v-model="mesSelected"  > 
                                   <option value="1">Enero</option>
@@ -71,7 +71,17 @@
                                   <option value="11">Noviembre</option>
                                   <option value="12">Diciembre</option>
                                 </select>
-                              </div> 
+                              </div>
+
+                              <div v-if="reportSelected=='M' || reportSelected=='Q'">
+                                <label>Año:</label>
+                                <select class='form-control'  v-model="ajercicio"  > 
+                                  <option value=2021>2021</option>
+                                  <option value=2022>2022</option>
+                                  <option value=2023>2023</option>
+                                  <option value=2024>2024</option> 
+                                </select>
+                              </div>
 
                             </div>
                           </div> 
@@ -100,7 +110,8 @@
                   <option value='N'  >N.GRÁFICAS POR ENCUESTA</option>                 
                   <option value='Ñ'  >Ñ.ENCUESTAS SANCIONADAS</option>       
                   <option value='O'  >O.GRÁFICA DE PREGUNTAS EVALUADAS</option>
-                  <option value='P'  >P. CASOS DE RIESGO BAJO COVID-19</option>                               
+                  <option value='P'  >P. CASOS DE RIESGO BAJO COVID-19</option> 
+                  <option value='Q'  >Q. RESULTADO EVALUACIÓN</option>                               
                 </select>  
                 </br>
                 <button type="button" class="btn btn-info float-right"  @click='generateReport()' >Consultar</button>       
@@ -114,4 +125,4 @@
 
   <div id="viewReport"> </div>   
   
-<script type="text/javascript" src="../../controllers/admin/reportes_2.js" ></script>
+<script type="text/javascript" src="../../controllers/admin/reportes_3.js" ></script>
