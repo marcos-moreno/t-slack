@@ -315,7 +315,7 @@
                                                                     type="checkbox" style="margin-left:15px;"
                                                                     :id="punto_evaluar.ev_punto_evaluar_id+'_chec'+rubro.ev_punto_evaluar_ln_id" 
                                                                     v-model="rubro.is_checked">
-                                                                <span>{{ rubro.nombre }}</span>
+                                                                <span>{{ rubro.orden }}.-{{ rubro.nombre }}</span>
                                                             </div>
                                                             <br>
                                                             <button type="button" class="btn btn-primary" 

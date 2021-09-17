@@ -111,7 +111,7 @@
                   <option value='Ñ'  >Ñ.ENCUESTAS SANCIONADAS</option>       
                   <option value='O'  >O.GRÁFICA DE PREGUNTAS EVALUADAS</option>
                   <option value='P'  >P. CASOS DE RIESGO BAJO COVID-19</option> 
-                  <option value='Q'  >Q. RESULTADO EVALUACIÓN</option>                               
+                  <option value='Q'  >Q. RESULTADO DE EVALUACIÓN (LIDERAZGO)</option>                               
                 </select>  
                 </br>
                 <button type="button" class="btn btn-info float-right"  @click='generateReport()' >Consultar</button>       
