@@ -143,9 +143,20 @@ class Ev_evaluacion
         try {  
             $parameters = array(
                 ':points' => $this->received_data->points,  
-                ':id_lider' => $_SESSION['id_empleado'],
+                ':id_lider' => $_SESSION['id_empleado']
+                ,':ev_indicador_general_id' => $this->received_data->ev_indicador_general_id
+                ,':id_empleado'  => $this->received_data->id_empleado
+                ,':ev_evaluacion_ln_id'  => $this->received_data->ev_evaluacion_ln_id
+                ,':ev_evaluacion_id'  => $this->received_data->ev_evaluacion_id
             );
-            $query = "SELECT refividrio.save_dat_point(:points,:id_lider)";
+            $query = "SELECT refividrio.save_dat_point(
+                            :points
+                            ,:id_lider
+                            ,:ev_indicador_general_id
+                            ,:id_empleado
+                            ,:ev_evaluacion_ln_id
+                            ,:ev_evaluacion_id
+                    )";
             $statement = $this->connect->prepare($query); 
             $statement->execute($parameters);   
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {   

@@ -302,9 +302,9 @@
                                                         <button class="btn btn-link text-left" type="button" data-toggle="collapse"
                                                             v-bind:data-target="'#c'+punto_evaluar.ev_punto_evaluar_id" aria-expanded="true"
                                                             v-bind:aria-controls="'c'+punto_evaluar.ev_punto_evaluar_id">
-                                                            {{punto_evaluar.nombre}} --->
+                                                            {{punto_evaluar.nombre}}
                                                         </button>
-                                                        <FONT style="color:#289001" size="3px">{{punto_evaluar.porcentaje_tl}}</FONT>  
+                                                        <!-- <FONT style="color:#289001" size="3px">{{punto_evaluar.porcentaje_tl}}</FONT>   -->
                                                     </h2>
                                                 </div>
                                                 <div :id="'c'+punto_evaluar.ev_punto_evaluar_id" class="collapse" v-bind:aria-labelledby="'h'+punto_evaluar.ev_punto_evaluar_id" >
@@ -319,7 +319,13 @@
                                                             </div>
                                                             <br>
                                                             <button type="button" class="btn btn-primary" 
-                                                                @click="save_dat_point(punto_evaluar.ev_puntos_evaluar_ln)"
+                                                                @click="save_dat_point(
+                                                                    punto_evaluar.ev_puntos_evaluar_ln
+                                                                    ,indicador.ev_indicador_general_id 
+                                                                    ,ev_evaluacion_ln.id_empleado
+                                                                    ,ev_evaluacion_ln.ev_evaluacion_ln_id
+                                                                    ,ev_evaluacion_ln.ev_evaluacion_id
+                                                                )"
                                                             >Guardar</button>
                                                         </ul>
                                                     </div>
@@ -363,4 +369,4 @@
         </div>
     </div>
 </div>
-<script type="text/javascript" src="../../controllers/ev/c_ev_evaluacion1.js"></script>
+<script type="text/javascript" src="../../controllers/ev/c_ev_evaluacion2.js"></script>
