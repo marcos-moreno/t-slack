@@ -87,7 +87,12 @@
             
                         <td>{{ ev_ticket.fechasolucion}}</td>
             
-                        <td>{{ ev_ticket.estado}}</td>
+                        <td v-if="ev_ticket.estado =='AB'">({{ ev_ticket.estado}}) Abierto</td>
+                        <td v-if="ev_ticket.estado =='CA'">({{ ev_ticket.estado}}) Cancelado</td>
+                        <td v-if="ev_ticket.estado =='CO'">({{ ev_ticket.estado}}) Completo</td>
+                        <td v-if="ev_ticket.estado =='SSO'">({{ ev_ticket.estado}}) Sin Soluci&oacute;n</td>
+
+
             
                
                         <td >
@@ -123,6 +128,46 @@
                     <label>Comentario de Soluci&oacute;n</label>
                     <input type='text' class='form-control' v-model='ev_ticket.comentario_solucion' />
                 </div> 
+                
+                    <div v-if="view_adjunto_dialog" >  
+            <transition name="model" > 
+                <div class="modal-mask" > 
+                    <div  class="modal-dialog modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <p class="modal-title">
+                                    Evidencias del reporte
+                                </p> 
+                                <div>
+                                    <button  type="button" class="close" @click="view_adjunto_dialog=false">
+                                    <span aria-hidden="true">&times;</span></button>
+                                </div>
+                            </div>  
+                            <div class="modal-body"> 
+                                <div class="card-body">   
+                                    <div class="modal-body"> 
+                                        <ul class="list-group">
+                                            <li v-for="item in files_adjuntos" 
+                                            class="list-group-item d-flex justify-content-between align-items-center">
+                                                <button
+                                                    style="background:none;color:blue;border:none
+                                                    ;max-width:30px
+                                                    "
+                                                    @click="get_file(item)"
+                                                >{{ item.name.substring(0,50) }}</button>  
+
+                                                  
+                                            </li>
+                                        </ul>
+                                    </div> 
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+                </div> 
+            </transition>
+        </div>
+               
 
                 
                 <table class="table table-bordered table-striped">
@@ -130,16 +175,28 @@
                         <td>ID Empleado</td>
                         <td>Comentarios</td>
                         <td>Fecha Creaci&oacute;n</td>
+                        <td>Linea ID</td>
+                        <td>Archivos</td>
                     </tr>
                    
                     <tr v-for="ev_ticket in LineaCollections" >
                         <td>{{ ev_ticket.id_empleado }}    {{ ev_ticket.nombre }} {{ ev_ticket.paterno }} {{ ev_ticket.materno }}</td>
 
-                        <td>{{  ev_ticket.comentario }}</td>
+                        <td>{{  ev_ticket.comentario }}  </td>
                             
                         <td>{{ ev_ticket.fechacreacion }}</td>
-                        
-           
+
+                        <td>{{ ev_ticket.ev_ticket_ln_id }}</td>
+
+                        <td>
+                            <div class="form-group">
+                                <button  type="button" class="close" @click="getfiles_adjuntos(ev_ticket.ev_ticket_ln_id )">
+                                    <img src="../../img/evidencias.svg" width="7%" />
+                                    Evidencias
+                                </button><br>
+                            </div>
+                        </td>
+
                     </tr>
 
                         

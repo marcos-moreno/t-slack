@@ -35,6 +35,10 @@ if (check_session()) {
             $model = new Ev_solucion_ticket($data,$connect,$received_data);
             $model->selectLinea();
         break;
+        case 'selecciona': 
+            $model = new Ev_solucion_ticket($data,$connect,$received_data);
+            $model->selecciona();
+        break;
     }
 }else{
     $output = array('message' => 'Not authorized'); 
@@ -112,8 +116,8 @@ class Ev_solucion_ticket
                 ':estado' => 'AB',
             );
             $query = "SELECT distinct ti.ev_ticket_id,
-            TO_CHAR(ti.fechacreacion, 'yyyy-MM-ddThh:mm') as fechacreacion,
-            TO_CHAR(ti.fechasolucion, 'yyyy-MM-ddThh:mm') as fechasolucion,
+            TO_CHAR(ti.fechacreacion, 'DD-MM-YYYY HH12:MI:SS AM') as fechacreacion,
+            TO_CHAR(ti.fechasolucion, 'DD-MM-YYYY HH12:MI:SS AM') as fechasolucion,
             ti.estado,ti.ev_catalogo_ticket_id , d.departamento_id, ca.situacion,ti.comentario_solucion, 
 			e.nombre, d.nombre
                     FROM refividrio.ev_ticket ti
@@ -151,8 +155,8 @@ class Ev_solucion_ticket
                 ':id_empleado' => $_SESSION['id_empleado'], 
             );
             $query = "SELECT distinct ti.ev_ticket_id,
-            TO_CHAR(ti.fechacreacion, 'yyyy-MM-ddThh:mm') as fechacreacion,
-            TO_CHAR(ti.fechasolucion, 'yyyy-MM-ddThh:mm') as fechasolucion,
+            TO_CHAR(ti.fechacreacion, 'DD-MM-YYYY HH12:MI:SS AM') as fechacreacion,
+            TO_CHAR(ti.fechasolucion, 'DD-MM-YYYY HH12:MI:SS AM') as fechasolucion,
             ti.estado,ti.ev_catalogo_ticket_id , d.departamento_id, ca.situacion,ti.comentario_solucion, 
 			e.nombre, d.nombre
                     FROM refividrio.ev_ticket ti
@@ -214,10 +218,10 @@ class Ev_solucion_ticket
                 // 'statuss' => $status,
             );
             $query = "SELECT  ti.ev_ticket_id,
-            TO_CHAR(ti.fechacreacion, 'yyyy-MM-ddThh:mm') as fechacreacion,
-            TO_CHAR(ti.fechasolucion, 'yyyy-MM-ddThh:mm') as fechasolucion,
+            TO_CHAR(ti.fechacreacion, 'DD-MM-YYYY HH12:MI:SS AM') as fechacreacion,
+            TO_CHAR(ti.fechasolucion, 'DD-MM-YYYY HH12:MI:SS AM') as fechasolucion,
             ti.estado,ti.ev_catalogo_ticket_id , d.departamento_id, ca.situacion,ti.comentario_solucion, 
-			d.nombre, ln.id_empleado, e.nombre, e.paterno, e.materno, ln.comentario
+			d.nombre, ln.id_empleado, e.nombre, e.paterno, e.materno, ln.comentario, ln.ev_ticket_ln_id
                     FROM refividrio.ev_ticket ti
 					INNER JOIN refividrio.ev_ticket_ln ln on ti.ev_ticket_id = ln.ev_ticket_id
                     INNER JOIN refividrio.departamento d on ti.departamento_id = d.departamento_id
@@ -225,6 +229,33 @@ class Ev_solucion_ticket
 					INNER JOIN refividrio.empleado e on e.id_empleado = ln.id_empleado
                     WHERE 
                        ti.estado =:estado and ti.ev_ticket_id = :ev_ticket_id 
+                    " ;
+                        
+            $statement = $this->connect->prepare($query); 
+            $statement->execute($parameters);   
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
+                    $data[] = $row;
+            }
+
+        
+            echo json_encode($data); 
+            return true;
+        } catch (PDOException $exc) {
+            $output = array('message' => $exc->getMessage()); 
+            echo json_encode($output); 
+            return false;
+        }  
+    }
+
+    public function selecciona(){
+        try {  
+            $parameters = array(
+                'ev_ticket_id' => $this->received_data->model->ev_ticket_id,
+            );
+            $query = "SELECT  ev_ticket_ln_id
+                    FROM refividrio.ev_ticket_ln
+                    WHERE 
+                     ev_ticket_id = :ev_ticket_id 
                     " ;
                         
             $statement = $this->connect->prepare($query); 

@@ -39,10 +39,12 @@ if (check_session()) {
             $model = new Ev_ticket_ln($data,$connect,$received_data);
             $model->updateV();
         break;
+        case 'selecciona': 
+            $model = new Ev_ticket_ln($data,$connect,$received_data);
+            $model->selecciona();
+        break;
     }
-}else{
-    $output = array('message' => 'Not authorized'); 
-    echo json_encode($output); 
+
 } 
 
 class Ev_ticket_ln 
@@ -69,18 +71,23 @@ class Ev_ticket_ln
                         
                     ); 
         $query = 'INSERT INTO refividrio.ev_ticket_ln (id_empleado,comentario,ev_ticket_id,estado) 
-        VALUES (:id_empleado,:comentario,(SELECT MAX(ev_ticket_id) FROM refividrio.ev_ticket where ev_catalogo_ticket_id = :ev_catalogo_ticket_id LIMIT 1),:estado);';
+        VALUES (:id_empleado,:comentario,(SELECT MAX(ev_ticket_id) FROM refividrio.ev_ticket where ev_catalogo_ticket_id = :ev_catalogo_ticket_id LIMIT 1),:estado)RETURNING ev_ticket_ln_id;';
 
-            $statement = $this->connect->prepare($query); 
-            $statement->execute($data);  
-            $output = array('message' => 'Data Inserted'); 
-            echo json_encode($output); 
-            return true;
-        } catch (PDOException $exc) {
-            $output = array('message' => $exc->getMessage()); 
-            echo json_encode($output); 
-            return false;
-        } 
+$statement = $this->connect->prepare($query); 
+$statement->execute($data);
+$result = $statement->fetchAll();
+$ev_ticket_ln_id = 0;  
+foreach ($result as $row) {
+    $ev_ticket_ln_id = $row['ev_ticket_ln_id'];
+} 
+$output = array('message' => 'Data Inserted','ev_ticket_ln_id' => $ev_ticket_ln_id); 
+echo json_encode($output); 
+return true;
+} catch (PDOException $exc) {
+$output = array('message' => $exc->getMessage()); 
+echo json_encode($output); 
+return false;
+} 
     } 
 
     public function insertO(){
@@ -94,12 +101,16 @@ class Ev_ticket_ln
                         
                     ); 
         $query = 'INSERT INTO refividrio.ev_ticket_ln (id_empleado,comentario,ev_ticket_id,estado) 
-        VALUES (:id_empleado,:comentario,(SELECT MAX (ev_ticket_id) FROM refividrio.ev_ticket where ev_catalogo_ticket_id = (SELECT ev_catalogo_ticket_id from refividrio.ev_catalogo_ticket where ev_catalogo_ticket_id = :ev_catalogo_ticket_id )),:estado);';
+        VALUES (:id_empleado,:comentario,(SELECT MAX (ev_ticket_id) FROM refividrio.ev_ticket where ev_catalogo_ticket_id = (SELECT ev_catalogo_ticket_id from refividrio.ev_catalogo_ticket where ev_catalogo_ticket_id = :ev_catalogo_ticket_id )),:estado)RETURNING ev_ticket_ln_id;';
 
             $statement = $this->connect->prepare($query); 
-            $statement->execute($data);  
-            
-            $output = array('message' => 'Data Inserted'); 
+            $statement->execute($data);
+            $result = $statement->fetchAll();
+            $ev_ticket_ln_id = 0;  
+            foreach ($result as $row) {
+                $ev_ticket_ln_id = $row['ev_ticket_ln_id'];
+            } 
+            $output = array('message' => 'Data Inserted','ev_ticket_ln_id' => $ev_ticket_ln_id); 
             echo json_encode($output); 
             return true;
         } catch (PDOException $exc) {
@@ -226,6 +237,38 @@ class Ev_ticket_ln
             echo json_encode($output); 
             return false;
         }  
+    }
+
+
+    public function selecciona(){
+        try {  
+            $parameters = array(
+                
+                ':ev_ticket_ln_id' => $this->received_data->model->ev_ticket_ln_id, 
+               
+               
+            );
+            $query = "SELECT ev_ticket_id
+            FROM refividrio.ev_ticket_ln
+            WHERE 
+                ev_ticket_ln_id = :ev_ticket_ln_id
+                    " ;
+                        
+                        $statement = $this->connect->prepare($query); 
+                        $statement->execute($parameters);
+                        $result = $statement->fetchAll();
+                        $ev_ticket_id = 0;  
+                        foreach ($result as $row) {
+                            $ev_ticket_id = $row['ev_ticket_id'];
+                        } 
+                        $output = array('message' => 'Data gets','ev_ticket_id' => $ev_ticket_id); 
+                        echo json_encode($output); 
+                        return true;
+                    } catch (PDOException $exc) {
+                        $output = array('message' => $exc->getMessage()); 
+                        echo json_encode($output); 
+                        return false;
+                    } 
     }
 
     public function validaInsert(){
