@@ -24,10 +24,47 @@ var application = new Vue({
 
         filter : '',
         filterestado:'',
+        adjunto_dialog : false,
+        view_adjunto_dialog : false,
+        evidencia_dialog : false,
+        load_dialog : false,
+        files_adjuntos : [],
+        file_adjunto : {},
         
     
     },
     methods:{
+
+        async get_file(file){ 
+            window.open(`../../models/generales/bd_file_adjunto.php?type_getFile_admin=1&id_file=${file.id_file_adjunto}`
+            ,'_blank');
+        }, 
+        async getfiles_adjuntos(ev_ticket_ln_id){
+
+            if(ev_ticket_ln_id > 0 ){
+                console.log('entro');
+                this.ev_ticket_ln.ev_ticket_ln_id = ev_ticket_ln_id;
+
+                console.log(this.ev_ticket_ln.ev_ticket_ln_id);
+                this.view_adjunto_dialog = true;
+            this.files_adjuntos  = []; 
+            const response = await this.request('../../models/generales/bd_file_adjunto.php',
+                {
+                    'action' : 'select_preview'
+                    ,'tabla': 'ev_ticket_ln'
+                    ,'id_tabla' : this.ev_ticket_ln.ev_ticket_ln_id
+                });
+            try{   
+                this.files_adjuntos = response; 
+                console.log('saiend');
+            }catch(error){
+                console.log(error);
+                this.show_message('No hay datos Para Mostrar.','info');
+            }  
+            }
+
+            
+        },
 
         async getev_tickets(){  
             this.ev_ticketCollection  = [];
@@ -73,7 +110,7 @@ var application = new Vue({
                
             } 
         },
-
+        
         
 
         async save_ev_ticket(){
@@ -139,6 +176,7 @@ var application = new Vue({
 
         model_empty(){
             this.ev_ticket = {ev_ticket_id:0,problema:'',observacion:'',fechacreacion:'',fechasolucion:'',estado:'',ev_catalogo_ticket_id:'', comentario_solucion: ''};
+            this.ev_ticket_ln = {ev_ticket_ln_id: 0};
         },
         async request(path,jsonParameters){
             const response = await axios.post(path, jsonParameters).then(function (response) {   

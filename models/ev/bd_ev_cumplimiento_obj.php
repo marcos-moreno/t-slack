@@ -27,6 +27,10 @@ if (check_session()) {
             $model = new Ev_cumplimiento_obj($data,$connect,$received_data);
             $model->selectCombo();
         break;
+        case 'selectCombo2':
+            $model = new Ev_cumplimiento_obj($data,$connect,$received_data);
+            $model->selectCombo2();
+        break;
         case 'selectTabla':
             $model = new Ev_cumplimiento_obj($data,$connect,$received_data);
             $model->selectTabla();
@@ -109,6 +113,32 @@ class Ev_cumplimiento_obj
         }  
     }
 
+    public function selectCombo2(){
+        try {
+            $parameters = array(
+                    ':id_empleado' => $_SESSION['id_empleado'],
+                );   
+            $query = '
+                    select  ig.nombre,ig.ev_indicador_general_id
+            from refividrio.ev_indicador_general as ig 
+            inner join refividrio.ev_indicador_puesto as ip on ip.ev_indicador_general_id = ig.ev_indicador_general_id
+            inner join refividrio.empleado as em on em.ev_puesto_id = ip.ev_puesto_id
+            where em.id_empleado = :id_empleado and ig.ev_indicador_general_id IN (24,11);      
+            ' ;         
+            $statement = $this->connect->prepare($query); 
+            $statement->execute($parameters);   
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
+                    $data[] = $row;
+            } 
+            echo json_encode($data); 
+            return true;
+        } catch (PDOException $exc) {
+            $output = array('message' => $exc->getMessage()); 
+            echo json_encode($output); 
+            return false;
+        }  
+    }
+
     public function selectEstado(){
         try { 
             $valor = 'CUMPLIMIENTO DE OBJETIVOS';
@@ -167,8 +197,8 @@ class Ev_cumplimiento_obj
             $query = "
             SELECT em.id_empleado, co.ev_cumplimiento_obj_id, co.id_indicador, ig.nombre, ig.ev_indicador_general_id,
              concat( em.nombre, em.paterno, em.materno) as fullname,
-            TO_CHAR(fechainicio, 'yyyy-MM-ddThh:mm') as fechainicio, 
-            TO_CHAR(fechatermino, 'yyyy-MM-ddThh:mm') as fechatermino, 
+            TO_CHAR(fechainicio, 'DD-MM-YYYY HH12:MI:SS AM') as fechainicio, 
+            TO_CHAR(fechatermino, 'DD-MM-YYYY HH12:MI:SS AM') as fechatermino, 
              co.estado, co.nombre_objetivo, co.descripcion
             FROM refividrio.ev_cumplimiento_obj as co
             Inner join refividrio.ev_indicador_general as ig on ig.ev_indicador_general_id = co.id_indicador
@@ -193,7 +223,7 @@ class Ev_cumplimiento_obj
         try {
             $data = array(
                 ':id_indicador' => $this->received_data->model->id_indicador,
-                ':id_empleado' => $this->received_data->model->id_empleado,
+                ':id_empleado' => $_SESSION['id_empleado'],
                 ':fechainicio' => $this->received_data->model->fechainicio,
                 'fechatermino' => $this->received_data->model->fechatermino,
                 ':estado' => $this->received_data->model->estado,

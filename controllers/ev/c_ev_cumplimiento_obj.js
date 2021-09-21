@@ -5,7 +5,10 @@ var application = new Vue({
         isFormCrud:true,
         path : '../../models/ev/bd_ev_cumplimiento_obj.php',
         typeMessage : '',
+        typeMessage2 : '',
         msg:'',
+        msg2:'',
+
         //ev_cumplimiento: {},
         //paginador
         numByPag : 15, 
@@ -76,7 +79,28 @@ var application = new Vue({
                     
                 }  
             }catch(error){
+                this.indicador = null;
                 this.show_message('No se encontro indicador','info');
+                
+            } 
+        
+        }, 
+
+        async get_empleadoFilter2(){
+            
+            const responseIndicador = await this.request(this.path,{model:this.ev_cumplimiento
+            ,'action' : 'selectCombo2'}); 
+            try{  
+                if(responseIndicador.length > 0){
+                    
+                    this.indicador = responseIndicador;
+                    this.show_message2('Se he encontraron indicadores exitosamente','success');
+
+                    
+                }  
+            }catch(error){
+                this.indicador = null;
+                this.show_message2('No se encontro indicadores','error');
                 
             } 
         
@@ -125,10 +149,14 @@ var application = new Vue({
         async save(){
             if(this.ev_cumplimiento.fechatermino < this.ev_cumplimiento.fechainicio){
                 this.show_message('Fecha no coherente verificalo.', 'error');
+                this.show_message2('Fecha no coherente verificalo.', 'error');
+
             }else {
                 console.log('fecha coherente');
                 if(this.ev_cumplimiento.nombre_objetivo == '' || this.ev_cumplimiento.descripcion == '' || this.ev_cumplimiento.estado == ''){
                     this.show_message('Hay campos vacios.', 'error');
+                    this.show_message2('Hay campos vacios.', 'error');
+
                 } else {
                     if(this.ev_cumplimiento.ev_cumplimiento_obj_id > 0){
                         // console.log(ev_cumplimiento_obj_id);
@@ -150,13 +178,13 @@ var application = new Vue({
                         const response = await this.request(this.path,{model:this.ev_cumplimiento,'action' : 'insert'}); 
                         console.log(response);
                         if(response.message == 'Data Inserted'){
-                            this.show_message('Registro Guardado.','success');
+                            this.show_message2('Registro Guardado.','success');
                             
                             this.get_register();
                             this.model_empty();
                        
                         }else{
-                            this.show_message(response.message,'error');
+                            this.show_message2(response.message2,'error');
                         } 
                     }
                 }
@@ -181,6 +209,7 @@ var application = new Vue({
             this.estados = null;
          
         },
+        
 
         search_ev_cumpliID(ev_cumplimiento_obj_id){
             
@@ -229,6 +258,11 @@ var application = new Vue({
             this.msg = msg;
             this.typeMessage = typeMessage;
             setTimeout(function() { application.typeMessage='' ;application.msg =''; }, 5000);
+        },
+        async show_message2(msg2,typeMessage){
+            this.msg2 = msg2;
+            this.typeMessage = typeMessage;
+            setTimeout(function() { application.typeMessage='' ;application.msg2 =''; }, 5000);
         },model_empty(){
             this.ev_cumplimiento ={
                 ev_cumplimiento_obj_id: 0,
@@ -287,6 +321,7 @@ var application = new Vue({
     async mounted() {    
     },
     async created(){
+    await this.get_empleadoFilter2()
        await this.model_empty();
        await this.fill_f_keys();
        await this.get_register();

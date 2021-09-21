@@ -34,6 +34,8 @@
                             <div class="alert alert-primary" v-if="typeMessage == 'info'" role="alert">{{msg}}</div>
                             <div class="alert alert-danger"  v-if="typeMessage == 'error'" role="alert">{{msg}}</div>
                             <div class="alert alert-success" v-if="typeMessage == 'success'" role="alert">{{msg}}</div>
+                            <!-- <div class="alert alert-primary" v-if="typeMessage == 'info'" role="alert">{{msg2}}</div> -->
+
                            
                         </div> 
                     </td> 
@@ -93,7 +95,10 @@
             
                         <td>{{ ev_ticket.fechacreacion}}</td>
             
-                        <td>{{ ev_ticket.estado}}</td>
+                        <td v-if="ev_ticket.estado =='AB'">({{ ev_ticket.estado}}) Abierto</td>
+                        <td v-if="ev_ticket.estado =='CA'">({{ ev_ticket.estado}}) Cancelado</td>
+                        <td v-if="ev_ticket.estado =='CO'">({{ ev_ticket.estado}}) Completo</td>
+                        <td v-if="ev_ticket.estado =='SSO'">({{ ev_ticket.estado}}) Sin Soluci&oacute;n</td>
 
                         <td>{{ ev_ticket.comentario }}</td>
 
@@ -202,12 +207,28 @@
                 <div class='form-group' v-show="com">
                     <label>Comentario de soluci&oacute;n</label>
                     <input type='text' class='form-control' v-model='ev_ticket.comentario_solucion' disabled/>
-                </div> 
+                </div> <br><br><br><br>
+                <div  class="form-group" v-if="adjunto"> 
+                    <button  type="button" class="close" @click="adjunto_dialog=true">
+                        <img src="../../img/adjuntar.svg" width="7%" />
+                        Adjuntar Evidencia
+                    </button><br><br><br>
 
+                    <button  type="button" class="close" @click="getfiles_adjuntos()" >
+                        <img src="../../img/evidencias.svg" width="7%" />
+                        Evidencias
+                    </button><br><br><br><br><br><br>
+                   
+                </div>
+
+                
                 <div class="form-group">
                     <td><button type="button" class="btn btn btn-xs" @click="cancel_ev_ticket()"><img src="../../img/regresar.png" width="28px" /> Regresar</button></td> 
                     <button @click="save_ev_ticket()" class="btn btn-info btn-xs" ><img src="../../img/send.png" width="18px" /> *Guardar</button>
-                </div> 
+                </div>
+                
+                
+               
             </div>
             <div  v-show="isFormInsert2">
                 <div class="alert alert-success" role="alert">
@@ -226,12 +247,118 @@
                 <div class='form-group'>
                     <label>Comentario</label>
                     <input type='text' class='form-control' v-model='ev_ticket.comentario' />
+                </div><br><br><br>
+                <div  class="form-group" v-if="adjunto"> 
+                    <button  type="button" class="close" @click="adjunto_dialog=true">
+                        <img src="../../img/adjuntar.svg" width="7%" />
+                        Adjuntar Evidencia
+                    </button><br><br><br>
+                    <button  type="button" class="close" @click="getfiles_adjuntos()" >
+                        <img src="../../img/evidencias.svg" width="7%" />
+                        Evidencias
+                    </button><br><br><br><br><br><br>
+                    
+                   
                 </div>
+
+                              
+
                 <div class="form-group">
                     <td><button type="button" class="btn btn btn-xs" @click="cancel_ev_ticket()"><img src="../../img/regresar.png" width="28px" /> Regresar</button></td> 
                     <button @click="save_ev_ticket()" class="btn btn-info btn-xs" ><img src="../../img/send.png" width="18px" /> *Guardar</button>
                 </div> 
             </div>
+           
+
+            
+
+
+
+            <div v-if="adjunto_dialog" >  
+                    <transition name="model" >
+                    <div class="modal-mask" > 
+                        <div class="modal-dialog modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <p class="alert alert-warning" class="modal-title">
+                                        Adjuntar Evidencia  
+                                    </p>
+                                    <div>
+                                        <button  type="button" class="close" @click="adjunto_dialog=false">
+                                        <span aria-hidden="true">&times;</span></button>
+                                    </div>
+                                </div>  
+                                <div class="modal-body"> 
+                                    <div class="card-body">   
+                                        <div class="custom-control custom-checkbox">
+                                            <div class='form-group'>
+                                                <label>Archivo imagen,pdf,word,excel</label>
+                                                <input type='file' class='form-control' id="file" 
+                                                multiple="multiple" 
+                                                accept="application/pdf,.doc,.docx,.xls,.xlsx,image/png,image/jpeg,image/jpg"  />
+                                            </div>    
+                                            <div align="center"> 
+                                                <input type="button" @click="save_file()" 
+                                                class="btn btn-success btn-xs" value="Guardar" />
+                                            </div>
+                                        </div>  
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
+                    </transition>
+                </div> 
+             
+                <div v-if="view_adjunto_dialog" >  
+            <transition name="model" > 
+                <div class="modal-mask" > 
+                    <div  class="modal-dialog modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <p class="modal-title">
+                                    Evidencias del reporte
+                                </p> 
+                                <div>
+                                    <button  type="button" class="close" @click="view_adjunto_dialog=false">
+                                    <span aria-hidden="true">&times;</span></button>
+                                </div>
+                            </div>  
+                            <div class="modal-body"> 
+                                <div class="card-body">   
+                                    <div class="modal-body"> 
+                                        <ul class="list-group">
+                                            <li v-for="item in files_adjuntos" 
+                                            class="list-group-item d-flex justify-content-between align-items-center">
+                                                <button
+                                                    style="background:none;color:blue;border:none
+                                                    ;max-width:30px
+                                                    "
+                                                    @click="get_file(item)"
+                                                >{{ item.name.substring(0,50) }}</button>  
+
+                                                 <button
+                                                    style="background:none;color:blue;border:none"
+                                                    @click="delete_file(item.id_file_adjunto)"
+                                                > 
+                                                    <img src="../../img/borrar.png" width="28px" />
+                                                </button>   
+                                            </li>
+                                        </ul>
+                                    </div> 
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+                </div> 
+            </transition>
+        </div>
+
+            
+
+
+
+
             
         </div>  
     </div>

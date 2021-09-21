@@ -47,6 +47,10 @@ if (check_session()) {
             $model = new Ev_ticket($data,$connect,$received_data);
             $model->updateV();
         break;
+        case 'selecciona': 
+            $model = new Ev_ticket($data,$connect,$received_data);
+            $model->selecciona();
+        break;
     }
 }else{
     $output = array('message' => 'Not authorized'); 
@@ -171,8 +175,8 @@ class Ev_ticket
                 ':defec' => 'AB',
             );
             $query = "SELECT ti.ev_ticket_id,
-            TO_CHAR(ti.fechacreacion, 'yyyy-MM-ddThh:mm') as fechacreacion,
-            TO_CHAR(ti.fechasolucion, 'yyyy-MM-ddThh:mm') as fechasolucion,
+            TO_CHAR(ti.fechacreacion, 'DD-MM-YYYY HH12:MI:SS AM') as fechacreacion,
+            TO_CHAR(ti.fechasolucion, 'DD-MM-YYYY HH12:MI:SS AM') as fechasolucion,
             ti.estado,ti.ev_catalogo_ticket_id , ln.comentario, d.nombre, ca.situacion, ti.comentario_solucion
                     FROM ev_ticket ti
                     INNER JOIN ev_ticket_ln ln on ti.ev_ticket_id = ln.ev_ticket_id
@@ -208,8 +212,8 @@ class Ev_ticket
                 ':id_empleado' => $_SESSION['id_empleado'], 
             );
             $query = "SELECT ti.ev_ticket_id,
-            TO_CHAR(ti.fechacreacion, 'yyyy-MM-ddThh:mm') as fechacreacion,
-            TO_CHAR(ti.fechasolucion, 'yyyy-MM-ddThh:mm') as fechasolucion,
+            TO_CHAR(ti.fechacreacion, 'DD-MM-YYYY HH12:MI:SS AM') as fechacreacion,
+            TO_CHAR(ti.fechasolucion, 'DD-MM-YYYY HH12:MI:SS AM') as fechasolucion,
             ti.estado,ti.ev_catalogo_ticket_id , ln.comentario, d.nombre, ca.situacion, ti.comentario_solucion
                     FROM ev_ticket ti
                     INNER JOIN ev_ticket_ln ln on ti.ev_ticket_id = ln.ev_ticket_id
@@ -302,6 +306,38 @@ class Ev_ticket
             return json_encode($output);  
         }  
     }
+
+    public function selecciona(){
+        try {  
+            $parameters = array(
+                
+                ':ev_ticket_id' => $this->received_data->model->ev_ticket_id, 
+               
+               
+            );
+            $query = "SELECT ev_ticket_ln_id
+            FROM refividrio.ev_ticket_ln
+            WHERE 
+                ev_ticket_id = :ev_ticket_id
+                    " ;
+                        
+                        $statement = $this->connect->prepare($query); 
+                        $statement->execute($parameters);
+                        $result = $statement->fetchAll();
+                        $ev_ticket_ln_id = 0;  
+                        foreach ($result as $row) {
+                            $ev_ticket_ln_id = $row['ev_ticket_ln_id'];
+                        } 
+                        $output = array('message' => 'Data gets','ev_ticket_ln_id' => $ev_ticket_ln_id); 
+                        echo json_encode($output); 
+                        return true;
+                    } catch (PDOException $exc) {
+                        $output = array('message' => $exc->getMessage()); 
+                        echo json_encode($output); 
+                        return false;
+                    } 
+    }
+
    
     public function valida(){
         try { 

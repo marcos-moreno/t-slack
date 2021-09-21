@@ -2,6 +2,15 @@
 var application = new Vue({
     el:'#app_ev_ticket',
     data:{ 
+//filearchvos
+        adjunto_dialog : false,
+        view_adjunto_dialog : false,
+        evidencia_dialog : false,
+        load_dialog : false,
+        files_adjuntos : [],
+        file_adjunto : {},
+
+
         ev_ticket : null,
         ev_ticketCollection : [],
         isFormCrud: false,
@@ -29,9 +38,89 @@ var application = new Vue({
         fechas: false,
         com:false,
         disabled: 1,
+        adjunto: false,
+        adjuntoGet: false,
     
     },
     methods:{
+
+        async delete_file(id_file_adjunto){   
+            if(id_file_adjunto > 0){
+                const response = await this.request('../../models/generales/bd_file_adjunto.php'
+                ,{model:{'id_file_adjunto':id_file_adjunto},'action' : 'delete'});
+                if(response.message == 'Data Deleted'){
+                    await this.getfiles_adjuntos();
+                    this.show_message('Registro Eliminado','success');
+                }else{
+                    this.show_message(response.message,'error');
+                }
+            }else{ 
+                this.show_message('ID 0 No es posible Eliminar.','info');
+            } 
+        }, 
+        async get_file(file){ 
+            window.open(`../../models/generales/bd_file_adjunto.php?type_getFile_admin=1&id_file=${file.id_file_adjunto}`
+            ,'_blank');
+        }, 
+        async getfiles_adjuntos(){
+            this.view_adjunto_dialog = true;
+            this.files_adjuntos  = []; 
+            const response = await this.request('../../models/generales/bd_file_adjunto.php',
+                {
+                    'action' : 'select_preview'
+                    ,'tabla': 'ev_ticket_ln'
+                    ,'id_tabla' : this.ev_ticket_ln_id.ev_ticket_ln_id
+                });
+            try{   
+                this.files_adjuntos = response; 
+            }catch(error){
+                console.log(error);
+                this.show_message('No hay datos Para Mostrar.','info');
+            }  
+        },
+
+
+        async save_file(){    
+            var files = document.getElementById("file").files;
+            if (files.length < 1) { 
+                alert("Por favor Selecciona los documentos a cargar.");
+                return;
+            }
+            this.adjunto_dialog = false;
+            this.load_dialog = true;  
+            for (let index = 0; index < files.length; index++) {
+                const element = files[index];
+                let formData = new FormData();
+                formData.append('file', element); 
+                formData.append('id_tabla', this.ev_ticket_ln_id.ev_ticket_ln_id);
+                formData.append('tabla', 'ev_ticket_ln');
+                formData.append('action', 'insert'); 
+                formData.append('type', 'file');  
+                formData.append('name', element.name);   
+                const respuesta = await axios.post('../../models/generales/bd_file_adjunto.php',
+                formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }).then(function (response) {
+                    return response;
+                })
+                .catch(function (response) {
+                    return response;
+                });  
+                if (respuesta.data.status == "error") {
+                    alert("Aceptar para continuar.\nExiste un error con el archivo: " + element.name + "  Error: "+ respuesta.data.message);
+                }else{
+                    this.show_message('Se adjunto correctamente.','success'); 
+                }
+            }  
+            this.load_dialog = false;
+           
+
+        },
+
+
+
         async getev_tickets(){  
             this.ev_ticketCollection  = [];
             this.paginaCollection = [];
@@ -104,6 +193,7 @@ var application = new Vue({
                         console.log(responseCreacion);
                         if(responseCreacion == null){
                             this.model_empty();
+                             await this.getev_tickets();
                             this.show_message('Este ticket fue creado originalmento por Otro usuario por lo que se te prohibe actualizar','info');
                         } else {
 
@@ -140,9 +230,14 @@ var application = new Vue({
                             const response = await this.request(this.path,{model:this.ev_ticket,'action' : 'insert'}); 
                             const response_lds = await this.request('../../models/ev/bd_ev_ticket_ln.php',{model:this.ev_ticket,'action' : 'insert'});
                             if(response.message == 'Data Inserted'){
-                                await this.getev_tickets();
                                 this.show_message('Registro Guardado.','success');
-                                this.model_empty();
+                                this.ev_ticket_ln_id.ev_ticket_ln_id = response_lds.ev_ticket_ln_id;
+                                console.log(this.ev_ticket_ln_id.ev_ticket_ln_id);
+                                // const resTicket = await this.request('../../models/ev/bd_ev_ticket_ln.php',{model:this.ev_ticket_ln_id,'action' : 'selecciona'});
+                                // this.ev_ticket.ev_ticket_id = resTicket.ev_ticket_id;
+                                // console.log(this.ev_ticket.ev_ticket_id);
+                                this.update_ev_ticket2(response_lds.ev_ticket_ln_id);
+
                                 
                             }else{
                                 this.show_message(response.message,'error');
@@ -151,9 +246,13 @@ var application = new Vue({
                             const response = await this.request(this.path,{model:this.ev_ticket,'action' : 'insert'}); 
                             const response_lds = await this.request('../../models/ev/bd_ev_ticket_ln.php',{model:this.ev_ticket,'action' : 'insertO'});
                             if( response_lds.message == 'Data Inserted'){
-                                await this.getev_tickets();
                                 this.show_message('Registro Guardado.','success');
-                                this.model_empty();
+                                this.ev_ticket_ln_id.ev_ticket_ln_id = response_lds.ev_ticket_ln_id;
+                                console.log(this.ev_ticket_ln_id.ev_ticket_ln_id);
+                                // const resTicket = await this.request('../../models/ev/bd_ev_ticket_ln.php',{model:this.ev_ticket_ln_id,'action' : 'selecciona'});
+                                // this.ev_ticket.ev_ticket_id = resTicket.ev_ticket_id;
+                                // console.log(this.ev_ticket.ev_ticket_id);
+                                this.update_ev_ticket2(response_lds.ev_ticket_ln_id);
                                 
                             }else{
                                 this.show_message(response.message,'error');
@@ -165,11 +264,12 @@ var application = new Vue({
                 const response_ld = await this.request('../../models/ev/bd_ev_ticket_ln.php',{model:this.ev_ticket,'action' : 'insertO'}); 
                
                     if(response_ld.message == 'Data Inserted'){
-                        await this.getev_tickets();
+                        
                         this.show_message('Registro Guardado.','success');
-                        this.model_empty();
-                        this.isFormCrud = false;
-                        this.isForm = false;
+
+                        this.ev_ticket_ln_id.ev_ticket_ln_id = response_ld.ev_ticket_ln_id;
+                                console.log(this.ev_ticket_ln_id.ev_ticket_ln_id);
+                                this.update_ev_ticket2(response_ld.ev_ticket_ln_id);
                     }else{
                         
                         this.show_message(response_ld.message,'error');
@@ -181,10 +281,38 @@ var application = new Vue({
             // }
         },
 
+        async update_ev_ticket2(ev_ticket_ln_id){ 
+            if(ev_ticket_ln_id > 0 ){
+
+                this.ev_ticket_ln_id.ev_ticket_ln_id =ev_ticket_ln_id;
+                const resTicket = await this.request(this.path,{model:this.ev_ticket_ln_id,'action' : 'selecciona'});
+                this.ev_ticket.ev_ticket_id = resTicket.ev_ticket_id;
+                console.log(this.ev_ticket.ev_ticket_id);
+                console.log(this.ev_ticket);
+
+
+
+
+                if(this.ev_ticket_ln_id.ev_ticket_ln_id > 0){
+                    this. adjunto = true; 
+                } else {
+                    this.show_message('Objeto no econtrado.','info');
+                }
+            }else {
+                this.show_message('No se encuentra un indice 0','info');
+            }
+        }, 
+
         async update_ev_ticket(ev_ticket_id){ 
             if(ev_ticket_id > 0){
                 this.ev_ticket = this.search_ev_ticketByID(ev_ticket_id);
                 if(this.ev_ticket.ev_ticket_id > 0){
+                const resTicket = await this.request(this.path,{model:this.ev_ticket,'action' : 'selecciona'});
+                console.log('ev_ticket_id');
+                this.ev_ticket_ln_id.ev_ticket_ln_id = resTicket.ev_ticket_ln_id;
+                console.log(this.ev_ticket_ln_id);
+
+                    
                     this.isFormCrud = true;
                     this.isFormInsert = true;
                     this.isForm = false;
@@ -192,6 +320,8 @@ var application = new Vue({
                     this.fechas = true;
                     this.disabled = 0;
                     this.com = true;
+                    this.adjunto = true;
+                    this.adjuntoGet = true;
                     
                 }else{
                     this.show_message('Hay un problema con este Registro.','info');
@@ -249,6 +379,7 @@ var application = new Vue({
         }, 
         cancel_ev_ticket(){  
             this.model_empty();
+            this.getev_tickets();
             this.isFormCrud = false;
             this.isForm = false;
             this.isFormInsert = false;
@@ -268,6 +399,11 @@ var application = new Vue({
             this.typeMessage = typeMessage;
             setTimeout(function() { application.typeMessage='' ;application.msg =''; }, 5000);
         },
+        async show_message2(msg2,typeMessage){
+            this.msg2 = msg2;
+            this.typeMessage = typeMessage;
+            setTimeout(function() { application.typeMessage='' ;application.msg2 =''; }, 5000);
+        },
 
         async show_messageStatic(msg, staticMessage){
             this.msg =msg;
@@ -277,6 +413,8 @@ var application = new Vue({
         
         model_empty(){
             this.ev_ticket = {ev_ticket_id:0,problema:'',observacion:'',fechacreacion:'',fechasolucion:'',estado:'',ev_catalogo_ticket_id:'',comentario:''};
+            this.ev_ticket_ln_id = {ev_ticket_ln_id: 0};
+            this.ev_ticket2 = {ev_ticket_id:0};
             this.ev_catalogo_ticketCollection = null;
             this.disabled = 1;
             this.isFormInsert = false;
@@ -285,6 +423,8 @@ var application = new Vue({
             this.isForm = false;
             this.fechas = false;
             this.com = false;
+            this.adjunto = false;
+            this.adjuntoGet = false;
         },
         async request(path,jsonParameters){
             const response = await axios.post(path, jsonParameters).then(function (response) {   

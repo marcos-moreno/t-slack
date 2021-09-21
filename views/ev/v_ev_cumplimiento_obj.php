@@ -23,11 +23,11 @@
             </div> 
 
             <div class="panel-body" v-if="tabla">
-                <div class="col-6">
+                <!-- <div class="col-6">
                     <div class="input-group mb-3">
                         <button type="button" class="btn btn-info btn-xs edit" @click="abre()">Agregar</button>
                     </div>
-                </div> 
+                </div>  -->
                 <div class="table-responsive">
                     <nav aria-label="Page navigation example">
                         <ul class="pagination">  
@@ -51,14 +51,27 @@
                             <th>Empleado</th>
                             <th>EstadoIndicador</th>
                             <th>Nombre del Objetivo</th>
+                            <th>Fecha inicio</th>
+                            <th>Fecha Termino</th>
                             <th></th> 
                         </tr>
                         <tr v-for="contenido in paginaCollection" >
                             <td>{{ contenido.ev_cumplimiento_obj_id}}</td>
                             <td>{{ contenido.nombre}}</td>
                             <td>({{ contenido.id_empleado }} ) {{ contenido.fullname}}</td>
-                            <td>{{ contenido.estado}}</td>
+                            <td v-if="contenido.estado == 'PE'">{{ contenido.estado}} Pendiente</td>
+                            <td v-if="contenido.estado == 'TE'">{{ contenido.estado}} Terminado</td>
+                            <td v-if="contenido.estado == 'NT'">{{ contenido.estado}} NO Terminado</td>
+                            <td v-if="contenido.estado == 'CA'">{{ contenido.estado}} Cancelado</td>
+
+                            <td v-if="contenido.estado == 'NE'">{{ contenido.estado}} Negociaci&oacute;n &Eacute;xitosa</td>
+                            <td v-if="contenido.estado == 'NNE'">{{ contenido.estado}} Negociaci&oacute;n no &Eacute;xitosa</td>
+
+
                             <td>{{ contenido.nombre_objetivo }}</td>
+                            <td>{{ contenido.fechainicio }}</td>
+                            <td>{{ contenido.fechatermino }}</td>
+
                             <td style="width:150px" >
                                 <button type="button" class="btn btn" @click="update_ev_cumpli(contenido.ev_cumplimiento_obj_id)"><img src="../../img/lapiz.svg" width="25px" /></button>
                                 <button type="button" class="btn btn" @click="delete_ev_cumpli(contenido.ev_cumplimiento_obj_id)"><img src="../../img/borrar.png" width="25px" /></button>
@@ -80,7 +93,7 @@
                                     <div class="input-group-prepend">
                                         <label class="input-group-text" >Empleados</label>
                                     </div>
-                                    <select class='form-control' size='1' @change="get_empleadoFilter()"  v-model='ev_cumplimiento.id_empleado' >
+                                    <select class='form-control' size='1' @change="get_empleadoFilter()"  v-model='ev_cumplimiento.id_empleado' disabled>
                                         <optgroup v-for="(depa, i) in departamentos" :label="depa.nombre" >  
                                             <option v-for='rows in empleadoCollectionfiltro' v-if="rows.departamento_id==depa.departamento_id" v-bind:value='rows.id_empleado' >
                                                 {{ rows.paterno }} {{ rows.materno }} {{ rows.nombre }}
@@ -103,7 +116,7 @@
                                     <div class="input-group-prepend">
                                         <label class="input-group-text" >Indicador</label>
                                     </div>
-                                    <select class='form-control'  style="width:150px" @change="get_estado()" v-model='ev_cumplimiento.id_indicador'  > 
+                                    <select class='form-control'  style="width:150px" @change="get_estado()" v-model='ev_cumplimiento.id_indicador' disabled > 
                                         <option > ------</option>
                                         <option v-for='rows in indicador' v-bind:value='rows.ev_indicador_general_id'>{{ rows.nombre }}</option>
                                     </select>
@@ -120,7 +133,7 @@
                                         <div class="input-group-prepend">
                                             <label class="input-group-text" >Fecha Inicio</label>
                                         </div>
-                                        <input class="form-control" type="datetime-local"  v-model='ev_cumplimiento.fechainicio'> 
+                                        <input class="form-control" type="datetime-local"  v-model='ev_cumplimiento.fechainicio' disabled> 
                                     </div>
                             </div>
                             <div class="col-6">
