@@ -124,8 +124,7 @@ var application = new Vue({
                 ,'id_empleado' : id_empleado
                 ,'ev_evaluacion_ln_id' : ev_evaluacion_ln_id
                 ,'ev_evaluacion_id' : ev_evaluacion_id
-            });
-            console.log(result_save_point);
+            }); 
             await this.show_indicadores(this.ev_evaluacion_ln);
         },
         async show_indicadores(ev_evaluacion_ln){

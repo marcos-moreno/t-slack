@@ -330,13 +330,26 @@
                                                         </ul>
                                                     </div>
                                                 </div>
-
-
-
-                                            </div>
+                                            </div> 
                                         </div>
                                     </div>
                                 </div>
+
+
+
+                                <div v-if="indicador.ev_indicador_general.tipo_captura[0].value == 'Directa'">
+                                    <!-- <div v-if="indicador.ev_indicador_general.tipo_captura[0].value == 'Directa'">  -->
+                                            <!-- {{indicador.ev_puntos_evaluar}} -->
+                                            <div class="card" v-for="punto_evaluar in indicador.ev_puntos_evaluar">
+                                                <!-- {{punto_evaluar.tipo_evaluacion}} -->
+                                                <div class="accordion" v-if="punto_evaluar.tipo_evaluacion == 'ESCALA 1 al 10' ">  
+                                                    {{punto_evaluar}}
+                                                </div> 
+                                            </div>
+                                    <!-- </div> -->
+                                </div>
+
+
                                 <!--
                                 <div v-if="indicador.ev_indicador_general.tipo_captura[0].value=='Reportes'">
                                     <div v-if="indicador.ev_indicador_general.tipo_captura[0].value == 'Reportes'">
