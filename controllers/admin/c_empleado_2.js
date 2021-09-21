@@ -30,6 +30,7 @@ var application = new Vue({
         ev_puestoCollectionFiltro:[],
         filtroPuesto:"",
         departamentoCollection:[], 
+        id_empleado_filtro : '',
     },
     methods:{
         
@@ -64,7 +65,7 @@ var application = new Vue({
                 }
             } 
         },
-        async getempleados(){  
+        async getempleados(){
             this.empleadoCollection  = [];
             this.paginaCollection = [];
             const response = await this.request(
@@ -75,9 +76,10 @@ var application = new Vue({
                     ,'id_empresa' :this.empresa_id_filter
                     ,'action' : 'select'
                     ,'filter' : this.filter.toString()
+                    ,'id_empleado_filtro' : this.id_empleado_filtro
                 }
             );
-            console.log(response);
+            // console.log(response);
             try{
                 this.show_message(response.length + ' Registros Encontrados.','success');
                 this.empleadoCollection = response;
@@ -193,6 +195,7 @@ var application = new Vue({
         async get_segmentosFilter(){
             const response_segmento = await this.request('../../models/admin/bd_segmento.php',
             {'order' : 'ORDER BY id_segmento ASC','action' : 'select',filter:" activo=true AND id_empresa = " + this.empresa_id_filter});
+            console.log(response_segmento);
             try{  
                 if(response_segmento.length > 0){  
                     this.segmentoFilterCollection = response_segmento; 
@@ -204,8 +207,8 @@ var application = new Vue({
         }, 
         
         async fill_f_keys(){
-            // this.get_segmentos(); 
-            // this.get_segmentosFilter();
+            this.get_segmentos(); 
+            this.get_segmentosFilter();
             const response_empresa = await this.request('../../models/bd/bd_company.php',{'action' : 'fetchall'});
             try{  
                 if(response_empresa.length > 0){  

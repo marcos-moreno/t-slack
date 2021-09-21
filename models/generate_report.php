@@ -30,6 +30,8 @@ class generate_report
             $realizadas = (isset($_GET['realizadas'])?$_GET['realizadas']:0);
             $num_mes = (isset($_GET['num_mes'])?$_GET['num_mes']:"1");
             $nivel = (isset($_GET['nivel'])?$_GET['nivel']:0);
+            $mes = (isset($_GET['mes'])?$_GET['mes']:0);
+            $ejercicio = (isset($_GET['ejercicio'])?$_GET['ejercicio']:0);
             $tipo_encuesta = (isset($_GET['tipo_encuesta'])?$_GET['tipo_encuesta']:0);//0 = Todos los tipos de encuestas; 1 : Concluidas; 2 : En captura;
             $params = array(
                     'id_empleado' => $id_empleado,
@@ -39,7 +41,9 @@ class generate_report
                     'tipo_encuesta' => $tipo_encuesta,
                     'realizadas' => $realizadas, 
                     'nivel' => $nivel,
-                    'num_mes' => $num_mes 
+                    'num_mes' => $num_mes,
+                    'mes' => $mes,
+                    'ejercicio' => $ejercicio 
                 );
             $c = new Client("http://67.205.162.138:51541/jasperserver", "DesarrolloAdmin", "Dev_JasperSoft#20");
             $report = $c->reportService()->runReport('/reports/Encuestas/' . $name_report, 'pdf', null, null, $params);

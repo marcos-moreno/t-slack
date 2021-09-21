@@ -11,7 +11,8 @@ var report = new Vue({
         pollSelected: 0,
         typePoolSelected:0,
         reportSelected: "A",
-        mesSelected: "1"
+        mesSelected: "1",
+        ajercicio : 2021,
     },
     methods:{ 
        
@@ -56,10 +57,11 @@ var report = new Vue({
 
             if(this.reportSelected  == 'A'){ params += "&nivel=3";      }
             if(this.reportSelected  == 'B'){ params += "&nivel=2";      }
-            if(this.reportSelected  == 'C'){ params += "&nivel=1";      } 
+            if(this.reportSelected  == 'C'){ params += "&nivel=1";      }  
             if(this.reportSelected  == 'F'){ params += "&realizadas=0"; }
             if(this.reportSelected  == 'G'){ params += "&realizadas=1"; }  
             if(this.reportSelected  == 'M'){ params += "&num_mes=" + this.mesSelected ; } 
+            if(this.reportSelected  == 'Q'){ params += "&ejercicio="+this.ajercicio+"&mes="+this.mesSelected; }
 
             params += "&tipo_encuesta=" + this.typePoolSelected; //0 = Todos los tipos de encuestas; 1 : Concluidas; 2 : En captura;
             console.log(params);
@@ -83,7 +85,9 @@ var report = new Vue({
                 case 'M': return 'cumple_mes';       
                 case 'N': return 'resultadoEncuesta_1_1_1_1';
                 case 'Ñ': return 'resultadoEncuesta_1_1_1_1_1';           
-                case 'O': return 'resultadoEncuesta_1_1_1_1_1_1';      
+                case 'O': return 'resultadoEncuesta_1_1_1_1_1_1';     
+                case 'P': return 'resultadoEncuesta_1_1_2'; // BAJO
+                case 'Q': return 'resultado_evaluacion'; // BAJO
                 default : return '';   
             }
         },

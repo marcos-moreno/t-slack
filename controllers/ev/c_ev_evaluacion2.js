@@ -102,7 +102,6 @@ var application = new Vue({
                 ,'no_faltas' : jsonResponce.no_faltas
                 ,'no_retardos' : jsonResponce.no_retardos
             });
-            this.is_load = false;
             if (response_evaluar_reportes.status == 'success') {
                 ev_evaluacion_ln.calificacion = response_evaluar_reportes.data.procesar_evaluacion;
                 this.show_message("Evaluaciones Procesadas",'success'); 
@@ -110,12 +109,22 @@ var application = new Vue({
                 this.show_message("No se pudo procesar, error -> " + response_evaluar_reportes.data,'error'); 
             }
         },
-        async save_dat_point(data_save){
+        async save_dat_point(
+                data_save
+                ,ev_indicador_general_id 
+                ,id_empleado
+                ,ev_evaluacion_ln_id
+                ,ev_evaluacion_id 
+            ){
             this.is_load = true;
-            await this.request(this.path,{
+            const result_save_point = await this.request(this.path,{
                 'action' : 'save_dat_point',
                 'points' : JSON.stringify(data_save)
-            });
+                ,'ev_indicador_general_id' : ev_indicador_general_id
+                ,'id_empleado' : id_empleado
+                ,'ev_evaluacion_ln_id' : ev_evaluacion_ln_id
+                ,'ev_evaluacion_id' : ev_evaluacion_id
+            }); 
             await this.show_indicadores(this.ev_evaluacion_ln);
         },
         async show_indicadores(ev_evaluacion_ln){
@@ -132,7 +141,6 @@ var application = new Vue({
                     'ev_evaluacion_ln_id' : ev_evaluacion_ln.ev_evaluacion_ln_id,
                     'ev_evaluacion_id' : ev_evaluacion_ln.ev_evaluacion_id
                 });
-                console.log(response);
                 if (response.length > 0) {
                     this.indicadoresEvaluacion = response;
                 } else {
@@ -140,6 +148,8 @@ var application = new Vue({
                 }
             }else
                 this.show_message('La evaluación ya no esta disponible.','error');
+            
+            this.is_load = false;
         },
         // ::::::Indicadores:::::::::::::::::
 
@@ -223,7 +233,7 @@ var application = new Vue({
         },
         async save_ev_evaluacion_ln(){
             this.ev_evaluacion_ln.ev_puesto_id = this.empleadoByln.ev_puesto_id;
-            if (this.ev_evaluacion_ln.ev_puesto_id == null || this.ev_evaluacion_ln.ev_puesto_id == 0 || this.ev_evaluacion_ln.ev_puesto_id == '') {
+            if (this.ev_evaluacion_ln.ev_puesto_id == null || this.ev_evaluakcion_ln.ev_puesto_id == 0 || this.ev_evaluacion_ln.ev_puesto_id == '') {
                 this.show_message('El empleado no tiene asignado un puesto.','error');
                 return;
             }
