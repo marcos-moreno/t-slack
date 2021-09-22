@@ -252,8 +252,8 @@ class Ev_evaluacion
                             nm1.id_empleado
                         FROM(
                             SELECT 
-                                (SELECT j.id_superior FROM jerarquizacion j WHERE j.id_empleado = e.id_empleado LIMIT 1) As direct_sup ,
-                                (SELECT j.id_empleado FROM jerarquizacion j WHERE j.departamento_id = e.departamento_id LIMIT 1) As dep_sup,
+                                (SELECT DISTINCT(j.id_superior) FROM jerarquizacion j WHERE j.id_superior IS NOT NULL AND j.id_empleado = e.id_empleado LIMIT 1) As direct_sup ,
+                                (SELECT DISTINCT(j.id_empleado) FROM jerarquizacion j WHERE j.id_empleado IS NOT NULL AND j.departamento_id = e.departamento_id LIMIT 1) As dep_sup,
                                 e.id_empleado
                             FROM
                             Empleado e
