@@ -209,15 +209,13 @@
                                             class="list-group-item d-flex justify-content-between align-items-center">
                                                 <button
                                                     style="background:none;color:blue;border:none
-                                                    ;max-width:30px
-                                                    "
+                                                    ;max-width:30px"
                                                     @click="get_file(item)"
                                                 >{{ item.name.substring(0,50) }}</button>  
 
                                                  <button
                                                     style="background:none;color:blue;border:none"
-                                                    @click="delete_file(item.id_file_adjunto)"
-                                                > 
+                                                    @click="delete_file(item.id_file_adjunto)"> 
                                                     <img src="../../img/borrar.png" width="28px" />
                                                 </button>   
                                             </li>
