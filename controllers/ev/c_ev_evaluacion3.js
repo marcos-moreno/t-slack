@@ -44,8 +44,40 @@ var application = new Vue({
         //::::::::::Evaluacion
         itIsEvaluation : false,
         indicadoresEvaluacion : [],
+        view_incidencias : false,
+        incidencias : [],
+        textIncidencia : ""
     },
     methods:{
+        //::::::::::::::Ver valores de la ecaluación
+        async view_retardos(ev_evaluacion_ln,ev_evaluacion,type){
+            const response = await axios
+            .get(configEP.EndPointCerberus + 'get_retardos'
+                ,{
+                    headers:{
+                        "token" : localStorage.getItem("API_KEY_CERBERUS")
+                    }, 
+                    params:{ 
+                            fechaInicio: ev_evaluacion.periodo[0].inicio_periodo,
+                            fechaFin:ev_evaluacion.periodo[0].fin_periodo,
+                            idEmpleado: ev_evaluacion_ln.empleado[0].id_cerberus_empleado,
+                            tipo: type
+                        }
+                })
+            .then(function(response){ return response.data;})
+            .catch(function(response){ return response;}); 
+            console.log(response);
+            if (response.status == "success") {
+                this.view_incidencias = true;
+                this.incidencias = response.data;
+                this.textIncidencia = (type == "PUNTUALIDAD"?"Retardos del período.":"Faltas del período");
+            }else{
+                this.view_incidencias = false;
+                this.incidencias = [];
+            }
+        },
+        //::::::::::::::Ver valores de la ecaluación
+
         //::::::::::::::Evaluar
         async evaluar_reportes(ev_evaluacion_ln,indicador){ 
             const response_evaluar_reportes = await this.request(this.path,{

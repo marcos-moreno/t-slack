@@ -11,6 +11,28 @@
                 </div> 
             </div>
         </div> 
+
+        <div v-if="view_incidencias"  class="modal-mask" style="height:100%" > 
+            <div class="modal-mask" > 
+                <div class="modal-dialog modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">{{textIncidencia}}</h4>
+                            <button type="button" class="close" @click="view_incidencias=false"><span aria-hidden="true">&times;</span></button>
+                        </div> 
+                        <div class="modal-body"  >      
+                            <ul>
+                                <li v-for="incidencia in incidencias">
+                                    <FONT style="color:#5E94C1" size="3px">{{ incidencia.fecha }}</FONT>  -- 
+                                    <FONT style="color:#000" size="3px">{{ incidencia.nombreIncidencia }}</FONT>  
+                                </li>
+                            </ul>
+                        </div> 
+                    </div>
+                </div> 
+            </div>
+        </div>
+
         <div class="pre-scrollable" >
             <div class="alert alert-primary" v-if="typeMessage == 'info'" role="alert">{{msg}}</div>
             <div class="alert alert-danger"  v-if="typeMessage == 'error'" role="alert">{{msg}}</div>
@@ -275,12 +297,20 @@
                 <div class="card" v-for="indicador in indicadoresEvaluacion">
                     <div class="card-header" :id="'h'+indicador.ev_indicador_puesto_id">
                         <h2 class="mb-0">
-                            <button class="btn btn-link text-left" type="button" data-toggle="collapse" v-bind:data-target="'#c'+indicador.ev_indicador_puesto_id" aria-expanded="true" v-bind:aria-controls="'c'+indicador.ev_indicador_puesto_id">
+                            <button class="btn btn-link text-left" type="button" data-toggle="collapse" 
+                                    v-bind:data-target="'#c'+indicador.ev_indicador_puesto_id"
+                                    aria-expanded="true" v-bind:aria-controls="'c'+indicador.ev_indicador_puesto_id">
                             {{indicador.ev_indicador_general[0].nombre}} --->
                             </button> 
                             <FONT style="color:#289001" size="3px">{{indicador.calificacion_indicador}} pts obtenidos de </FONT>  
                             
-                            <FONT style="color:#696969" size="3px">{{indicador.porcentaje}} pts </FONT> 
+                            <FONT style="color:#696969" size="3px">{{indicador.porcentaje}} pts </FONT>
+
+                            <button v-if="indicador.ev_indicador_general[0].nombre == 'PUNTUALIDAD'  || indicador.ev_indicador_general[0].nombre == 'ASISTENCIA'"
+                                    class="btn btn-link" type="button" data-toggle="collapse"  
+                                    @click="view_retardos(ev_evaluacion_ln,ev_evaluacion,indicador.ev_indicador_general[0].nombre)">
+                                    Ver incidencias
+                            </button>
                         </h2>
                     </div>
                     <div :id="'c'+indicador.ev_indicador_puesto_id" class="collapse" v-bind:aria-labelledby="'h'+indicador.ev_indicador_puesto_id" >
@@ -382,4 +412,4 @@
         </div>
     </div>
 </div>
-<script type="text/javascript" src="../../controllers/ev/c_ev_evaluacion2.js"></script>
+<script type="text/javascript" src="../../controllers/ev/c_ev_evaluacion3.js"></script>
