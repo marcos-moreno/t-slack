@@ -260,10 +260,7 @@
                     <div class='form-group'>
                         <label>Puesto</label>   
                         <div v-if="empleadoByln.id_empleado > 0">
-                            <input disabled type='text' class='form-control' v-if="empleadoByln.ev_puesto.length > 0"
-                            :value='empleadoByln.ev_puesto[0].ev_puesto_id + " - (" +
-                            empleadoByln.ev_puesto[0].codigo + ") " + empleadoByln.ev_puesto[0].nombre_puesto + 
-                            " " + (empleadoByln.ev_puesto[0].tipo!=null?empleadoByln.ev_puesto[0].tipo:"")' />
+                            <input disabled type='text' class='form-control' :value='empleadoByln.nombre_puesto' />
                         </div>
                     </div> 
                     <div class='row'>
@@ -366,40 +363,17 @@
                                 </div>
 
 
-
-                                <div v-if="indicador.ev_indicador_general.tipo_captura[0].value == 'Directa'">
-                                    <!-- <div v-if="indicador.ev_indicador_general.tipo_captura[0].value == 'Directa'">  -->
-                                            <!-- {{indicador.ev_puntos_evaluar}} -->
-                                            <div class="card" v-for="punto_evaluar in indicador.ev_puntos_evaluar">
-                                                <!-- {{punto_evaluar.tipo_evaluacion}} -->
-                                                <div class="accordion" v-if="punto_evaluar.tipo_evaluacion == 'ESCALA 1 al 10' ">  
-                                                    {{punto_evaluar}}
-                                                </div> 
-                                            </div>
-                                    <!-- </div> -->
-                                </div>
-
-
-                                <!--
-                                <div v-if="indicador.ev_indicador_general.tipo_captura[0].value=='Reportes'">
-                                    <div v-if="indicador.ev_indicador_general.tipo_captura[0].value == 'Reportes'">
-                                        <button type="button" name="filter" class="btn btn-info btn-xs" 
-                                        @click="evaluar_reportes(
-                                                    ev_evaluacion_ln,
-                                                    indicador
-                                                )">Recalcular {{indicador.ev_indicador_general[0].nombre}}</button>
-                                    </div>
-                                </div>
-                                <div v-else-if="indicador.ev_indicador_general.tipo_captura[0].value=='Reportes'">
-                                    <div v-if="indicador.ev_indicador_general.tipo_captura[0].value == 'Reportes'">
-                                        <button type="button" name="filter" class="btn btn-info btn-xs" 
-                                        @click="evaluar_reportes(
-                                                    ev_evaluacion_ln,
-                                                    indicador
-                                                )">Recalcular {{indicador.ev_indicador_general[0].nombre}}</button>
-                                    </div>
-                                </div>
-                                -->
+                                <div v-if="indicador.ev_indicador_general.tipo_captura[0].value == 'Directa'"> 
+                                    <div class="card" v-for="punto_evaluar in indicador.ev_puntos_evaluar"> 
+                                        <div class="accordion" v-if="punto_evaluar.tipo_evaluacion == 'ESCALA'"> 
+                                            <div>{{punto_evaluar.nombre}}</div>
+                                            <div>{{punto_evaluar.descripcion}}</div> 
+                                            <select width="30px" class="mb-2 mr-sm-2 mb-sm-0" v-model="punto_evaluar.calif"  >
+                                                <option v-for="i in punto_evaluar.max_escala" value="1">{{i}}</option> 
+                                            </select>
+                                        </div>
+                                    </div> 
+                                </div> 
                             </div> 
                             <div v-else>
                                 No hay forma de avaluación
@@ -412,4 +386,4 @@
         </div>
     </div>
 </div>
-<script type="text/javascript" src="../../controllers/ev/c_ev_evaluacion3.js"></script>
+<script type="text/javascript" src="../../controllers/ev/c_ev_evaluacion_.js"></script>

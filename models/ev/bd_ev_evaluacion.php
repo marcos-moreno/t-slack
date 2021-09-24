@@ -384,8 +384,7 @@ class Ev_evaluacion
     public function delete(){
         try {  
             $data = array(
-                   ':ev_evaluacion_id' => $this->received_data->model->ev_evaluacion_id,
-                            
+                        ':ev_evaluacion_id' => $this->received_data->model->ev_evaluacion_id,
                     ); 
         $query = 'DELETE FROM ev_evaluacion WHERE ev_evaluacion_id = :ev_evaluacion_id ;'; 
 

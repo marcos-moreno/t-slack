@@ -186,20 +186,23 @@ class Empleado
             $parameters = array(
                     ':id_empleado' => $_SESSION['id_empleado'],  
                 );   
-            $query = '
-                SELECT 
-                    id_empleado,id_segmento,id_creadopor,fecha_creado,nombre
-                    ,paterno,materno,activo,celular
-                    ,correo,enviar_encuesta
-                    ,genero,id_actualizadopor,fecha_actualizado,usuario,password
-                    ,fecha_nacimiento,nss,rfc,id_cerberus_empleado
-                    ,id_talla_playera,id_numero_zapato,fecha_alta_cerberus,perfilcalculo,correo_verificado,
-                    id_empresa,desc_mail_v ,id_compac,ev_puesto_id,departamento_id
-                FROM refividrio.empleado
-                WHERE departamento_id IN 
-                    (SELECT departamento_id FROM refividrio.lider_departamento WHERE id_empleado = :id_empleado)
-                ORDER BY departamento_id DESC,paterno,materno,nombre;        
-            ' ;         
+            $query = "
+                SELECT  
+					CONCAT('(',p.codigo,') ',nombre_puesto,' ',p.tipo,' --',pn.nombre_nivel_puesto) As nombre_puesto
+					,e.id_empleado,e.id_segmento,e.id_creadopor,e.fecha_creado,e.nombre
+                    ,e.paterno,e.materno,e.activo,e.celular
+                    ,e.correo,e.enviar_encuesta
+                    ,e.genero,e.id_actualizadopor,e.fecha_actualizado,e.usuario,e.password
+                    ,e.fecha_nacimiento,e.nss,e.rfc,e.id_cerberus_empleado
+                    ,e.id_talla_playera,e.id_numero_zapato,e.fecha_alta_cerberus,e.perfilcalculo,e.correo_verificado,
+                    e.id_empresa,e.desc_mail_v ,e.id_compac,e.ev_puesto_id,e.departamento_id
+                FROM refividrio.empleado e
+				INNER JOIN refividrio.ev_puesto p ON p.ev_puesto_id = e.ev_puesto_id
+				INNER JOIN refividrio.ev_nivel_p pn ON p.ev_nivel_p_id = pn.ev_nivel_p_id
+                WHERE e.departamento_id IN 
+                    (SELECT departamento_id FROM refividrio.lider_departamento lid WHERE lid.id_empleado = :id_empleado)
+                ORDER BY e.departamento_id DESC,e.paterno,e.materno,e.nombre;
+            ";         
             $statement = $this->connect->prepare($query); 
             $statement->execute($parameters);   
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  

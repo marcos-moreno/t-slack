@@ -57,7 +57,20 @@ var notification = new Vue({
      },  
     }, 
  
-    mounted:function(){
+    mounted:async function(){
+        let linkComprobate = "../../models/login.php"; 
+            const reset = await axios.post(linkComprobate, {
+                action:'isPass_default' 
+            }).then(function (response) { 
+            return response;
+            })
+            .catch(function (response) {  
+                return response;
+            });  
+            if(reset.data.data){ 
+            }else{
+                this.fetchAllNotifications(); 
+            }
         // let reset = document.getElementById("resetPassword").value;
         // if(reset != "reset"){ 
         //     this.fetchAllNotifications(); 

@@ -63,10 +63,8 @@ var application = new Vue({
                             idEmpleado: ev_evaluacion_ln.empleado[0].id_cerberus_empleado,
                             tipo: type
                         }
-                })
-            .then(function(response){ return response.data;})
+            }).then(function(response){ return response.data;})
             .catch(function(response){ return response;}); 
-            console.log(response);
             if (response.status == "success") {
                 this.view_incidencias = true;
                 this.incidencias = response.data;
@@ -265,7 +263,7 @@ var application = new Vue({
         },
         async save_ev_evaluacion_ln(){
             this.ev_evaluacion_ln.ev_puesto_id = this.empleadoByln.ev_puesto_id;
-            if (this.ev_evaluacion_ln.ev_puesto_id == null || this.ev_evaluakcion_ln.ev_puesto_id == 0 || this.ev_evaluacion_ln.ev_puesto_id == '') {
+            if (this.ev_evaluacion_ln.ev_puesto_id == null || this.ev_evaluacion_ln.ev_puesto_id == 0 || this.ev_evaluacion_ln.ev_puesto_id == '') {
                 this.show_message('El empleado no tiene asignado un puesto.','error');
                 return;
             }

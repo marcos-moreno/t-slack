@@ -228,6 +228,6 @@ if ($valido == false) {  header('location: ../logout.php'); }
 </style>
 <body  onclick="hover()" style="font-size: 10pt;background-color: <?php session_start();   echo $_SESSION['color_back'] ?>" >
 <script type="text/javascript" src="../../controllers/user/c_leccion.js"></script>
-<script type="text/javascript" src="../../controllers/user/notifications_us.js"></script>
+<script type="text/javascript" src="../../controllers/user/notifications_user.js"></script>
 <script type="text/javascript" src="../../controllers/admin/c_changePasword1.js"></script>  
 <script type="text/javascript" src='../../controllers/config.js'></script>

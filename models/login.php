@@ -216,8 +216,7 @@ class Log_Request
                 $_SESSION['nombre'] = $data['nombre'];
                 $_SESSION['paterno'] = $data['paterno'];  
                 $_SESSION['materno'] = $data['materno'];  
-                $_SESSION['rol'] = $data['rol'];  
-                $_SESSION['rol'] = $data['rol'];  
+                $_SESSION['rol'] = $data['rol'];   
                 $_SESSION['pagina_inicio'] = $data['pagina_inicio']; 
                 $_SESSION['color_back'] = $data['color_back'];  
                 $resulToken = $this->get_token($data);
