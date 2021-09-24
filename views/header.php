@@ -151,11 +151,11 @@ if ($valido == false) {  header('location: ../logout.php'); }
                         <button type="button" class="close" @click="modalNotification=false;notificationSelected='';"><span aria-hidden="true">&times;</span></button>
                       </div>  
                       <div class="modal-body"> 
-                        <div class="card-body">   
-                          <div class="custom-control custom-checkbox"> 
+                        <!-- <div class="card-body">    -->
+                          <!-- <div class="custom-control custom-checkbox">  -->
                             <div v-html="notificationSelected.description"></div>
-                          </div> 
-                        </div>
+                          <!-- </div>  -->
+                        <!-- </div> -->
                         <button type="button" class="btn btn-info" @click="modalNotification=false;notificationSelected='';">
                           Cerrar
                         </button>
