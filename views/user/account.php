@@ -99,7 +99,7 @@
           <div class="row">
               <div class="col-sm">
                   <label>Playera</label> 
-                  <select :disabled="account.id_talla_playera != null" class='form-control' size='1'  v-model='account.id_talla_playera' >
+                  <select :disabled="permiteModificar" class='form-control' size='1'  v-model='account.id_talla_playera' >
                       <option value='null' >-</option>
                       <option v-for='rows in tallaCollection' v-bind:value='rows.id_talla'>{{ rows.valor }}</option>
                   </select>
@@ -108,7 +108,7 @@
               </div>  
               <div class="col-sm">
                   <label>Número Zapato</label> 
-                  <select :disabled="account.id_numero_zapato != null"  class='form-control' size='1'  v-model='account.id_numero_zapato' >
+                  <select :disabled="permiteModificar"  class='form-control' size='1'  v-model='account.id_numero_zapato' >
                       <option value='null' >-</option>
                       <option v-for='rows in numsZapatoCollection' v-bind:value='rows.id_talla'> {{ rows.valor }}</option>
                   </select>
@@ -174,4 +174,4 @@
       </div>  
     </div> 
 </div>
-<script type="text/javascript" src="../../controllers/user/c_user_pro.js"></script>
+<script type="text/javascript" src="../../controllers/user/c_user_pr.js"></script>

@@ -313,17 +313,12 @@
                     <div :id="'c'+indicador.ev_indicador_puesto_id" class="collapse" v-bind:aria-labelledby="'h'+indicador.ev_indicador_puesto_id" >
                         <div class="card-body"> 
                             <div v-if="indicador.ev_indicador_general.tipo_captura.length > 0">
-                                <p>{{indicador.ev_indicador_general[0].descripcion}}</p> 
-                                <!-- <p>{{indicador.ev_indicador_general[0]}}</p>  -->
+                                <p>{{indicador.ev_indicador_general[0].descripcion}}</p>
                                 <div v-if="indicador.ev_indicador_general.tipo_captura[0].value == 'Encuesta'">
                                     <div v-if="indicador.ev_indicador_general.tipo_captura[0].value == 'Encuesta'">
-                                       <!-- {{indicador.ev_puntos_evaluar}}  -->
-                                       <!-- {{indicador.ev_indicador_general.tipo_captura}} -->
-                                       <!-- v-if="indicador.ev_indicador_general.tipo_captura.value == 'Encuesta' " -->
                                         <div class="accordion">
                                             <div class="card" v-if="punto_evaluar.tipo_evaluacion == 'SI/NO' " 
                                                 v-for="punto_evaluar in indicador.ev_puntos_evaluar">
-                                                <!-- {{punto_evaluar.tipo_evaluacion}} -->
                                                 <div class="card-header" :id="'h'+punto_evaluar.ev_punto_evaluar_id">
                                                     <h2 class="mb-0">
                                                         <button class="btn btn-link text-left" type="button" data-toggle="collapse"
@@ -331,7 +326,6 @@
                                                             v-bind:aria-controls="'c'+punto_evaluar.ev_punto_evaluar_id">
                                                             {{punto_evaluar.nombre}}
                                                         </button>
-                                                        <!-- <FONT style="color:#289001" size="3px">{{punto_evaluar.porcentaje_tl}}</FONT>   -->
                                                     </h2>
                                                 </div>
                                                 <div :id="'c'+punto_evaluar.ev_punto_evaluar_id" class="collapse" v-bind:aria-labelledby="'h'+punto_evaluar.ev_punto_evaluar_id" >
@@ -362,18 +356,30 @@
                                     </div>
                                 </div>
 
+                                <div v-if="indicador.ev_indicador_general.tipo_captura[0].value == 'Directa'">  
+                                    <button type="button" class="btn btn-primary" 
+                                                @click="save_dat_point_direct(
+                                                    punto_evaluar.ev_puntos_evaluar_ln
+                                                    ,indicador.ev_indicador_general_id 
+                                                    ,ev_evaluacion_ln.id_empleado
+                                                    ,ev_evaluacion_ln.ev_evaluacion_ln_id
+                                                    ,ev_evaluacion_ln.ev_evaluacion_id
+                                                )"
+                                    >Guardar</button></br></br>
+                                    <div class="row">
+                                        <div class="col-sm" v-for="punto_evaluar in indicador.ev_puntos_evaluar">
+                                    {{punto_evaluar}}
 
-                                <div v-if="indicador.ev_indicador_general.tipo_captura[0].value == 'Directa'"> 
-                                    <div class="card" v-for="punto_evaluar in indicador.ev_puntos_evaluar"> 
-                                        <div class="accordion" v-if="punto_evaluar.tipo_evaluacion == 'ESCALA'"> 
-                                            <div>{{punto_evaluar.nombre}}</div>
-                                            <div>{{punto_evaluar.descripcion}}</div> 
-                                            <select width="30px" class="mb-2 mr-sm-2 mb-sm-0" v-model="punto_evaluar.calif"  >
-                                                <option v-for="i in punto_evaluar.max_escala" value="1">{{i}}</option> 
-                                            </select>
-                                        </div>
-                                    </div> 
-                                </div> 
+                                            <div class="input-group mb-3">
+                                                <label class="input-group-text">{{punto_evaluar.nombre}}</label>
+                                                <select class='form-control' v-model="punto_evaluar.calificacion_obtenida"> 
+                                                    <option v-for="i in punto_evaluar.max_escala" value="i">{{i}}</option>  
+                                                </select> 
+                                            </div>
+                                        </div> 
+                                    </div>
+                                </div>
+
                             </div> 
                             <div v-else>
                                 No hay forma de avaluación

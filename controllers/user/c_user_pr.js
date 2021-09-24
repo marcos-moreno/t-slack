@@ -14,6 +14,7 @@ var account = new Vue({
         emailNOmodificado : "",
         isHello : false,
         isError:false,
+        permiteModificar: false
     },
     methods:{ 
         async findRegister(){
@@ -233,19 +234,35 @@ var account = new Vue({
             .catch(function (response) {  
                 return response;
             });  
+
             if(reset.data.data){
             }else{
+                if (this.account.id_numero_zapato != null || this.account.id_talla_playera != null) {
+                    this.permiteModificar = true;
+                }
                 if (this.account.correo_verificado) {
                 } else {
                     this.isHello = true;
                     this.msg =  "Tenemos un problema con tu correo electrónico por favor actualizalo.";
                     $('#ModalMsg').modal('show'); 
                 }
-                if (!this.validForm()) {
-                    this.msg = "Algunos datos de tu cuenta no son correctos.";
-                    this.isError = true;
-                    this.isHello = false;
-                    $('#ModalMsg').modal('show');  
+                if (!this.validForm()) { 
+                    let linkComprobate = "../../models/login.php"; 
+                    const reset = await axios.post(linkComprobate, {
+                        action:'isPass_default' 
+                    }).then(function (response) { 
+                    return response;
+                    })
+                    .catch(function (response) {  
+                        return response;
+                    });  
+                    if(reset.data.data){ 
+                    }else{
+                        this.msg = "Algunos datos de tu cuenta no son correctos.";
+                        this.isError = true;
+                        this.isHello = false;
+                        $('#ModalMsg').modal('show'); 
+                    } 
                 } 
             }
         } catch (error) {

@@ -230,8 +230,7 @@ class Ev_indicador_puesto
             $parameters = array(
                 ':id_lider' => $_SESSION['id_empleado'],
                 ':ev_punto_evaluar_id' => $row['ev_punto_evaluar_id'],
-                ':id_empleado' => $id_empleado,
-                ':ev_punto_evaluar_id' => $row['ev_punto_evaluar_id'],
+                ':id_empleado' => $id_empleado, 
                 ':ev_evaluacion_id' => $ev_evaluacion_id
             );
             $query = '
@@ -268,7 +267,7 @@ class Ev_indicador_puesto
         $data = array(); 
         try {
             $query = 'SELECT 
-                        pe.*,tc.nombre As tipo_evaluacion,es_capturado,direct_data,opcion_multiple,pe.orden
+                        pe.*,tc.nombre As tipo_evaluacion,es_capturado,direct_data,opcion_multiple,pe.orden,0 calificacion_obtenida
                         FROM ev_punto_evaluar pe
                         INNER JOIN refividrio.ev_tipo_captura tc ON tc.ev_tipo_captura_id = pe.ev_tipo_captura_id
                         WHERE ev_indicador_general_id = ' .$row['ev_indicador_general_id']
