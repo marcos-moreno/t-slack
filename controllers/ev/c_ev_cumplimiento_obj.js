@@ -176,7 +176,7 @@ var application = new Vue({
                         
                         
                         const response = await this.request(this.path,{model:this.ev_cumplimiento,'action' : 'insert'}); 
-                        console.log(response);
+                        // console.log(response);
                         if(response.message == 'Data Inserted'){
                             this.show_message2('Registro Guardado.','success');
                             
@@ -205,7 +205,7 @@ var application = new Vue({
 
         async cancel_ev_cumpli(){
             this.model_empty();
-            this.indicador = null;
+            // this.indicador = null;
             this.estados = null;
          
         },
@@ -321,7 +321,7 @@ var application = new Vue({
     async mounted() {    
     },
     async created(){
-    await this.get_empleadoFilter2()
+    // await this.get_empleadoFilter2()
        await this.model_empty();
        await this.fill_f_keys();
        await this.get_register();

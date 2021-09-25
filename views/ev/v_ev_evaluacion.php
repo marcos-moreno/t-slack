@@ -372,7 +372,7 @@
                                 -->
                             </div> 
                             <div v-else>
-                                No hay forma de avaluación
+                                No hay forma de evaluación
                             </div>
                         </div>
                     </div>

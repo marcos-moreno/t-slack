@@ -93,7 +93,6 @@ var application = new Vue({
         },   
         async save_ev_propuesta(){ 
             if(this.ev_propuesta.propuesta_id > 0){
-                console.log(this.ev_propuesta.propuesta_id);
 
                 const response = await this.request(this.path,{model:this.ev_propuesta,'action' : 'update'});
                 if(response.message == 'Data Updated'){
@@ -202,7 +201,7 @@ var application = new Vue({
             const response_estado = await this.request(this.path,{'action' : 'selectEstado'});
             try{  
                 if(response_estado.length > 0){  
-                    console.log(response_estado);
+                    // console.log(response_estado);
                     this.estadoCollection2 = response_estado; 
                 }  
             }catch(error){
@@ -256,7 +255,7 @@ var application = new Vue({
     async mounted() {    
     },
     async created(){
-        await this.getev_propuestas();
+        await this.getevConsulEstadoUser();
        await this.model_empty();
        await this.fill_f_keys();
        this.paginator(1);

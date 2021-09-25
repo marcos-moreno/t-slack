@@ -107,10 +107,10 @@ class Ev_propuesta
                 ':id_empleado' => $_SESSION['id_empleado'] 
          
             );
-            $query = "SELECT propuesta_id,id_creadopor,TO_CHAR(p.fecha_creado, 'DD-MM-YYYY HH12:MI:SS AM') as fecha_creado ,id_empleado,departamento_id,texto,estado,propuesta 
+            $query = "SELECT propuesta_id,id_creadopor,TO_CHAR(fecha_creado, 'DD-MM-YYYY HH12:MI:SS AM') as fecha_creado ,id_empleado,departamento_id,texto,estado,propuesta 
                     FROM ev_propuesta 
                     WHERE 
-                    estado = :valor and id_empleado = :id_empleado
+                    estado ILIKE '%' || :valor || '%'  and id_empleado = :id_empleado
                     ORDER BY 1 DESC" ;
                         
             $statement = $this->connect->prepare($query); 
@@ -254,7 +254,7 @@ class Ev_propuesta
                 // ':valor' => $this->received_data->filter,  
                 ':id_empleado' => $_SESSION['id_empleado'], 
             );
-            $query = "SELECT propuesta_id,id_creadopor,TO_CHAR(p.fecha_creado, 'DD-MM-YYYY HH12:MI:SS AM')as fecha_creado,id_empleado,departamento_id,texto,estado,propuesta 
+            $query = "SELECT propuesta_id,id_creadopor,TO_CHAR(fecha_creado, 'DD-MM-YYYY HH12:MI:SS AM')as fecha_creado,id_empleado,departamento_id,texto,estado,propuesta 
                     FROM ev_propuesta 
                     WHERE 
                         id_empleado = :id_empleado 

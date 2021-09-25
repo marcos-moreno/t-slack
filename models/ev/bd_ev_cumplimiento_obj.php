@@ -197,8 +197,8 @@ class Ev_cumplimiento_obj
             $query = "
             SELECT em.id_empleado, co.ev_cumplimiento_obj_id, co.id_indicador, ig.nombre, ig.ev_indicador_general_id,
              concat( em.nombre, em.paterno, em.materno) as fullname,
-            TO_CHAR(fechainicio, 'DD-MM-YYYY HH12:MI:SS AM') as fechainicio, 
-            TO_CHAR(fechatermino, 'DD-MM-YYYY HH12:MI:SS AM') as fechatermino, 
+            TO_CHAR(fechainicio, 'yyyy-MM-ddThh:mm') as fechainicio, 
+            TO_CHAR(fechatermino, 'yyyy-MM-ddThh:mm') as fechatermino, 
              co.estado, co.nombre_objetivo, co.descripcion
             FROM refividrio.ev_cumplimiento_obj as co
             Inner join refividrio.ev_indicador_general as ig on ig.ev_indicador_general_id = co.id_indicador

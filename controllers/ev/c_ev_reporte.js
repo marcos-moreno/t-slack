@@ -31,10 +31,13 @@ var application = new Vue({
         empresa_id_filter:0,
         segmento_id_filter:0,
         segmentoFilterCollection:[],
-        depas:[]
+        depas:[],
+        ev_punto_evaluarCollection:[],
+        resultado:[],
+        combo: false,
     },
     methods:{
-    //::::::::::::: Adjunto Inicio 
+    //::::::::::::: Adjunto Inicio
         search_file_ByID(id_file){
             for (let index = 0; index < this.files_adjuntos.length; index++) {
                 const element = this.files_adjuntos[index]; 
@@ -42,6 +45,31 @@ var application = new Vue({
                     return element;
                 }
             }  
+        },
+
+        async evaluaFilter() {
+            if(this.ev_reporte.ev_indicador_puesto_id == 1009 || this.ev_reporte.ev_indicador_puesto_id == 1010){
+                this.combo = true;
+                const responseIndicador = await this.request(this.path,{model:this.ev_reporte
+                    ,'action' : 'selectEvaluar'}); 
+                try{  
+                    if(responseIndicador.length > 0){
+                        this.ev_punto_evaluarCollection = responseIndicador;
+                        
+                    }  
+                }catch(error){
+                    // this.ev_punto_evaluarCollection = null;
+                    this.show_message('No se encontro indicador','info');
+                } 
+            } else {
+                this.combo = false;
+            }
+
+           
+
+
+
+
         },
         async delete_file(id_file_adjunto){   
             if(id_file_adjunto > 0){
@@ -218,11 +246,15 @@ var application = new Vue({
                 }
             }else if(this.ev_reporte.ev_reporte_id == 0){ 
                 this.ev_reporte.id_empleado = this.empleadoSelected_id;
+                if(this.ev_reporte.ev_punto_evaluar == 0){
+                    this.ev_reporte.ev_punto_evaluar = null;
+                }
                 const response = await this.request(this.path,{model:this.ev_reporte,'action' : 'insert'}); 
                  if(response.message == 'Data Inserted'){
                     await this.getev_reportes();
                     this.update_ev_reporte(response.ev_reporte_id);
                     this.show_message('Registro Guardado.','success');
+                    this.cancel_ev_reporte();
                 }else{
                     this.show_message(response.message,'error');
                 }  
@@ -231,14 +263,25 @@ var application = new Vue({
         async update_ev_reporte(ev_reporte_id){
             if(ev_reporte_id > 0){
                 this.ev_reporte = this.search_ev_reporteByID(ev_reporte_id);
+
                 if(this.ev_reporte.ev_reporte_id > 0){
                     this.isFormCrud = true;
-                }else{
-                    this.show_message('Hay un problema con este Registro.','info');
+                        this.ev_reporte.id_empleado = this.empleadoSelected_id;
+
+                            if(this.ev_reporte.ev_punto_evaluar != null){
+                                this.evaluaFilter();
+                                this.combo = true;
+                            } else {
+                                this.combo = false;
+
+                            }
+                          
                 } 
+
             }else{
-                this.show_message('Hay un problema con este Registro.','info');
+                 this.show_message('Hay un problema con este Registro.','info');
             } 
+            
         }, 
         add_ev_reporte(){  
             this.model_empty();
@@ -247,6 +290,8 @@ var application = new Vue({
         cancel_ev_reporte(){  
             this.model_empty();
             this.isFormCrud = false;
+            this.combo = false;
+
         },  
         search_ev_reporteByID(ev_reporte_id){
             for (let index = 0; index < this.ev_reporteCollection.length; index++) {
@@ -260,7 +305,9 @@ var application = new Vue({
             this.typeMessage = typeMessage;
             setTimeout(function() { application.typeMessage='' ;application.msg =''; }, 5000);
         },model_empty(){
-            this.ev_reporte = {ev_reporte_id:0,descripcion:'',fecha:'',id_empleado:'',ev_indicador_puesto_id:'',id_lider:'',creado:'',creadopor:'',actualizado:'',actualizadopor:''};
+            this.ev_reporte = {ev_reporte_id:0,descripcion:'',fecha:'',id_empleado:'',ev_indicador_puesto_id:'',id_lider:'',creado:'',creadopor:'',actualizado:'',actualizadopor:'', ev_punto_evaluar: 0};
+            this.combo = false;
+            this.combo2 = false;
         },
         async request(path,jsonParameters){
             const response = await axios.post(path, jsonParameters).then(function (response) {   

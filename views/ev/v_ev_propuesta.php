@@ -61,7 +61,7 @@
                 <td><button type="button" class="btn btn-info btn-xs edit" @click="add_ev_propuesta()">Agregar</button></td>
                 <table class="table table-bordered table-striped">
                     <tr> 
-                        <th>propuesta_id</th>
+                        <th>Id</th>
                                     
                         <th>Fecha de Creaci&oacute;n</th>
                                     

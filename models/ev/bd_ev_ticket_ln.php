@@ -70,8 +70,8 @@ class Ev_ticket_ln
                         ':ev_catalogo_ticket_id' => $this->received_data->model->ev_catalogo_ticket_id,
                         
                     ); 
-        $query = 'INSERT INTO refividrio.ev_ticket_ln (id_empleado,comentario,ev_ticket_id,estado) 
-        VALUES (:id_empleado,:comentario,(SELECT MAX(ev_ticket_id) FROM refividrio.ev_ticket where ev_catalogo_ticket_id = :ev_catalogo_ticket_id LIMIT 1),:estado)RETURNING ev_ticket_ln_id;';
+        $query = 'INSERT INTO refividrio.ev_ticket_ln (id_empleado,comentario,ev_ticket_id,estado,creado) 
+        VALUES (:id_empleado,:comentario,(SELECT MAX(ev_ticket_id) FROM refividrio.ev_ticket where ev_catalogo_ticket_id = :ev_catalogo_ticket_id LIMIT 1),:estado, now())RETURNING ev_ticket_ln_id;';
 
 $statement = $this->connect->prepare($query); 
 $statement->execute($data);
@@ -100,8 +100,8 @@ return false;
                         ':ev_catalogo_ticket_id' => $this->received_data->model->ev_catalogo_ticket_id,
                         
                     ); 
-        $query = 'INSERT INTO refividrio.ev_ticket_ln (id_empleado,comentario,ev_ticket_id,estado) 
-        VALUES (:id_empleado,:comentario,(SELECT MAX (ev_ticket_id) FROM refividrio.ev_ticket where ev_catalogo_ticket_id = (SELECT ev_catalogo_ticket_id from refividrio.ev_catalogo_ticket where ev_catalogo_ticket_id = :ev_catalogo_ticket_id )),:estado)RETURNING ev_ticket_ln_id;';
+        $query = 'INSERT INTO refividrio.ev_ticket_ln (id_empleado,comentario,ev_ticket_id,estado,creado) 
+        VALUES (:id_empleado,:comentario,(SELECT MAX (ev_ticket_id) FROM refividrio.ev_ticket where ev_catalogo_ticket_id = (SELECT ev_catalogo_ticket_id from refividrio.ev_catalogo_ticket where ev_catalogo_ticket_id = :ev_catalogo_ticket_id )),:estado,now())RETURNING ev_ticket_ln_id;';
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);

@@ -118,6 +118,69 @@
                 <br>
                 <br>
             </div>
+
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                </table>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped" >
+                    <th>Evaluaci&oacute;n de atenci&oacute;n </th>
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Departamento</th>
+                        <th>Motivo</th>
+                        <th>Ticket solucionado por</th>
+                        <th></th>
+                    </tr>
+                    <tr v-for="ev_ticket in evaluacionCollection" >
+                        <td>{{ ev_ticket.ev_ticket_ln_id }} </td>
+                        <td>({{ (ev_ticket.departamento_id) }}) {{ ev_ticket.dep }}</td>
+                        <td> {{ ev_ticket.situacion }} </td>
+                        <td>({{ ev_ticket.solucionadopor }}) {{ ev_ticket.nombre }} {{ ev_ticket.paterno }}{{ ev_ticket.materno }}</td>
+                        <td>
+                            <center>
+                                <button type="button" class="btn btn-info" @click="openEvaluacion(ev_ticket)">
+                                    Evaluar Departamento
+                                </button>
+                            </center> 
+                        </td>
+                        
+                        
+                    </tr>
+                </table>
+                <br>
+                <br>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         </div>  
             
         <div v-if="isFormCrud" >

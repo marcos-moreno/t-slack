@@ -1,21 +1,26 @@
 var application = new Vue({
-    el:'#usuarioencuesta',
+    el:'#ticketencuesta',
     data:{ 
         questions:null 
         ,btePressed:false
         ,cargando:true
         ,is_upload:false
         ,puntos_evaluar:[]
+        ,ev_cabeceraCollection:[]
         ,intent_save : false
-        ,id_lider : 0
+        // ,id_lider : 0
+        ,ev_ticket_ln_id : 0
+        ,solucionadopor : 0 
         ,status_termino : false, estado_descripcion : false,estado_result : "", termino: false,
+        
     },
+   
     methods:{
-        // valueDefault(){
-        //     for (let index = 0; index < this.puntos_evaluar.length; index++) {
-        //         this.puntos_evaluar[index].respuesta = "5";
-        //     }
-        // },
+        valueDefault(){
+            for (let index = 0; index < this.puntos_evaluar.length; index++) {
+                this.puntos_evaluar[index].respuesta = "5";
+            }
+        },
         async getRespuestas(){
             this.is_upload = true;
             let jsonRespuestas = [];
@@ -35,17 +40,20 @@ var application = new Vue({
                     respuest_valor : value
                 });
             }
-            const responce_save_dat_evaluac_por_user = await axios.post("../../models/ev/bd_ev_evaluacion.php", 
+            
+            const responce_save_dat_evaluac_por_user = await axios.post("../../models/ev/bd_ev_ticket_evaluacion.php", 
             {
                 action:'save_dat_evaluac_por_user',
-                "id_lider" : this.id_lider, 
+                "ev_ticket_ln_id" : this.ev_ticket_ln_id,
+                "solucionadopor" : this.solucionadopor,
                 "respuestas_collection" :  JSON.stringify(jsonRespuestas)
             })
+            
             .then(function (response) {return response.data;})
             .catch(function (response) {return response;});
             this.is_upload = false;
-            // console.log(jsonRespuestas);
-            // console.log(responce_save_dat_evaluac_por_user); 
+            console.log(jsonRespuestas);
+            console.log(responce_save_dat_evaluac_por_user); 
             if (responce_save_dat_evaluac_por_user.status == "error") {
                 this.status_termino = false;
                 if (responce_save_dat_evaluac_por_user.message.indexOf("duplicate key value violates unique constraint") > 0) {
@@ -59,28 +67,34 @@ var application = new Vue({
             }
             this.termino = true;
         },
-        async insertEmpleado_encuesta(validAnswers){
-            return axios.post("../../models/bd/bd_answer_survey.php", {
-                action:'inserEncuesta_empleado'
-                ,id_encuesta: validAnswers[0].id_encuesta     
-            }).then(function (response) {   
-                return response.data; 
-            }).catch(function (response) {  
-                return response.data;
-            })
-        }, 
+        // async insertEmpleado_encuesta(validAnswers){
+        //     return axios.post("../../models/bd/bd_answer_survey.php", {
+        //         action:'inserEncuesta_empleado'
+        //         ,id_encuesta: validAnswers[0].id_encuesta     
+        //     }).then(function (response) {   
+        //         return response.data; 
+        //     }).catch(function (response) {  
+        //         return response.data;
+        //     })
+        // }, 
     },
     async mounted() {  
     },
     created: async function(){
-        this.id_lider = document.getElementById("id_lider").value; 
+        this.ev_ticket_ln_id = document.getElementById("ev_ticket_ln_id").value; 
         let id_indicador = document.getElementById("id_indicador").value;
-        if (this.id_lider > 0 && id_indicador > 0) {
+        this.solucionadopor = document.getElementById("solucionadopor").value;
+        // this.nombre = document.getElementById("nombre").value;
+        // this.paterno = document.getElementById("paterno").value;
+        // this.materno = document.getElementById("materno").value;
+
+
+       
+        if (this.ev_ticket_ln_id > 0 && id_indicador > 0 && this.solucionadopor > 0) {
             const responce_evaluacion = await axios.post(
-                "../../models/ev/bd_ev_evaluacion.php", 
+                "../../models/ev/bd_ev_ticket_evaluacion.php", 
                 {
                     action:'select_puntos_evaluar'
-                    ,id_lider: this.id_lider
                     ,id_indicador: id_indicador
                 }
             ).then(function (response) {return response.data;}
@@ -92,7 +106,12 @@ var application = new Vue({
                 this.puntos_evaluar = [];
             }
         } else {
-            location.href="showPoll.php"; 
-        } 
-    }
+            location.href="v_ev_ticket.php"; 
+        }
+
+
+    },
+    
+
+    
    }); 

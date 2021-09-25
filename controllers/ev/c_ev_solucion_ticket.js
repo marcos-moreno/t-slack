@@ -42,7 +42,7 @@ var application = new Vue({
         async getfiles_adjuntos(ev_ticket_ln_id){
 
             if(ev_ticket_ln_id > 0 ){
-                console.log('entro');
+                // console.log('entro');
                 this.ev_ticket_ln.ev_ticket_ln_id = ev_ticket_ln_id;
 
                 console.log(this.ev_ticket_ln.ev_ticket_ln_id);
@@ -56,7 +56,7 @@ var application = new Vue({
                 });
             try{   
                 this.files_adjuntos = response; 
-                console.log('saiend');
+                // console.log('saiend');
             }catch(error){
                 console.log(error);
                 this.show_message('No hay datos Para Mostrar.','info');
@@ -87,7 +87,7 @@ var application = new Vue({
             this.ev_ticketCollection  = [];
             this.paginaCollection = [];
             const response = await this.request(this.path,{'action' : 'selectFilter','filterestado' : this.filterestado});
-            console.log(response);
+            // console.log(response);
             try{ 
                 this.show_message(response.length + ' Registros Encontrados.','success');
                 this.ev_ticketCollection = response;
@@ -102,7 +102,7 @@ var application = new Vue({
 
         async SelectLinea(){
             const response = await this.request(this.path,{model:this.ev_ticket,'action' : 'selectLinea'});
-            console.log(response);
+            // console.log(response);
             try{ 
                 this.LineaCollections = response;
             }catch(error){
