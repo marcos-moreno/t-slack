@@ -47,11 +47,11 @@ class Jerarquizacion
             $data = array(
                     ':id_empleado' => $this->received_data->model->id_empleado,
                         ':id_atributo_nivel' => $this->received_data->model->id_atributo_nivel,
-                        ':activo' => $this->received_data->model->activo,
-                        ':id_superior' => ($this->received_data->model->id_superior = "null" ? NULL : $this->received_data->model->id_superior) ,
+                        ':activo' => $this->received_data->model->activo, 
                         ':creadopor' => $_SESSION['id_empleado'],
                         ':actualizadopor' => $_SESSION['id_empleado'],
-                        ':departamento_id' => ($this->received_data->model->departamento_id = "null" ? NULL : $this->received_data->model->departamento_id)
+                        ':departamento_id' => ($this->received_data->model->departamento_id = "null" ? NULL : $this->received_data->model->departamento_id),
+                        ':id_superior' => ($this->received_data->model->id_superior = "null" ? NULL : $this->received_data->model->id_superior) ,
                     ); 
         $query = "INSERT INTO jerarquizacion (id_empleado,id_atributo_nivel,activo,id_superior,creado,actualizado,creadopor,actualizadopor,departamento_id) 
                     VALUES (:id_empleado,:id_atributo_nivel,:activo,
@@ -75,10 +75,10 @@ class Jerarquizacion
                     ':jerarquizacion_id' => $this->received_data->model->jerarquizacion_id, 
                         ':id_empleado' => $this->received_data->model->id_empleado, 
                         ':id_atributo_nivel' => $this->received_data->model->id_atributo_nivel, 
-                        ':activo' => $this->received_data->model->activo, 
-                        ':id_superior' => $this->received_data->model->id_superior, 
-                        ':actualizadopor' => $_SESSION['id_empleado'],
-                        ':departamento_id' => $this->received_data->model->departamento_id,
+                        ':activo' => $this->received_data->model->activo,  
+                        ':actualizadopor' => $_SESSION['id_empleado'], 
+                        ':departamento_id' => ($this->received_data->model->departamento_id = "null" ? NULL : $this->received_data->model->departamento_id),
+                        ':id_superior' => ($this->received_data->model->id_superior = "null" ? NULL : $this->received_data->model->id_superior) ,
                     ); 
             $query = 'UPDATE jerarquizacion SET id_empleado=:id_empleado,id_atributo_nivel=:id_atributo_nivel
                         ,activo=:activo,id_superior=:id_superior,actualizado=Now()
