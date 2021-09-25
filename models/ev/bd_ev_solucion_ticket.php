@@ -91,7 +91,7 @@ class Ev_solucion_ticket
                 
             ); 
            
-            $query = 'UPDATE ev_ticket_ln SET estado=false WHERE  ev_ticket_id = :ev_ticket_id ;';
+            $query = 'UPDATE ev_ticket_ln SET estado=false, status_satisfaccion=false WHERE  ev_ticket_id = :ev_ticket_id ;';
 
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  

@@ -22,6 +22,8 @@ var application = new Vue({
         departamentoCollection: [],
         estadoCollection:[],
         estadoCollection2:[],
+        evaluacionCollection: [],
+        evaluacionCollectionTest: [],
 
         //paginador
         numByPag : 15, 
@@ -43,6 +45,30 @@ var application = new Vue({
     
     },
     methods:{
+
+
+
+         openEvaluacion(ev_ticket){
+            // console.log(ev_ticket);
+            location.href="ev_ticket_evaluacion.php?ev_ticket_ln_id=" + ev_ticket.ev_ticket_ln_id + "&id_indicador=18&departamento="+ev_ticket.dep + "&solucionadopor="+ev_ticket.solucionadopor
+            + "&nombre=" + ev_ticket.nombre + "&paterno=" + ev_ticket.paterno + "&materno=" +ev_ticket.materno + "&comentario_solucion=" +ev_ticket.comentario_solucion + "&situacion=" +ev_ticket.situacion;
+        },
+
+        async get_Evaluaciones(){
+            this.evaluacionCollection = [];
+            const responseEvaluacion = await this.request(this.path, {'action' : 'selectEvaluacion'}) ;
+            // console.log(responseEvaluacion);
+
+            try {
+                if(responseEvaluacion.length > 0){  
+                this.evaluacionCollection = responseEvaluacion;
+                } 
+            } catch (error) {
+                // this.show_message('Sin evaluaciones a Realizar', info)
+                console.log('sin resultados');
+
+            }
+        },
 
         async delete_file(id_file_adjunto){   
             if(id_file_adjunto > 0){
@@ -74,7 +100,7 @@ var application = new Vue({
             try{   
                 this.files_adjuntos = response; 
             }catch(error){
-                console.log(error);
+                // console.log(error);
                 this.show_message('No hay datos Para Mostrar.','info');
             }  
         },
@@ -190,7 +216,7 @@ var application = new Vue({
                 }else {
                     if(this.ev_ticket.ev_ticket_id > 0){
                         const responseCreacion = await this.request(this.path,{model:this.ev_ticket,'action' : 'verificaExistencia'});
-                        console.log(responseCreacion);
+                        // console.log(responseCreacion);
                         if(responseCreacion == null){
                             this.model_empty();
                              await this.getev_tickets();
@@ -232,7 +258,7 @@ var application = new Vue({
                             if(response.message == 'Data Inserted'){
                                 this.show_message('Registro Guardado.','success');
                                 this.ev_ticket_ln_id.ev_ticket_ln_id = response_lds.ev_ticket_ln_id;
-                                console.log(this.ev_ticket_ln_id.ev_ticket_ln_id);
+                                // console.log(this.ev_ticket_ln_id.ev_ticket_ln_id);
                                 // const resTicket = await this.request('../../models/ev/bd_ev_ticket_ln.php',{model:this.ev_ticket_ln_id,'action' : 'selecciona'});
                                 // this.ev_ticket.ev_ticket_id = resTicket.ev_ticket_id;
                                 // console.log(this.ev_ticket.ev_ticket_id);
@@ -248,7 +274,7 @@ var application = new Vue({
                             if( response_lds.message == 'Data Inserted'){
                                 this.show_message('Registro Guardado.','success');
                                 this.ev_ticket_ln_id.ev_ticket_ln_id = response_lds.ev_ticket_ln_id;
-                                console.log(this.ev_ticket_ln_id.ev_ticket_ln_id);
+                                // console.log(this.ev_ticket_ln_id.ev_ticket_ln_id);
                                 // const resTicket = await this.request('../../models/ev/bd_ev_ticket_ln.php',{model:this.ev_ticket_ln_id,'action' : 'selecciona'});
                                 // this.ev_ticket.ev_ticket_id = resTicket.ev_ticket_id;
                                 // console.log(this.ev_ticket.ev_ticket_id);
@@ -268,7 +294,7 @@ var application = new Vue({
                         this.show_message('Registro Guardado.','success');
 
                         this.ev_ticket_ln_id.ev_ticket_ln_id = response_ld.ev_ticket_ln_id;
-                                console.log(this.ev_ticket_ln_id.ev_ticket_ln_id);
+                                // console.log(this.ev_ticket_ln_id.ev_ticket_ln_id);
                                 this.update_ev_ticket2(response_ld.ev_ticket_ln_id);
                     }else{
                         
@@ -287,8 +313,8 @@ var application = new Vue({
                 this.ev_ticket_ln_id.ev_ticket_ln_id =ev_ticket_ln_id;
                 const resTicket = await this.request(this.path,{model:this.ev_ticket_ln_id,'action' : 'selecciona'});
                 this.ev_ticket.ev_ticket_id = resTicket.ev_ticket_id;
-                console.log(this.ev_ticket.ev_ticket_id);
-                console.log(this.ev_ticket);
+                // console.log(this.ev_ticket.ev_ticket_id);
+                // console.log(this.ev_ticket);
 
 
 
@@ -308,9 +334,9 @@ var application = new Vue({
                 this.ev_ticket = this.search_ev_ticketByID(ev_ticket_id);
                 if(this.ev_ticket.ev_ticket_id > 0){
                 const resTicket = await this.request(this.path,{model:this.ev_ticket,'action' : 'selecciona'});
-                console.log('ev_ticket_id');
+                // console.log('ev_ticket_id');
                 this.ev_ticket_ln_id.ev_ticket_ln_id = resTicket.ev_ticket_ln_id;
-                console.log(this.ev_ticket_ln_id);
+                // console.log(this.ev_ticket_ln_id);
 
                     
                     this.isFormCrud = true;
@@ -461,6 +487,9 @@ var application = new Vue({
             }catch(error){
                 this.show_message('No hay estados disponibles .','info');
             } 
+            
+            
+        
         },paginator(i){ 
             let cantidad_pages = Math.ceil(this.ev_ticketCollection.length / this.numByPag);
             this.paginas = []; 
@@ -491,6 +520,7 @@ var application = new Vue({
     async mounted() {    
     },
     async created(){
+        await this.get_Evaluaciones();
         await this.getevConsulEstado();
        await this.getev_tickets();
        await this.model_empty();

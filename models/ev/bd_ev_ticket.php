@@ -51,6 +51,11 @@ if (check_session()) {
             $model = new Ev_ticket($data,$connect,$received_data);
             $model->selecciona();
         break;
+        case 'selectEvaluacion': 
+            $model = new Ev_ticket($data,$connect,$received_data);
+            $model->selectEvaluacion();
+        break;
+        
     }
 }else{
     $output = array('message' => 'Not authorized'); 
@@ -394,7 +399,48 @@ class Ev_ticket
         }  
 
     }
+    public function selectEvaluacion(){
+        try {  
+            $parameters = array(
+                ':id_empleado' => $_SESSION['id_empleado'], 
+            );
+            $query = "SELECT ti.ev_ticket_id, ln.ev_ticket_ln_id,ti.solucionadopor,
+            ti.estado,ti.ev_catalogo_ticket_id , ln.comentario, d.nombre, ti.comentario_solucion, d.departamento_id, d.nombre as dep, ca.situacion, e.nombre, e.paterno, e.materno
+                    FROM refividrio.ev_ticket ti
+                    INNER JOIN refividrio.ev_ticket_ln ln on ti.ev_ticket_id = ln.ev_ticket_id
+                    INNER JOIN refividrio.departamento d on ti.departamento_id = d.departamento_id
+                    INNEr join ev_catalogo_ticket ca on ti.ev_catalogo_ticket_id = ca.ev_catalogo_ticket_id
+                    INNER JOIN empleado e on ti.solucionadopor = e.id_empleado
 
+                    WHERE 
+                        ln.id_empleado = :id_empleado and ln.estado = false and ln.status_satisfaccion = false
+                    " ;
+                        
+            $statement = $this->connect->prepare($query); 
+            $statement->execute($parameters);   
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
+                    // $row['ev_ticket_ln_id'] = $this->search_union($row,'ev_ticket_ln_id','ev_ticket_ln_id','ev_ticket_ln_id');
+                
+                    
+                    $data[] = $row;
+
+                    
+
+                    
+            }
+            
+
+        
+            echo json_encode($data); 
+            return true;
+        } catch (PDOException $exc) {
+            $output = array('message' => $exc->getMessage()); 
+            echo json_encode($output); 
+            return false;
+        }  
+    }
+    
+   
    
     
 
