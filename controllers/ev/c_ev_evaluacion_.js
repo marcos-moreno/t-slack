@@ -139,6 +139,35 @@ var application = new Vue({
                 this.show_message("No se pudo procesar, error -> " + response_evaluar_reportes.data,'error'); 
             }
         },
+        async save_dat_point_direct( 
+                data_save
+                ,ev_indicador_general_id 
+                ,id_empleado_
+                ,ev_evaluacion_ln_id
+                ,ev_evaluacion_id 
+        ){
+            let arrayDatos = [];
+            for (let index = 0; index < data_save.length; index++) {
+                const element = data_save[index];
+                arrayDatos.push({
+                    calificacion_obtenida:element.calificacion_obtenida,
+                    ev_punto_evaluar_id:element.ev_punto_evaluar_id,
+                    id_empleado:id_empleado_
+                }); 
+            }
+            console.log(arrayDatos);
+            console.log(data_save);
+            // const result_save_dat_point_direct = await this.request(this.path,{
+            //     'action' : 'save_dat_point_direct',
+            //     'points' : JSON.stringify(data_save)
+            //     ,'ev_indicador_general_id' : ev_indicador_general_id
+            //     ,'id_empleado' : id_empleado
+            //     ,'ev_evaluacion_ln_id' : ev_evaluacion_ln_id
+            //     ,'ev_evaluacion_id' : ev_evaluacion_id
+            // }); 
+            // console.log(result_save_dat_point_direct);
+            // await this.show_indicadores(this.ev_evaluacion_ln);
+        },
         async save_dat_point(
                 data_save
                 ,ev_indicador_general_id 

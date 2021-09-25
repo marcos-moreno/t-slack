@@ -23,6 +23,10 @@ if (check_session()) {
             $model = new Ev_evaluacion($data,$connect,$received_data);
             $model->save_dat_point();
         break;
+        case 'save_dat_point_direct': 
+            $model = new Ev_evaluacion($data,$connect,$received_data);
+            $model->save_dat_point_direct();
+        break;
         case 'select': 
             $model = new Ev_evaluacion($data,$connect,$received_data);
             $model->select();
@@ -139,6 +143,37 @@ class Ev_evaluacion
             return false;
         }  
     }
+    public function save_dat_point_direct(){
+        try {  
+            $parameters = array(
+                ':points' => $this->received_data->points,  
+                ':id_lider' => $_SESSION['id_empleado']
+                ,':ev_indicador_general_id' => $this->received_data->ev_indicador_general_id
+                ,':id_empleado'  => $this->received_data->id_empleado
+                ,':ev_evaluacion_ln_id'  => $this->received_data->ev_evaluacion_ln_id
+                ,':ev_evaluacion_id'  => $this->received_data->ev_evaluacion_id
+            );
+            $query = "SELECT refividrio.save_dat_point_direct(
+                            :points
+                            ,:id_lider
+                            ,:ev_indicador_general_id
+                            ,:id_empleado
+                            ,:ev_evaluacion_ln_id
+                            ,:ev_evaluacion_id
+                    )";
+            $statement = $this->connect->prepare($query); 
+            $statement->execute($parameters);   
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {   
+                $data[] = $row;
+            } 
+            echo json_encode($data); 
+            return true;
+        } catch (PDOException $exc) {
+            $output = array('message' => $exc->getMessage()); 
+            echo json_encode($output); 
+            return false;
+        }  
+    } 
     public function save_dat_point(){
         try {  
             $parameters = array(

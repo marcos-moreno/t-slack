@@ -359,7 +359,7 @@
                                 <div v-if="indicador.ev_indicador_general.tipo_captura[0].value == 'Directa'">  
                                     <button type="button" class="btn btn-primary" 
                                                 @click="save_dat_point_direct(
-                                                    punto_evaluar.ev_puntos_evaluar_ln
+                                                    indicador.ev_puntos_evaluar
                                                     ,indicador.ev_indicador_general_id 
                                                     ,ev_evaluacion_ln.id_empleado
                                                     ,ev_evaluacion_ln.ev_evaluacion_ln_id
@@ -368,12 +368,11 @@
                                     >Guardar</button></br></br>
                                     <div class="row">
                                         <div class="col-sm" v-for="punto_evaluar in indicador.ev_puntos_evaluar">
-                                    {{punto_evaluar}}
-
                                             <div class="input-group mb-3">
                                                 <label class="input-group-text">{{punto_evaluar.nombre}}</label>
-                                                <select class='form-control' v-model="punto_evaluar.calificacion_obtenida"> 
-                                                    <option v-for="i in punto_evaluar.max_escala" value="i">{{i}}</option>  
+                                                <select class='form-control' v-model="punto_evaluar.calificacion_obtenida">
+                                                    <option value="0">0</option>  
+                                                    <option v-for="(i,e) in punto_evaluar.max_escala" v-bind:value="i">{{i}}</option>  
                                                 </select> 
                                             </div>
                                         </div> 
