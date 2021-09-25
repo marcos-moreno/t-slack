@@ -48,14 +48,15 @@ class Jerarquizacion
                     ':id_empleado' => $this->received_data->model->id_empleado,
                         ':id_atributo_nivel' => $this->received_data->model->id_atributo_nivel,
                         ':activo' => $this->received_data->model->activo,
-                        ':id_superior' => $this->received_data->model->id_superior,
+                        ':id_superior' => ($this->received_data->model->id_superior = "null" ? NULL : $this->received_data->model->id_superior) ,
                         ':creadopor' => $_SESSION['id_empleado'],
                         ':actualizadopor' => $_SESSION['id_empleado'],
-                        ':departamento_id' => $this->received_data->model->departamento_id,
-                        
+                        ':departamento_id' => ($this->received_data->model->departamento_id = "null" ? NULL : $this->received_data->model->departamento_id)
                     ); 
-        $query = 'INSERT INTO jerarquizacion (id_empleado,id_atributo_nivel,activo,id_superior,creado,actualizado,creadopor,actualizadopor,departamento_id) 
-                    VALUES (:id_empleado,:id_atributo_nivel,:activo,:id_superior,Now(),Now(),:creadopor,:actualizadopor,:departamento_id) ;';
+        $query = "INSERT INTO jerarquizacion (id_empleado,id_atributo_nivel,activo,id_superior,creado,actualizado,creadopor,actualizadopor,departamento_id) 
+                    VALUES (:id_empleado,:id_atributo_nivel,:activo,
+                    :id_superior
+                    ,Now(),Now(),:creadopor,:actualizadopor,:departamento_id) ;";
             $statement = $this->connect->prepare($query); 
             $statement->execute($data);  
             $output = array('message' => 'Data Inserted'); 

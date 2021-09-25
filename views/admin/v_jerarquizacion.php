@@ -114,6 +114,9 @@
                     </div>
                     <div class="col-7">
                         <select class='form-control' size='1'  v-model='jerarquizacion.id_superior'  >
+                            <option value=null >
+                                No asignado
+                            </option>
                             <option v-for='rows in superiorCollectionfiltro'
                                 v-bind:value='rows.id_empleado'>
                                     {{ rows.paterno }} {{ rows.materno }} {{ rows.nombre }} ({{rows.departamento}})
@@ -128,7 +131,10 @@
                     <div class="input-group mb-3">
                         <label class="input-group-text">Departamento</label>
                         <select class='form-control' v-model='jerarquizacion.departamento_id'>
-                               <option
+                                <option value=null >
+                                    No asignado
+                                </option>
+                                <option
                                         v-for='depa in departamentoCollection' 
                                         v-bind:value='depa.departamento_id'>
                                         {{depa.nombre}} -- {{depa.segmento[0].nombre}} ({{depa.empresa[0].empresa_observaciones}})
