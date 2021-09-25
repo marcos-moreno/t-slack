@@ -99,7 +99,7 @@
                         <td>{{ ev_reporte.ev_reporte_id}}</td>
                         <td>{{ ev_reporte.descripcion}}</td>
                         <td>{{ ev_reporte.fecha}}</td>
-                        <td>{{ ev_reporte.nombre_indicador}}</td> 
+                        <td>{{ ev_reporte.nombre_indicador}} {{ ev_reporte.ev_ }}</td> 
                         <td style="width:150px" >
                             <button type="button" class="btn btn" @click="update_ev_reporte(ev_reporte.ev_reporte_id)"><img src="../../img/lapiz.svg" width="25px" /></button>
                             <button type="button" class="btn btn" @click="delete_ev_reporte(ev_reporte.ev_reporte_id)"><img src="../../img/borrar.png" width="25px" /></button>
@@ -132,13 +132,25 @@
             </div>    
             <div class='form-group'>
                 <label>Indicador</label> 
-                <select class='form-control' size='1'  v-model='ev_reporte.ev_indicador_puesto_id' >
+                <select class='form-control' size='1'  v-model='ev_reporte.ev_indicador_puesto_id' @change="evaluaFilter()">
                     <option value='0' >-</option>
                     <option v-for='rows in ev_indicador_Collection' v-bind:value='rows.ev_indicador_puesto_id'>
                         {{ rows.ev_indicador_general[0].nombre }}
                     </option>
                 </select>
-            </div>  
+            </div>
+
+            <div class='form-group' v-if="combo">
+                <label>Punto a Evaluar</label> 
+                
+                <select class='form-control' size='1'  v-model='ev_reporte.ev_punto_evaluar' >
+                    <option v-for='rows in ev_punto_evaluarCollection' v-bind:value='rows.ev_punto_evaluar_id' >
+                        {{ rows.catalogo }}
+                    </option>
+                </select>
+            </div>
+           
+
             <div class='form-group'>
                 <label >descripción</label>
                 <textarea class='form-control' v-model='ev_reporte.descripcion' >  </textarea>
@@ -209,13 +221,15 @@
                                             class="list-group-item d-flex justify-content-between align-items-center">
                                                 <button
                                                     style="background:none;color:blue;border:none
-                                                    ;max-width:30px"
+                                                    ;max-width:30px
+                                                    "
                                                     @click="get_file(item)"
                                                 >{{ item.name.substring(0,50) }}</button>  
 
                                                  <button
                                                     style="background:none;color:blue;border:none"
-                                                    @click="delete_file(item.id_file_adjunto)"> 
+                                                    @click="delete_file(item.id_file_adjunto)"
+                                                > 
                                                     <img src="../../img/borrar.png" width="28px" />
                                                 </button>   
                                             </li>

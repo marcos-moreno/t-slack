@@ -23,6 +23,14 @@ if (check_session()) {
             $model = new Ev_reporte($data,$connect,$received_data);
             $model->select();
         break;
+        case 'selectEvaluar': 
+            $model = new Ev_reporte($data,$connect,$received_data);
+            $model->selectEvaluar();
+        break;
+        case 'selectEvaluarUp': 
+            $model = new Ev_reporte($data,$connect,$received_data);
+            $model->selectEvaluarUp();
+        break;
     }
 }else{
     $output = array('message' => 'Not authorized'); 
@@ -42,6 +50,66 @@ class Ev_reporte
         $this->received_data = $received_data;
     }
 
+
+    public function selectEvaluarUp(){
+        try {   
+           
+        $parameters = array(
+            ':ev_indicador_puesto_id' => $this->received_data->model->ev_indicador_puesto_id,
+            ':ev_reporte_id' => $this->received_data->model->ev_reporte_id,
+        );
+        $query = 'SELECT 
+        ig.ev_indicador_general_id, ig.nombre, pu.ev_indicador_puesto_id, eva.nombre as catalogo, eva.ev_punto_evaluar_id
+        FROM refividrio.ev_indicador_puesto pu
+        inner join refividrio.ev_indicador_general ig on ig.ev_indicador_general_id = pu.ev_indicador_general_id
+        inner join refividrio.ev_punto_evaluar eva on eva.ev_indicador_general_id = ig.ev_indicador_general_id
+        INNER JOIN refividrio.ev_reporte re on re.ev_punto_evaluar = eva.ev_punto_evaluar_id
+        WHERE pu.ev_indicador_puesto_id = :ev_indicador_puesto_id and re.ev_reporte_id = :ev_reporte_id' ;
+                    
+        $statement = $this->connect->prepare($query); 
+        $statement->execute($parameters);   
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
+                $data[] = $row;
+        }
+
+    
+        echo json_encode($data); 
+        return true;
+        } catch (PDOException $exc) {
+        $output = array('message' => $exc->getMessage()); 
+        echo json_encode($output); 
+        return false;
+        }  
+    }
+
+    public function selectEvaluar(){
+        try {   
+           
+        $parameters = array(
+            'ev_indicador_puesto_id' => $this->received_data->model->ev_indicador_puesto_id,
+        );
+        $query = 'SELECT 
+        ig.ev_indicador_general_id, ig.nombre, pu.ev_indicador_puesto_id, eva.nombre as catalogo, eva.ev_punto_evaluar_id
+    FROM refividrio.ev_indicador_puesto pu
+    inner join refividrio.ev_indicador_general ig on ig.ev_indicador_general_id = pu.ev_indicador_general_id
+    inner join refividrio.ev_punto_evaluar eva on eva.ev_indicador_general_id = ig.ev_indicador_general_id
+    WHERE pu.ev_indicador_puesto_id = :ev_indicador_puesto_id ' ;
+                    
+        $statement = $this->connect->prepare($query); 
+        $statement->execute($parameters);   
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {  
+                $data[] = $row;
+        }
+
+    
+        echo json_encode($data); 
+        return true;
+    } catch (PDOException $exc) {
+        $output = array('message' => $exc->getMessage()); 
+        echo json_encode($output); 
+        return false;
+    }  
+    }
     public function insert(){
         try {
             $parameters = array(
@@ -81,10 +149,12 @@ class Ev_reporte
                         ':id_empleado' => $this->received_data->model->id_empleado, 
                         ':ev_indicador_puesto_id' => $this->received_data->model->ev_indicador_puesto_id, 
                         ':actualizadopor' => $_SESSION['id_empleado'],
+                        ':ev_punto_evaluar' => $this->received_data->model->ev_punto_evaluar, 
+
                     ); 
             $query = 'UPDATE ev_reporte SET descripcion=:descripcion,fecha=:fecha
                         ,id_empleado=:id_empleado,ev_indicador_puesto_id=:ev_indicador_puesto_id
-                        ,actualizado=Now(),actualizadopor=:actualizadopor 
+                        ,actualizado=Now(),actualizadopor=:actualizadopor , ev_punto_evaluar = :ev_punto_evaluar
                         WHERE  ev_reporte_id = :ev_reporte_id ;';
 
             $statement = $this->connect->prepare($query); 
@@ -109,7 +179,7 @@ class Ev_reporte
                 SELECT 
                     rep.ev_reporte_id,rep.descripcion,TO_CHAR(rep.fecha, 'YYYY-MM-DD') as fecha
                     ,rep.id_empleado,rep.ev_indicador_puesto_id,
-                    rep.creado,rep.creadopor,rep.actualizado,rep.actualizadopor,ig.nombre As nombre_indicador
+                    rep.creado,rep.creadopor,rep.actualizado,rep.actualizadopor,ig.nombre As nombre_indicador, rep.ev_punto_evaluar
                 FROM ev_reporte rep
                 INNER JOIN ev_indicador_puesto ip ON ip.ev_indicador_puesto_id=rep.ev_indicador_puesto_id
                 INNER JOIN ev_indicador_general ig ON ip.ev_indicador_general_id=ig.ev_indicador_general_id
